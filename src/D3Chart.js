@@ -50,8 +50,53 @@ function scaleToInteger(a, precision = 18) {
 
 const D3Chart = ({ data, liquidityData }) => {
   const svgRef = useRef();
+  const containerRef = useRef();
   const [initialViewSet, setInitialViewSet] = useState(false);
   const [dragInProgress, setDragInProgress] = useState(false);
+  const [dimensions, setDimensions] = useState(() => {
+    // Initialize with viewport-based dimensions
+    const isMobile = window.innerWidth <= 768;
+    return {
+      width: Math.max(300, Math.min(window.innerWidth - 20, 900)),
+      height: isMobile ? Math.min(300, window.innerHeight * 0.4) : 400
+    };
+  });
+  
+  // Handle resize for responsiveness
+  useEffect(() => {
+      const handleResize = () => {
+      // Always calculate based on window size for immediate responsiveness
+      const isMobile = window.innerWidth <= 768;
+      const height = isMobile ? Math.min(300, window.innerHeight * 0.4) : 400;
+      const width = Math.max(300, Math.min(window.innerWidth - 20, isMobile ? window.innerWidth - 20 : 900));
+      
+      setDimensions(prev => {
+        // Only update if dimensions actually changed to avoid unnecessary re-renders
+        if (prev.width !== width || prev.height !== height) {
+          return { width, height };
+        }
+        return prev;
+      });
+    };
+
+    // Use a timeout to ensure DOM is ready and multiple calls for better reliability
+    const timeoutId = setTimeout(handleResize, 100);
+    const intervalId = setInterval(handleResize, 500); // Check periodically initially
+    
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', () => {
+      setTimeout(handleResize, 300); // Handle mobile orientation changes
+    });
+    
+    // Stop the interval after a few seconds
+    setTimeout(() => clearInterval(intervalId), 3000);
+    
+    return () => {
+      clearTimeout(timeoutId);
+      clearInterval(intervalId);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   
   // Default state object
   const defaultState = useRef({
@@ -132,8 +177,8 @@ const D3Chart = ({ data, liquidityData }) => {
         centerPrice - zoomedRange / 2,
         centerPrice + zoomedRange / 2
       ])
-      .range([400 - 20 - 50, 0]); // [height, 0] for proper D3 coordinate system
-  }, [data, liquidityData, zoomLevel, panY]);
+      .range([dimensions.height - 20 - 50, 0]); // [height, 0] for proper D3 coordinate system
+  }, [data, liquidityData, zoomLevel, panY, dimensions]);
 
   useEffect(() => {
     if (!data || !liquidityData || !yScale) return;
@@ -141,9 +186,15 @@ const D3Chart = ({ data, liquidityData }) => {
     const svg = d3.select(svgRef.current);
     svg.selectAll("g").remove(); // Only remove D3-created elements, not React elements
 
-    const margin = { top: 20, right: 180, bottom: 50, left: 80 }; // Increased right margin for minimap
-    const width = 900 - margin.left - margin.right;
-    const height = 400 - margin.top - margin.bottom;
+    const isMobile = window.innerWidth <= 768;
+    const margin = { 
+      top: 20, 
+      right: isMobile ? 120 : 180, // Reduce right margin on mobile
+      bottom: 50, 
+      left: isMobile ? 60 : 80 // Reduce left margin on mobile
+    };
+    const width = dimensions.width - margin.left - margin.right;
+    const height = dimensions.height - margin.top - margin.bottom;
 
     const g = svg.append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -164,7 +215,7 @@ const D3Chart = ({ data, liquidityData }) => {
     // Scales for price line chart
     const xScale = d3.scaleTime()
       .domain(d3.extent(priceData, d => d.date))
-      .range([-80, width - 40]); // Extend left but stop before liquidity section
+      .range([-margin.left, width - 40]); // Extend left but stop before liquidity section
 
     // Line generator for price
     const line = d3.line()
@@ -288,9 +339,9 @@ const D3Chart = ({ data, liquidityData }) => {
       // Draw transparent pink background between min and max - extend to cover full chart area
       g.append('rect')
         .attr('class', 'price-range-element price-range-bg')
-        .attr('x', -80) // Extend left to cover the margin area
+        .attr('x', -margin.left) // Extend left to cover the margin area
         .attr('y', yScale(maxPrice))
-        .attr('width', 900) // Cover the entire SVG width
+        .attr('width', dimensions.width) // Cover the entire SVG width
         .attr('height', yScale(minPrice) - yScale(maxPrice))
         .attr('fill', '#ff69b4')
         .attr('fill-opacity', 0.15)
@@ -392,7 +443,7 @@ const D3Chart = ({ data, liquidityData }) => {
           .on('end', function(event) {
             // Apply the same offset calculation for consistency
             const adjustedY = event.y - this._dragOffsetY;
-            const newCenterY = Math.max(margin.top, Math.min(400 - margin.bottom, adjustedY));
+            const newCenterY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, adjustedY));
             const draggedPrice = yScale.invert(newCenterY);
             const rangeSize = maxPrice - minPrice;
             
@@ -421,8 +472,8 @@ const D3Chart = ({ data, liquidityData }) => {
       // Draw min price line (solid) with drag behavior
       g.append('line')
         .attr('class', 'price-range-element min-line')
-        .attr('x1', -80) // Start from left margin
-        .attr('x2', 820) // Extend to right edge (900 - 80 = 820)
+        .attr('x1', -margin.left) // Start from left margin
+        .attr('x2', dimensions.width - margin.left) // Extend to right edge
         .attr('y1', yScale(minPrice))
         .attr('y2', yScale(minPrice))
         .attr('stroke', '#131313')
@@ -537,8 +588,8 @@ const D3Chart = ({ data, liquidityData }) => {
       // Draw max price line (solid) with drag behavior
       g.append('line')
         .attr('class', 'price-range-element max-line')
-        .attr('x1', -80) // Start from left margin
-        .attr('x2', 820) // Extend to right edge (900 - 80 = 820)
+        .attr('x1', -margin.left) // Start from left margin
+        .attr('x2', dimensions.width - margin.left) // Extend to right edge
         .attr('y1', yScale(maxPrice))
         .attr('y2', yScale(maxPrice))
         .attr('stroke', '#131313')
@@ -653,7 +704,7 @@ const D3Chart = ({ data, liquidityData }) => {
       // Add min price label
       g.append('text')
         .attr('class', 'price-range-element min-label')
-        .attr('x', -68) // 12px from left border (-80 + 12)
+        .attr('x', -margin.left + 12) // 12px from left border
         .attr('y', yScale(minPrice) - 5)
         .attr('font-size', '10px')
         .attr('fill', '#131313')
@@ -663,7 +714,7 @@ const D3Chart = ({ data, liquidityData }) => {
       // Add max price label
       g.append('text')
         .attr('class', 'price-range-element max-label')
-        .attr('x', -68) // 12px from left border (-80 + 12)
+        .attr('x', -margin.left + 12) // 12px from left border
         .attr('y', yScale(maxPrice) + 15)
         .attr('font-size', '10px')
         .attr('fill', '#131313')
@@ -680,8 +731,8 @@ const D3Chart = ({ data, liquidityData }) => {
       // Draw dotted line across the entire chart for current price
       g.append('line')
         .attr('class', 'current-price-line')
-        .attr('x1', -80) // Start from left margin
-        .attr('x2', 820) // Extend to right edge (900 - 80 = 820)
+        .attr('x1', -margin.left) // Start from left margin
+        .attr('x2', dimensions.width - margin.left) // Extend to right edge
         .attr('y1', yScale(current))
         .attr('y2', yScale(current))
         .attr('stroke', '#666666') // Grey color
@@ -692,7 +743,7 @@ const D3Chart = ({ data, liquidityData }) => {
       // Add current price label on the left like min/max
       g.append('text')
         .attr('class', 'current-price-label')
-        .attr('x', -68) // 12px from left border (-80 + 12)
+        .attr('x', -margin.left + 12) // 12px from left border
         .attr('y', yScale(current) - 5)
         .attr('font-size', '10px')
         .attr('fill', '#666666') // Grey color
@@ -712,7 +763,7 @@ const D3Chart = ({ data, liquidityData }) => {
     // Create scale for full data range (for minimap) - full container height
     const minimapYScale = d3.scaleLinear()
       .domain([dataMin, dataMax])
-      .range([400 - margin.bottom, margin.top]);
+      .range([dimensions.height - margin.bottom, margin.top]);
     
     // Remove liquidity bars from minimap - not needed
     
@@ -722,7 +773,7 @@ const D3Chart = ({ data, liquidityData }) => {
       .attr('x', minimapX)
       .attr('y', -margin.top)
       .attr('width', 8)
-      .attr('height', 400) // Full container height
+      .attr('height', dimensions.height) // Full container height
       .attr('fill', '#333333')
       .attr('rx', 4);
     
@@ -766,7 +817,7 @@ const D3Chart = ({ data, liquidityData }) => {
         setDragInProgress(true);
       })
       .on('drag', function(event) {
-        const newCenterY = Math.max(margin.top, Math.min(400 - margin.bottom, event.y));
+        const newCenterY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, event.y));
         const newCenterPrice = minimapYScale.invert(newCenterY);
         const rangeSize = maxPrice - minPrice;
         
@@ -854,7 +905,7 @@ const D3Chart = ({ data, liquidityData }) => {
         setDragInProgress(true);
       })
       .on('drag', function(event) {
-        const newY = Math.max(margin.top, Math.min(400 - margin.bottom, event.y));
+        const newY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, event.y));
         const newMaxPrice = minimapYScale.invert(newY);
         
         // Ensure max stays above min
@@ -886,7 +937,7 @@ const D3Chart = ({ data, liquidityData }) => {
           .text(`Max: ${constrainedMaxPrice.toFixed(0)}`);
       })
       .on('end', function(event) {
-        const newY = Math.max(margin.top, Math.min(400 - margin.bottom, event.y));
+        const newY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, event.y));
         let newMaxPrice = minimapYScale.invert(newY);
         
         // If dragged to top, set to data maximum
@@ -907,7 +958,7 @@ const D3Chart = ({ data, liquidityData }) => {
         setDragInProgress(true);
       })
       .on('drag', function(event) {
-        const newY = Math.max(margin.top, Math.min(400 - margin.bottom, event.y));
+        const newY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, event.y));
         const newMinPrice = minimapYScale.invert(newY);
         
         // Ensure min stays below max
@@ -939,11 +990,11 @@ const D3Chart = ({ data, liquidityData }) => {
           .text(`Min: ${constrainedMinPrice.toFixed(0)}`);
       })
       .on('end', function(event) {
-        const newY = Math.max(margin.top, Math.min(400 - margin.bottom, event.y));
+        const newY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, event.y));
         let newMinPrice = minimapYScale.invert(newY);
         
         // If dragged to bottom, set to data minimum
-        if (newY >= 400 - margin.bottom - 10) {
+        if (newY >= dimensions.height - margin.bottom - 10) {
           newMinPrice = dataMin;
         }
         
@@ -960,7 +1011,7 @@ const D3Chart = ({ data, liquidityData }) => {
         setDragInProgress(true);
       })
       .on('drag', function(event) {
-        const newCenterY = Math.max(margin.top, Math.min(400 - margin.bottom, event.y));
+        const newCenterY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, event.y));
         const newCenterPrice = minimapYScale.invert(newCenterY);
         const rangeSize = maxPrice - minPrice;
         
@@ -1010,7 +1061,7 @@ const D3Chart = ({ data, liquidityData }) => {
           .text(`Max: ${newMaxPrice.toFixed(0)}`);
       })
       .on('end', function(event) {
-        const newCenterY = Math.max(margin.top, Math.min(400 - margin.bottom, event.y));
+        const newCenterY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, event.y));
         const newCenterPrice = minimapYScale.invert(newCenterY);
         const rangeSize = maxPrice - minPrice;
         
@@ -1077,10 +1128,76 @@ const D3Chart = ({ data, liquidityData }) => {
     const svgElement = svgRef.current;
     if (svgElement) {
       svgElement.addEventListener('wheel', handleWheel, { passive: false });
-      return () => svgElement.removeEventListener('wheel', handleWheel);
+      
+      // Add touch support for mobile
+      let touchStartY = null;
+      let lastTouchY = null;
+      let touchStartTime = null;
+      
+      const handleTouchStart = (event) => {
+        if (event.touches.length === 1) {
+          touchStartY = event.touches[0].clientY;
+          lastTouchY = touchStartY;
+          touchStartTime = Date.now();
+          event.preventDefault();
+        }
+      };
+      
+      const handleTouchMove = (event) => {
+        if (event.touches.length === 1 && touchStartY !== null) {
+          const currentTouchY = event.touches[0].clientY;
+          const deltaY = lastTouchY - currentTouchY; // Inverted for natural scrolling
+          
+          // Convert touch movement to pan
+          const allPrices = [
+            ...data.map(d => d.value),
+            ...liquidityData.map(d => d.price0)
+          ];
+          const priceExtent = d3.extent(allPrices);
+          const priceRange = priceExtent[1] - priceExtent[0];
+          const zoomedRange = priceRange / zoomLevel;
+          const touchSensitivity = zoomedRange / 400; // Scale based on current zoom
+          const scrollAmount = deltaY * touchSensitivity / priceRange;
+          
+          setChartState(prev => {
+            const newPanY = prev.panY + scrollAmount;
+            
+            // Apply bounds like in wheel handler
+            const halfZoomedRange = zoomedRange / 2;
+            const dataMin = Math.min(...allPrices);
+            const dataMax = Math.max(...allPrices);
+            const maxPanUp = (dataMax - halfZoomedRange - (priceExtent[0] + priceRange * 0.5)) / priceRange;
+            const maxPanDown = (dataMin + halfZoomedRange - (priceExtent[0] + priceRange * 0.5)) / priceRange;
+            const constrainedPanY = Math.max(maxPanDown, Math.min(maxPanUp, newPanY));
+            
+            return { ...prev, panY: constrainedPanY };
+          });
+          
+          lastTouchY = currentTouchY;
+          event.preventDefault();
+        }
+      };
+      
+      const handleTouchEnd = (event) => {
+        touchStartY = null;
+        lastTouchY = null;
+        touchStartTime = null;
+        event.preventDefault();
+      };
+      
+      svgElement.addEventListener('touchstart', handleTouchStart, { passive: false });
+      svgElement.addEventListener('touchmove', handleTouchMove, { passive: false });
+      svgElement.addEventListener('touchend', handleTouchEnd, { passive: false });
+      
+      return () => {
+        svgElement.removeEventListener('wheel', handleWheel);
+        svgElement.removeEventListener('touchstart', handleTouchStart);
+        svgElement.removeEventListener('touchmove', handleTouchMove);
+        svgElement.removeEventListener('touchend', handleTouchEnd);
+      };
     }
 
-  }, [data, liquidityData, zoomLevel, panY, yScale, current, currentTick, minPrice, maxPrice]);
+  }, [data, liquidityData, zoomLevel, panY, yScale, current, currentTick, minPrice, maxPrice, dimensions]);
 
 
   // Set reasonable initial view on first load
@@ -1237,45 +1354,69 @@ const D3Chart = ({ data, liquidityData }) => {
   };
 
   return (
-    <div>
+    <div ref={containerRef} style={{ 
+      width: '100%', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center',
+      margin: '0 auto'
+    }}>
       {/* Controls Panel - Outside Chart */}
       <div style={{ 
         marginBottom: '10px',
         background: '#f9f9f9',
-        padding: '12px',
+        padding: dimensions.width <= 768 ? '8px' : '12px',
         borderRadius: '4px',
         border: '1px solid #ddd',
         display: 'flex',
-        gap: '20px',
+        gap: dimensions.width <= 768 ? '8px' : '20px',
         alignItems: 'flex-start',
-        flexWrap: 'wrap'
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        fontSize: dimensions.width <= 768 ? '10px' : '12px',
+        width: 'fit-content',
+        maxWidth: '100%',
+        margin: '0 auto 10px auto'
       }}>
         {/* Zoom Controls */}
         <div>
           <div style={{ marginBottom: '4px', fontSize: '12px', fontWeight: 'bold' }}>
             Zoom: {zoomLevel.toFixed(1)}x
           </div>
-          <div style={{ display: 'flex', gap: '4px', marginBottom: '4px' }}>
-            <button onClick={handleZoomIn} style={{ fontSize: '12px', padding: '4px 8px' }}>
+          <div style={{ display: 'flex', gap: '4px', marginBottom: '4px', flexWrap: 'wrap' }}>
+            <button onClick={handleZoomIn} style={{ 
+              fontSize: dimensions.width <= 768 ? '10px' : '12px', 
+              padding: dimensions.width <= 768 ? '6px 10px' : '4px 8px',
+              minHeight: dimensions.width <= 768 ? '32px' : 'auto'
+            }}>
               Zoom In (+)
             </button>
-            <button onClick={handleZoomOut} style={{ fontSize: '12px', padding: '4px 8px' }}>
+            <button onClick={handleZoomOut} style={{ 
+              fontSize: dimensions.width <= 768 ? '10px' : '12px', 
+              padding: dimensions.width <= 768 ? '6px 10px' : '4px 8px',
+              minHeight: dimensions.width <= 768 ? '32px' : 'auto'
+            }}>
               Zoom Out (-)
             </button>
-            <button onClick={handleResetZoom} style={{ fontSize: '12px', padding: '4px 8px' }}>
+            <button onClick={handleResetZoom} style={{ 
+              fontSize: dimensions.width <= 768 ? '10px' : '12px', 
+              padding: dimensions.width <= 768 ? '6px 10px' : '4px 8px',
+              minHeight: dimensions.width <= 768 ? '32px' : 'auto'
+            }}>
               Reset
             </button>
             <button 
               onClick={handleCenterRange} 
               disabled={minPrice === null || maxPrice === null}
               style={{ 
-                fontSize: '12px', 
-                padding: '4px 8px',
+                fontSize: dimensions.width <= 768 ? '10px' : '12px', 
+                padding: dimensions.width <= 768 ? '6px 10px' : '4px 8px',
+                minHeight: dimensions.width <= 768 ? '32px' : 'auto',
                 opacity: minPrice === null || maxPrice === null ? 0.5 : 1,
                 cursor: minPrice === null || maxPrice === null ? 'not-allowed' : 'pointer'
               }}
             >
-              Center Range
+              {dimensions.width <= 768 ? 'Center' : 'Center Range'}
             </button>
           </div>
           <div style={{ fontSize: '10px', color: '#666', textAlign: 'center' }}>
@@ -1296,11 +1437,12 @@ const D3Chart = ({ data, liquidityData }) => {
                 value={minPrice || ''}
                 onChange={(e) => setMinPrice(e.target.value ? parseFloat(e.target.value) : null)}
                 style={{ 
-                  fontSize: '11px', 
-                  padding: '4px 6px', 
+                  fontSize: dimensions.width <= 768 ? '10px' : '11px', 
+                  padding: dimensions.width <= 768 ? '6px 8px' : '4px 6px', 
                   border: '1px solid #ccc',
                   borderRadius: '4px',
-                  width: '90px'
+                  width: dimensions.width <= 768 ? '70px' : '90px',
+                  minHeight: dimensions.width <= 768 ? '32px' : 'auto'
                 }}
                 step="0.01"
               />
@@ -1312,11 +1454,12 @@ const D3Chart = ({ data, liquidityData }) => {
                 value={maxPrice || ''}
                 onChange={(e) => setMaxPrice(e.target.value ? parseFloat(e.target.value) : null)}
                 style={{ 
-                  fontSize: '11px', 
-                  padding: '4px 6px', 
+                  fontSize: dimensions.width <= 768 ? '10px' : '11px', 
+                  padding: dimensions.width <= 768 ? '6px 8px' : '4px 6px', 
                   border: '1px solid #ccc',
                   borderRadius: '4px',
-                  width: '90px'
+                  width: dimensions.width <= 768 ? '70px' : '90px',
+                  minHeight: dimensions.width <= 768 ? '32px' : 'auto'
                 }}
                 step="0.01"
               />
@@ -1324,12 +1467,13 @@ const D3Chart = ({ data, liquidityData }) => {
             <button 
               onClick={() => { setMinPrice(null); setMaxPrice(null); }}
               style={{ 
-                fontSize: '11px', 
-                padding: '4px 8px', 
+                fontSize: dimensions.width <= 768 ? '10px' : '11px', 
+                padding: dimensions.width <= 768 ? '6px 10px' : '4px 8px', 
                 backgroundColor: '#fff',
                 border: '1px solid #ccc',
                 borderRadius: '4px',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                minHeight: dimensions.width <= 768 ? '32px' : 'auto'
               }}
             >
               Clear Range
@@ -1338,16 +1482,25 @@ const D3Chart = ({ data, liquidityData }) => {
         </div>
       </div>
 
-      <div style={{ position: 'relative' }}>
+      <div style={{ 
+        position: 'relative',
+        width: 'fit-content',
+        maxWidth: '100%',
+        overflow: 'hidden',
+        margin: '0 auto'
+      }}>
         <svg
-        ref={svgRef}
-        width={900}
-        height={400}
-        style={{ border: '1px solid #ccc' }}
+          ref={svgRef}
+          width={dimensions.width}
+          height={dimensions.height}
+          style={{ 
+            border: '1px solid #ccc',
+            display: 'block',
+            maxWidth: '100%',
+            touchAction: 'manipulation' // Optimizes for touch interactions
+          }}
         >
         </svg>
-        
-        
       </div>
     </div>
   );
