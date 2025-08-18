@@ -141,8 +141,8 @@ const D3Chart = ({ data, liquidityData }) => {
     const svg = d3.select(svgRef.current);
     svg.selectAll("g").remove(); // Only remove D3-created elements, not React elements
 
-    const margin = { top: 20, right: 120, bottom: 50, left: 80 };
-    const width = 800 - margin.left - margin.right;
+    const margin = { top: 20, right: 180, bottom: 50, left: 80 }; // Increased right margin for minimap
+    const width = 900 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
     const g = svg.append("g")
@@ -290,18 +290,23 @@ const D3Chart = ({ data, liquidityData }) => {
         .attr('class', 'price-range-element price-range-bg')
         .attr('x', -80) // Extend left to cover the margin area
         .attr('y', yScale(maxPrice))
-        .attr('width', 800) // Cover the entire SVG width
+        .attr('width', 900) // Cover the entire SVG width
         .attr('height', yScale(minPrice) - yScale(maxPrice))
         .attr('fill', '#ff69b4')
         .attr('fill-opacity', 0.15)
         .attr('stroke', 'none') // Remove any border from background
         .attr('cursor', 'move')
         .call(d3.drag()
-          .on('start', function() {
+          .on('start', function(event) {
             setDragInProgress(true);
+            // Store the initial click offset relative to the range center
+            const currentRangeCenterY = (yScale(maxPrice) + yScale(minPrice)) / 2;
+            this._dragOffsetY = event.y - currentRangeCenterY;
           })
           .on('drag', function(event) {
-            const newCenterY = Math.max(0, Math.min(height, event.y));
+            // Apply the stored offset to maintain consistent drag feel
+            const adjustedY = event.y - this._dragOffsetY;
+            const newCenterY = Math.max(0, Math.min(height, adjustedY));
             const draggedPrice = yScale.invert(newCenterY);
             const rangeSize = maxPrice - minPrice;
             
@@ -368,10 +373,26 @@ const D3Chart = ({ data, liquidityData }) => {
                   }
                   return "#888888";
                 });
+                
+              // Update minimap controls to reflect new positions
+              g.select('.minimap-range')
+                .attr('y', minimapYScale(newMaxPrice))
+                .attr('height', minimapYScale(newMinPrice) - minimapYScale(newMaxPrice));
+                
+              g.select('.max-handle')
+                .attr('cy', minimapYScale(newMaxPrice));
+                
+              g.select('.min-handle')
+                .attr('cy', minimapYScale(newMinPrice));
+                
+              g.select('.center-handle')
+                .attr('cy', (minimapYScale(newMaxPrice) + minimapYScale(newMinPrice)) / 2);
             }
           })
           .on('end', function(event) {
-            const newCenterY = Math.max(0, Math.min(height, event.y));
+            // Apply the same offset calculation for consistency
+            const adjustedY = event.y - this._dragOffsetY;
+            const newCenterY = Math.max(margin.top, Math.min(400 - margin.bottom, adjustedY));
             const draggedPrice = yScale.invert(newCenterY);
             const rangeSize = maxPrice - minPrice;
             
@@ -401,7 +422,7 @@ const D3Chart = ({ data, liquidityData }) => {
       g.append('line')
         .attr('class', 'price-range-element min-line')
         .attr('x1', -80) // Start from left margin
-        .attr('x2', 720) // Extend to right edge (800 - 80 = 720)
+        .attr('x2', 820) // Extend to right edge (900 - 80 = 820)
         .attr('y1', yScale(minPrice))
         .attr('y2', yScale(minPrice))
         .attr('stroke', '#131313')
@@ -480,6 +501,20 @@ const D3Chart = ({ data, liquidityData }) => {
                 }
                 return "#888888";
               });
+              
+            // Update minimap controls for min line drag
+            g.select('.minimap-range')
+              .attr('y', minimapYScale(draggedMaxPrice))
+              .attr('height', minimapYScale(draggedMinPrice) - minimapYScale(draggedMaxPrice));
+              
+            g.select('.max-handle')
+              .attr('cy', minimapYScale(draggedMaxPrice));
+              
+            g.select('.min-handle')
+              .attr('cy', minimapYScale(draggedMinPrice));
+              
+            g.select('.center-handle')
+              .attr('cy', (minimapYScale(draggedMaxPrice) + minimapYScale(draggedMinPrice)) / 2);
           })
           .on('end', function(event) {
             const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
@@ -503,7 +538,7 @@ const D3Chart = ({ data, liquidityData }) => {
       g.append('line')
         .attr('class', 'price-range-element max-line')
         .attr('x1', -80) // Start from left margin
-        .attr('x2', 720) // Extend to right edge (800 - 80 = 720)
+        .attr('x2', 820) // Extend to right edge (900 - 80 = 820)
         .attr('y1', yScale(maxPrice))
         .attr('y2', yScale(maxPrice))
         .attr('stroke', '#131313')
@@ -582,6 +617,20 @@ const D3Chart = ({ data, liquidityData }) => {
                 }
                 return "#888888";
               });
+              
+            // Update minimap controls for max line drag
+            g.select('.minimap-range')
+              .attr('y', minimapYScale(draggedMaxPrice))
+              .attr('height', minimapYScale(draggedMinPrice) - minimapYScale(draggedMaxPrice));
+              
+            g.select('.max-handle')
+              .attr('cy', minimapYScale(draggedMaxPrice));
+              
+            g.select('.min-handle')
+              .attr('cy', minimapYScale(draggedMinPrice));
+              
+            g.select('.center-handle')
+              .attr('cy', (minimapYScale(draggedMaxPrice) + minimapYScale(draggedMinPrice)) / 2);
           })
           .on('end', function(event) {
             const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
@@ -632,7 +681,7 @@ const D3Chart = ({ data, liquidityData }) => {
       g.append('line')
         .attr('class', 'current-price-line')
         .attr('x1', -80) // Start from left margin
-        .attr('x2', 720) // Extend to right edge (800 - 80 = 720)
+        .attr('x2', 820) // Extend to right edge (900 - 80 = 820)
         .attr('y1', yScale(current))
         .attr('y2', yScale(current))
         .attr('stroke', '#666666') // Grey color
@@ -651,7 +700,339 @@ const D3Chart = ({ data, liquidityData }) => {
         .text(`Current: ${current.toFixed(0)}`);
     }
 
-    // Drag points will be handled in separate useEffect
+    // Create minimap controls on the right side
+    const minimapWidth = 40;
+    const minimapX = width + 160; // Position near the right border
+    
+    // Get full data range for minimap scale
+    const minimapPrices = [...data.map(d => d.value), ...liquidityData.map(d => d.price0)];
+    const dataMin = Math.min(...minimapPrices);
+    const dataMax = Math.max(...minimapPrices);
+    
+    // Create scale for full data range (for minimap) - full container height
+    const minimapYScale = d3.scaleLinear()
+      .domain([dataMin, dataMax])
+      .range([400 - margin.bottom, margin.top]);
+    
+    // Remove liquidity bars from minimap - not needed
+    
+    // Draw minimap background track (full container height)
+    g.append('rect')
+      .attr('class', 'minimap-track')
+      .attr('x', minimapX)
+      .attr('y', -margin.top)
+      .attr('width', 8)
+      .attr('height', 400) // Full container height
+      .attr('fill', '#333333')
+      .attr('rx', 4);
+    
+    // Calculate current viewport bounds based on zoom and pan using full data range
+    const fullDataRange = dataMax - dataMin;
+    const zoomedRange = fullDataRange / zoomLevel;
+    const currentCenter = dataMin + fullDataRange * 0.5 + panY * fullDataRange;
+    const viewportMinPrice = currentCenter - zoomedRange / 2;
+    const viewportMaxPrice = currentCenter + zoomedRange / 2;
+    
+    // Draw viewport indicator (shows current visible area)
+    const viewportHeight = minimapYScale(viewportMinPrice) - minimapYScale(viewportMaxPrice);
+    g.append('rect')
+      .attr('class', 'minimap-viewport')
+      .attr('x', minimapX - 2)
+      .attr('y', minimapYScale(viewportMaxPrice))
+      .attr('width', 12)
+      .attr('height', viewportHeight)
+      .attr('fill', '#ffffff')
+      .attr('fill-opacity', 0.2)
+      .attr('stroke', '#ffffff')
+      .attr('stroke-width', 1)
+      .attr('stroke-opacity', 0.4)
+      .attr('rx', 2);
+    
+    // Draw current range indicator (pink bar) with drag functionality
+    const currentRangeHeight = minimapYScale(minPrice) - minimapYScale(maxPrice);
+    const minimapRange = g.append('rect')
+      .attr('class', 'minimap-range')
+      .attr('x', minimapX)
+      .attr('y', minimapYScale(maxPrice))
+      .attr('width', 8)
+      .attr('height', currentRangeHeight)
+      .attr('fill', '#ff69b4')
+      .attr('rx', 4)
+      .attr('cursor', 'move');
+    
+    // Add drag behavior to the minimap range bar
+    minimapRange.call(d3.drag()
+      .on('start', function() {
+        setDragInProgress(true);
+      })
+      .on('drag', function(event) {
+        const newCenterY = Math.max(margin.top, Math.min(400 - margin.bottom, event.y));
+        const newCenterPrice = minimapYScale.invert(newCenterY);
+        const rangeSize = maxPrice - minPrice;
+        
+        // Calculate new min/max based on center position
+        let newMaxPrice = newCenterPrice + rangeSize / 2;
+        let newMinPrice = newCenterPrice - rangeSize / 2;
+        
+        // Keep within data bounds
+        if (newMaxPrice > dataMax) {
+          newMaxPrice = dataMax;
+          newMinPrice = dataMax - rangeSize;
+        }
+        if (newMinPrice < dataMin) {
+          newMinPrice = dataMin;
+          newMaxPrice = dataMin + rangeSize;
+        }
+        
+        // Update visual positions of handles and range bar
+        topHandle.attr('cy', minimapYScale(newMaxPrice));
+        bottomHandle.attr('cy', minimapYScale(newMinPrice));
+        d3.select(this)
+          .attr('y', minimapYScale(newMaxPrice))
+          .attr('height', minimapYScale(newMinPrice) - minimapYScale(newMaxPrice));
+        
+        // Update center handle position
+        const newCenterHandleY = (minimapYScale(newMaxPrice) + minimapYScale(newMinPrice)) / 2;
+        centerHandle.attr('cy', newCenterHandleY);
+        
+        // Calculate pan position based on where the range is positioned
+        const fullDataRange = dataMax - dataMin;
+        const rangeCenterInData = (newMaxPrice + newMinPrice) / 2;
+        const dataCenterPosition = (rangeCenterInData - dataMin) / fullDataRange - 0.5;
+        
+        // Update chart state to follow the minimap range
+        setChartState(prev => ({
+          ...prev,
+          minPrice: newMinPrice,
+          maxPrice: newMaxPrice,
+          panY: dataCenterPosition
+        }));
+      })
+      .on('end', function() {
+        setDragInProgress(false);
+      })
+    );
+    
+    // Draw drag handles
+    const handleRadius = 8;
+    
+    // Top handle (max price)
+    const topHandle = g.append('circle')
+      .attr('class', 'minimap-handle max-handle')
+      .attr('cx', minimapX + 4)
+      .attr('cy', minimapYScale(maxPrice))
+      .attr('r', handleRadius)
+      .attr('fill', '#ffffff')
+      .attr('stroke', '#ff69b4')
+      .attr('stroke-width', 3)
+      .attr('cursor', 'ns-resize');
+    
+    // Bottom handle (min price) 
+    const bottomHandle = g.append('circle')
+      .attr('class', 'minimap-handle min-handle')
+      .attr('cx', minimapX + 4)
+      .attr('cy', minimapYScale(minPrice))
+      .attr('r', handleRadius)
+      .attr('fill', '#ffffff')
+      .attr('stroke', '#ff69b4')
+      .attr('stroke-width', 3)
+      .attr('cursor', 'ns-resize');
+    
+    // Center handle (for dragging entire range)
+    const centerY = (minimapYScale(maxPrice) + minimapYScale(minPrice)) / 2;
+    const centerHandle = g.append('circle')
+      .attr('class', 'minimap-handle center-handle')
+      .attr('cx', minimapX + 4)
+      .attr('cy', centerY)
+      .attr('r', 6)
+      .attr('fill', '#ff69b4')
+      .attr('cursor', 'move');
+    
+    // Add drag behavior to top handle (max price)
+    topHandle.call(d3.drag()
+      .on('start', function() {
+        setDragInProgress(true);
+      })
+      .on('drag', function(event) {
+        const newY = Math.max(margin.top, Math.min(400 - margin.bottom, event.y));
+        const newMaxPrice = minimapYScale.invert(newY);
+        
+        // Ensure max stays above min
+        const constrainedMaxPrice = Math.max(newMaxPrice, minPrice);
+        
+        // Update visual position
+        d3.select(this).attr('cy', minimapYScale(constrainedMaxPrice));
+        
+        // Update range bar
+        g.select('.minimap-range')
+          .attr('y', minimapYScale(constrainedMaxPrice))
+          .attr('height', minimapYScale(minPrice) - minimapYScale(constrainedMaxPrice));
+        
+        // Update center handle position
+        const newCenterY = (minimapYScale(constrainedMaxPrice) + minimapYScale(minPrice)) / 2;
+        centerHandle.attr('cy', newCenterY);
+        
+        // Update main chart price range elements
+        g.select('.price-range-bg')
+          .attr('y', yScale(constrainedMaxPrice))
+          .attr('height', yScale(minPrice) - yScale(constrainedMaxPrice));
+          
+        g.select('.max-line')
+          .attr('y1', yScale(constrainedMaxPrice))
+          .attr('y2', yScale(constrainedMaxPrice));
+          
+        g.select('.max-label')
+          .attr('y', yScale(constrainedMaxPrice) + 15)
+          .text(`Max: ${constrainedMaxPrice.toFixed(0)}`);
+      })
+      .on('end', function(event) {
+        const newY = Math.max(margin.top, Math.min(400 - margin.bottom, event.y));
+        let newMaxPrice = minimapYScale.invert(newY);
+        
+        // If dragged to top, set to data maximum
+        if (newY <= margin.top + 10) {
+          newMaxPrice = dataMax;
+        }
+        
+        // Ensure max stays above min
+        const constrainedMaxPrice = Math.max(newMaxPrice, minPrice);
+        setMaxPrice(constrainedMaxPrice);
+        setDragInProgress(false);
+      })
+    );
+    
+    // Add drag behavior to bottom handle (min price)
+    bottomHandle.call(d3.drag()
+      .on('start', function() {
+        setDragInProgress(true);
+      })
+      .on('drag', function(event) {
+        const newY = Math.max(margin.top, Math.min(400 - margin.bottom, event.y));
+        const newMinPrice = minimapYScale.invert(newY);
+        
+        // Ensure min stays below max
+        const constrainedMinPrice = Math.min(newMinPrice, maxPrice);
+        
+        // Update visual position
+        d3.select(this).attr('cy', minimapYScale(constrainedMinPrice));
+        
+        // Update range bar
+        g.select('.minimap-range')
+          .attr('y', minimapYScale(maxPrice))
+          .attr('height', minimapYScale(constrainedMinPrice) - minimapYScale(maxPrice));
+        
+        // Update center handle position
+        const newCenterY = (minimapYScale(maxPrice) + minimapYScale(constrainedMinPrice)) / 2;
+        centerHandle.attr('cy', newCenterY);
+        
+        // Update main chart price range elements
+        g.select('.price-range-bg')
+          .attr('y', yScale(maxPrice))
+          .attr('height', yScale(constrainedMinPrice) - yScale(maxPrice));
+          
+        g.select('.min-line')
+          .attr('y1', yScale(constrainedMinPrice))
+          .attr('y2', yScale(constrainedMinPrice));
+          
+        g.select('.min-label')
+          .attr('y', yScale(constrainedMinPrice) - 5)
+          .text(`Min: ${constrainedMinPrice.toFixed(0)}`);
+      })
+      .on('end', function(event) {
+        const newY = Math.max(margin.top, Math.min(400 - margin.bottom, event.y));
+        let newMinPrice = minimapYScale.invert(newY);
+        
+        // If dragged to bottom, set to data minimum
+        if (newY >= 400 - margin.bottom - 10) {
+          newMinPrice = dataMin;
+        }
+        
+        // Ensure min stays below max
+        const constrainedMinPrice = Math.min(newMinPrice, maxPrice);
+        setMinPrice(constrainedMinPrice);
+        setDragInProgress(false);
+      })
+    );
+    
+    // Add drag behavior to center handle (drag entire range)
+    centerHandle.call(d3.drag()
+      .on('start', function() {
+        setDragInProgress(true);
+      })
+      .on('drag', function(event) {
+        const newCenterY = Math.max(margin.top, Math.min(400 - margin.bottom, event.y));
+        const newCenterPrice = minimapYScale.invert(newCenterY);
+        const rangeSize = maxPrice - minPrice;
+        
+        // Calculate new min/max based on center position
+        let newMaxPrice = newCenterPrice + rangeSize / 2;
+        let newMinPrice = newCenterPrice - rangeSize / 2;
+        
+        // Keep within data bounds
+        if (newMaxPrice > dataMax) {
+          newMaxPrice = dataMax;
+          newMinPrice = dataMax - rangeSize;
+        }
+        if (newMinPrice < dataMin) {
+          newMinPrice = dataMin;
+          newMaxPrice = dataMin + rangeSize;
+        }
+        
+        // Update visual positions
+        topHandle.attr('cy', minimapYScale(newMaxPrice));
+        bottomHandle.attr('cy', minimapYScale(newMinPrice));
+        d3.select(this).attr('cy', (minimapYScale(newMaxPrice) + minimapYScale(newMinPrice)) / 2);
+        
+        // Update range bar
+        g.select('.minimap-range')
+          .attr('y', minimapYScale(newMaxPrice))
+          .attr('height', minimapYScale(newMinPrice) - minimapYScale(newMaxPrice));
+          
+        // Update main chart price range elements
+        g.select('.price-range-bg')
+          .attr('y', yScale(newMaxPrice))
+          .attr('height', yScale(newMinPrice) - yScale(newMaxPrice));
+          
+        g.select('.min-line')
+          .attr('y1', yScale(newMinPrice))
+          .attr('y2', yScale(newMinPrice));
+          
+        g.select('.max-line')
+          .attr('y1', yScale(newMaxPrice))
+          .attr('y2', yScale(newMaxPrice));
+          
+        g.select('.min-label')
+          .attr('y', yScale(newMinPrice) - 5)
+          .text(`Min: ${newMinPrice.toFixed(0)}`);
+          
+        g.select('.max-label')
+          .attr('y', yScale(newMaxPrice) + 15)
+          .text(`Max: ${newMaxPrice.toFixed(0)}`);
+      })
+      .on('end', function(event) {
+        const newCenterY = Math.max(margin.top, Math.min(400 - margin.bottom, event.y));
+        const newCenterPrice = minimapYScale.invert(newCenterY);
+        const rangeSize = maxPrice - minPrice;
+        
+        // Calculate new min/max based on center position
+        let newMaxPrice = newCenterPrice + rangeSize / 2;
+        let newMinPrice = newCenterPrice - rangeSize / 2;
+        
+        // Keep within data bounds
+        if (newMaxPrice > dataMax) {
+          newMaxPrice = dataMax;
+          newMinPrice = dataMax - rangeSize;
+        }
+        if (newMinPrice < dataMin) {
+          newMinPrice = dataMin;
+          newMaxPrice = dataMin + rangeSize;
+        }
+        
+        setMinPrice(newMinPrice);
+        setMaxPrice(newMaxPrice);
+        setDragInProgress(false);
+      })
+    );
 
 
     // Setup wheel event handler
@@ -960,7 +1341,7 @@ const D3Chart = ({ data, liquidityData }) => {
       <div style={{ position: 'relative' }}>
         <svg
         ref={svgRef}
-        width={800}
+        width={900}
         height={400}
         style={{ border: '1px solid #ccc' }}
         >
