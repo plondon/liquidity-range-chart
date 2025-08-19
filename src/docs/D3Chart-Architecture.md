@@ -32,7 +32,6 @@ This chart is used for:
 - **Zoom Controls**: In/Out/Reset with smooth animations
 - **Pan Support**: Scroll-to-pan vertical navigation
 - **Center Range**: Auto-center and zoom to fit selected range
-- **Minimap**: Full-data overview with viewport indicator and drag handles
 
 ### 4. **Real-time Price Indicators**
 
@@ -116,7 +115,6 @@ useChartState() {
 
 - **Range Background**: Drag entire range up/down
 - **Individual Lines**: Drag min/max boundaries
-- **Minimap Handles**: Three-handle system (min/max/center)
 - **Constraint Logic**: Prevents invalid states and out-of-bounds
 
 ### 2. **Mouse Interactions**

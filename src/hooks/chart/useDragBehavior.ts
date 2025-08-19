@@ -69,43 +69,10 @@ export const useDragBehavior = () => {
       });
   }, []);
 
-  const createMinimapDrag = useCallback((minimapScale: d3.ScaleLinear<number, number>, setZoomLevel: React.Dispatch<React.SetStateAction<number>>, setPanY: React.Dispatch<React.SetStateAction<number>>) => {
-    return d3.drag()
-      .on('drag', function(event) {
-        if (!minimapScale) return;
-        
-        const dy = event.dy;
-        const panChange = dy / (minimapScale.range()[0] * CHART_BEHAVIOR.PAN_STEP);
-        
-        setPanY(prevPanY => {
-          const newPanY = Math.max(CHART_BEHAVIOR.MIN_PAN, 
-                           Math.min(CHART_BEHAVIOR.MAX_PAN, prevPanY + panChange));
-          return newPanY;
-        });
-      });
-  }, []);
-
-  const createMinimapHandleDrag = useCallback((minimapScale: d3.ScaleLinear<number, number>, handleType: 'min' | 'max', setZoomLevel: React.Dispatch<React.SetStateAction<number>>, setPanY: React.Dispatch<React.SetStateAction<number>>, setMinPrice: React.Dispatch<React.SetStateAction<number | null>>, setMaxPrice: React.Dispatch<React.SetStateAction<number | null>>) => {
-    return d3.drag()
-      .on('drag', function(event) {
-        if (!minimapScale) return;
-        
-        const newY = Math.max(0, Math.min(minimapScale.range()[0], event.y));
-        const newPrice = minimapScale.invert(newY);
-        
-        if (handleType === 'min') {
-          setMinPrice(newPrice);
-        } else if (handleType === 'max') {
-          setMaxPrice(newPrice);
-        }
-      });
-  }, []);
 
   return {
     createRangeDrag,
     createMinPriceDrag,
-    createMaxPriceDrag,
-    createMinimapDrag,
-    createMinimapHandleDrag
+    createMaxPriceDrag
   };
 };
