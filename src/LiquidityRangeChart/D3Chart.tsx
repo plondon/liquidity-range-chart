@@ -6,6 +6,16 @@ import { useChartState } from './hooks/useChartState';
 import { useInitialView } from './hooks/useInitialView';
 import { useChartInteractions } from './hooks/useChartInteractions';
 import { PriceDataPoint, LiquidityDataPoint } from './types';
+import { CHART_COLORS, CHART_DIMENSIONS, BREAKPOINTS, CHART_BEHAVIOR, ANIMATION, TYPOGRAPHY } from './constants';
+import { 
+  calculateAllPrices, 
+  getPriceExtent, 
+  getColorForPrice, 
+  validateChartData, 
+  getResponsiveDimensions,
+  isPriceExtentValid 
+} from './utils';
+import { useDragBehavior } from '../hooks/chart/useDragBehavior';
 
 const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityData: LiquidityDataPoint[] }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -27,6 +37,9 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
     handleResetZoom,
     handleCenterRange
   } = useChartState();
+  
+  // Drag behavior hook
+  const dragBehavior = useDragBehavior();
   
   // Initialize hooks
   useInitialView(data, liquidityData, setChartState, defaultState);
@@ -61,24 +74,24 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
 
   // Calculate yScale outside useEffect so it's available for Brush component
   const yScale = useMemo(() => {
-    if (!data || !liquidityData) return null;
-    
     const allPrices = [
-      ...data.map(d => d.value),
+      ...calculateAllPrices(data),
       ...liquidityData.map(d => d.price0)
     ];
     const priceExtent = d3.extent(allPrices);
     
-    const priceRange = priceExtent?.[1] ? priceExtent?.[1] - priceExtent?.[0] : 0;
+    if (!isPriceExtentValid(priceExtent)) return null;
+    
+    const priceRange = priceExtent[1] - priceExtent[0];
     const zoomedRange = priceRange / zoomLevel;
-    const centerPrice = priceExtent?.[0] ? priceExtent?.[0] + priceRange * 0.5 + panY * priceRange : 0;
+    const centerPrice = priceExtent[0] + priceRange * 0.5 + panY * priceRange;
     
     return d3.scaleLinear()
       .domain([
         centerPrice - zoomedRange / 2,
         centerPrice + zoomedRange / 2
       ])
-      .range([dimensions.height - 20 - 50, 0]); // [height, 0] for proper D3 coordinate system
+      .range([dimensions.height - CHART_DIMENSIONS.MARGIN_TOP - CHART_DIMENSIONS.MARGIN_BOTTOM, 0]);
   }, [data, liquidityData, zoomLevel, panY, dimensions]);
 
   useEffect(() => {
@@ -87,12 +100,12 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
     const svg = d3.select(svgRef.current);
     svg.selectAll("g").remove(); // Only remove D3-created elements, not React elements
 
-    const isMobile = window.innerWidth <= 768;
+    const isMobile = window.innerWidth <= BREAKPOINTS.MOBILE;
     const margin = { 
-      top: 20, 
-      right: isMobile ? 120 : 180, // Reduce right margin on mobile
-      bottom: 50, 
-      left: isMobile ? 60 : 80 // Reduce left margin on mobile
+      top: isMobile ? 20 : CHART_DIMENSIONS.MARGIN_TOP, 
+      right: isMobile ? 120 : 180, // Keep original right margin for minimap positioning
+      bottom: isMobile ? 50 : CHART_DIMENSIONS.MARGIN_BOTTOM, 
+      left: isMobile ? 60 : 80 // Keep original left margin
     };
     const width = dimensions.width - margin.left - margin.right;
     const height = dimensions.height - margin.top - margin.bottom;
@@ -108,7 +121,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
 
     // Unified price scale encompassing both price data and liquidity data
     const allPrices = [
-      ...priceData.map(d => d.value),
+      ...calculateAllPrices(priceData),
       ...liquidityData.map(d => d.price0)
     ];
     const priceExtent = d3.extent(allPrices);
@@ -117,7 +130,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
     const dateExtent = d3.extent(priceData, d => d.date);
     const xScale = d3.scaleTime()
       .domain(dateExtent[0] && dateExtent[1] ? dateExtent : [new Date(), new Date()])
-      .range([-margin.left, width - 40]); // Extend left but stop before liquidity section
+      .range([-margin.left, width - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET]);
 
     // Line generator for price
     const line = d3.line<{ date: Date; value: number }>()
@@ -133,8 +146,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         const nextPoint = priceData[i + 1];
         
         // Check if current point is within range
-        const isInRange = currentPoint.value >= minPrice && currentPoint.value <= maxPrice;
-        const color = isInRange ? "#d63384" : "#888888"; // Dark pink or grey
+        const color = getColorForPrice(currentPoint.value, minPrice, maxPrice);
         
         // Draw line segment between current and next point
         g.append("path")
@@ -150,7 +162,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       g.append("path")
         .datum(priceData)
         .attr("fill", "none")
-        .attr("stroke", "#2196F3")
+        .attr("stroke", CHART_COLORS.PRIMARY_BLUE)
         .attr("stroke-width", 2)
         .attr("d", line)
         .attr("class", "price-line");
@@ -192,7 +204,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
     // Remove bars that are no longer needed
     bars.exit()
       .transition()
-      .duration(150)
+      .duration(ANIMATION.TOOLTIP_FADE_DURATION)
       .style("opacity", 0)
       .remove();
     
@@ -202,7 +214,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       .attr("class", "liquidity-bar")
       .attr("height", 1)
       .attr("opacity", 0.7)
-      .attr("x", d => width + 10 + liquidityWidth - liquidityXScale(d.activeLiquidity) - 40)
+      .attr("x", d => width + CHART_DIMENSIONS.LIQUIDITY_BARS_SPACING + liquidityWidth - liquidityXScale(d.activeLiquidity) - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET)
       .attr("y", d => liquidityYScale(d.price0) - 0.5)
       .attr("width", d => liquidityXScale(d.activeLiquidity));
     
@@ -210,27 +222,18 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
     bars.merge(enterBars)
       .transition()
       .duration(100)
-      .attr("x", d => width + 10 + liquidityWidth - liquidityXScale(d.activeLiquidity) - 40)
+      .attr("x", d => width + CHART_DIMENSIONS.LIQUIDITY_BARS_SPACING + liquidityWidth - liquidityXScale(d.activeLiquidity) - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET)
       .attr("y", d => liquidityYScale(d.price0) - 0.5)
       .attr("width", d => liquidityXScale(d.activeLiquidity))
-      .attr("fill", d => {
-        // Check if bar is within the price range - ensure proper number comparison
-        const price = d.price0;
-        
-        if (minPrice !== null && maxPrice !== null && 
-            price >= minPrice && price <= maxPrice) {
-          return "#d63384"; // Dark pink for bars within range
-        }
-        return "#888888"; // Default grey
-      })
+      .attr("fill", d => getColorForPrice(d.price0, minPrice, maxPrice))
       .attr("cursor", "pointer");
     
     // Add invisible overlay for better hover detection across the entire liquidity area
     const liquidityOverlay = g.append("rect")
       .attr("class", "liquidity-overlay")
-      .attr("x", width + 10) // Cover the full liquidity area
+      .attr("x", width + CHART_DIMENSIONS.LIQUIDITY_BARS_SPACING)
       .attr("y", 0)
-      .attr("width", liquidityWidth + 40) // Full liquidity area width
+      .attr("width", liquidityWidth + CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET)
       .attr("height", height)
       .attr("fill", "transparent")
       .attr("cursor", "pointer");
@@ -256,10 +259,10 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         
         // Use actual mouse position for tooltip, not data point position
         const tooltipMouseY = d3.pointer(event, this)[1] + margin.top; // Actual hover Y position
-        const liquidityBarsEndX = width + 10 + liquidityWidth - 40; // Where liquidity bars end
+        const liquidityBarsEndX = width + CHART_DIMENSIONS.LIQUIDITY_BARS_SPACING + liquidityWidth - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET;
         
         // Fixed position: 30px from right edge of chart
-        const fixedTooltipX = dimensions.width - 30;
+        const fixedTooltipX = dimensions.width - CHART_DIMENSIONS.TOOLTIP_RIGHT_MARGIN;
         
         setTooltip({
           visible: true,
@@ -288,10 +291,10 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         
         // Use actual mouse position for tooltip, not data point position
         const tooltipMouseY = d3.pointer(event, this)[1] + margin.top; // Actual hover Y position
-        const liquidityBarsEndX = width + 10 + liquidityWidth - 40; // Where liquidity bars end
+        const liquidityBarsEndX = width + CHART_DIMENSIONS.LIQUIDITY_BARS_SPACING + liquidityWidth - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET;
         
         // Fixed position: 30px from right edge of chart
-        const fixedTooltipX = dimensions.width - 30;
+        const fixedTooltipX = dimensions.width - CHART_DIMENSIONS.TOOLTIP_RIGHT_MARGIN;
         
         setTooltip({
           visible: true,
@@ -321,7 +324,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         .attr('y', yScale(maxPrice))
         .attr('width', dimensions.width) // Cover the entire SVG width
         .attr('height', yScale(minPrice) - yScale(maxPrice))
-        .attr('fill', '#ff69b4')
+        .attr('fill', CHART_COLORS.RANGE_OVERLAY_PINK)
         .attr('fill-opacity', 0.15)
         .attr('stroke', 'none')
         .style('pointer-events', 'none'); // No interactions on this visual layer
@@ -397,9 +400,9 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
                 .attr('fill', d => {
                   const price = (d as LiquidityDataPoint).price0;
                   if (price >= newMinPrice && price <= newMaxPrice) {
-                    return "#d63384";
+                    return CHART_COLORS.IN_RANGE_PINK;
                   }
-                  return "#888888";
+                  return CHART_COLORS.OUT_RANGE_GREY;
                 });
                 
               // Update price line segment colors
@@ -408,15 +411,15 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
                   const datum = d3.select(this).datum() as Array<{date: Date, value: number}>;
                   if (datum && datum.length > 0) {
                     const value = datum[0].value;
-                    return (value >= newMinPrice && value <= newMaxPrice) ? "#d63384" : "#888888";
+                    return getColorForPrice(value, newMinPrice, newMaxPrice);
                   }
-                  return "#888888";
+                  return CHART_COLORS.OUT_RANGE_GREY;
                 });
                 
               // Update current price dot color
               if (current !== null) {
                 const isCurrentInRange = current >= newMinPrice && current <= newMaxPrice;
-                const currentDotColor = isCurrentInRange ? "#d63384" : "#888888";
+                const currentDotColor = getColorForPrice(current, newMinPrice, newMaxPrice);
                 g.select('.current-price-dot').attr('fill', currentDotColor);
               }
                 
@@ -460,7 +463,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         .attr('x2', dimensions.width - margin.left) // Extend to right edge
         .attr('y1', yScale(minPrice))
         .attr('y2', yScale(minPrice))
-        .attr('stroke', '#131313')
+        .attr('stroke', CHART_COLORS.BOUNDARY_LINE)
         .attr('stroke-width', 2)
         .attr('opacity', 0.08)
         .attr('cursor', 'ns-resize')
@@ -487,15 +490,15 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
               
               // Update max line color to min color and vice versa
               g.select('.max-line')
-                .attr('stroke', '#131313'); // Same color for both
+                .attr('stroke', CHART_COLORS.BOUNDARY_LINE); // Same color for both
               d3.select(this)
-                .attr('stroke', '#131313'); // Same color for both
+                .attr('stroke', CHART_COLORS.BOUNDARY_LINE); // Same color for both
             } else {
               // Lines in normal order - restore original colors
               g.select('.max-line')
-                .attr('stroke', '#131313'); // Same color for both
+                .attr('stroke', CHART_COLORS.BOUNDARY_LINE); // Same color for both
               d3.select(this)
-                .attr('stroke', '#131313'); // Same color for both
+                .attr('stroke', CHART_COLORS.BOUNDARY_LINE); // Same color for both
             }
             
             // Update background
@@ -523,7 +526,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
               .attr('fill', d => {
                 const price = (d as LiquidityDataPoint).price0;
                 if (price >= draggedMinPrice && price <= draggedMaxPrice) {
-                  return "#d63384";
+                  return CHART_COLORS.IN_RANGE_PINK;
                 }
                 return "#888888";
               });
@@ -534,7 +537,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
                 const datum = d3.select(this).datum() as Array<{date: Date, value: number}>;
                 if (datum && datum.length > 0) {
                   const value = datum[0].value;
-                  return (value >= draggedMinPrice && value <= draggedMaxPrice) ? "#d63384" : "#888888";
+                  return getColorForPrice(value, draggedMinPrice, draggedMaxPrice);
                 }
                 return "#888888";
               });
@@ -583,7 +586,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         .attr('x2', dimensions.width - margin.left) // Extend to right edge
         .attr('y1', yScale(maxPrice))
         .attr('y2', yScale(maxPrice))
-        .attr('stroke', '#131313')
+        .attr('stroke', CHART_COLORS.BOUNDARY_LINE)
         .attr('stroke-width', 2)
         .attr('opacity', 0.08)
         .attr('cursor', 'ns-resize')
@@ -610,15 +613,15 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
               
               // Update min line color to max color and vice versa
               g.select('.min-line')
-                .attr('stroke', '#131313'); // Same color for both
+                .attr('stroke', CHART_COLORS.BOUNDARY_LINE); // Same color for both
               d3.select(this)
-                .attr('stroke', '#131313'); // Same color for both
+                .attr('stroke', CHART_COLORS.BOUNDARY_LINE); // Same color for both
             } else {
               // Lines in normal order - restore original colors
               g.select('.min-line')
-                .attr('stroke', '#131313'); // Same color for both
+                .attr('stroke', CHART_COLORS.BOUNDARY_LINE); // Same color for both
               d3.select(this)
-                .attr('stroke', '#131313'); // Same color for both
+                .attr('stroke', CHART_COLORS.BOUNDARY_LINE); // Same color for both
             }
             
             // Update background
@@ -646,7 +649,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
               .attr('fill', d => {
                 const price = (d as LiquidityDataPoint).price0;
                 if (price >= draggedMinPrice && price <= draggedMaxPrice) {
-                  return "#d63384";
+                  return CHART_COLORS.IN_RANGE_PINK;
                 }
                 return "#888888";
               });
@@ -657,7 +660,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
                 const datum = d3.select(this).datum() as Array<{date: Date, value: number}>;
                 if (datum && datum.length > 0) {
                   const value = datum[0].value;
-                  return (value >= draggedMinPrice && value <= draggedMaxPrice) ? "#d63384" : "#888888";
+                  return getColorForPrice(value, draggedMinPrice, draggedMaxPrice);
                 }
                 return "#888888";
               });
@@ -705,7 +708,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         .attr('x', -margin.left + 12) // 12px from left border
         .attr('y', yScale(minPrice) - 5)
         .attr('font-size', '10px')
-        .attr('fill', '#131313')
+        .attr('fill', CHART_COLORS.BOUNDARY_LINE)
         .attr('font-weight', 'bold')
         .text(`Min: ${minPrice?.toFixed(0)}`);
         
@@ -715,7 +718,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         .attr('x', -margin.left + 12) // 12px from left border
         .attr('y', yScale(maxPrice) + 15)
         .attr('font-size', '10px')
-        .attr('fill', '#131313')
+        .attr('fill', CHART_COLORS.BOUNDARY_LINE)
         .attr('font-weight', 'bold')
         .text(`Max: ${maxPrice.toFixed(0)}`);
     }
@@ -734,7 +737,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         .attr('x2', dimensions.width - margin.left) // Extend to right edge
         .attr('y1', yScale(current))
         .attr('y2', yScale(current))
-        .attr('stroke', '#666666') // Grey color
+        .attr('stroke', CHART_COLORS.CURRENT_PRICE_GREY)
         .attr('stroke-width', 2)
         .attr('stroke-dasharray', '5,5') // Dotted line pattern
         .attr('opacity', 0.8);
@@ -745,7 +748,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         .attr('x', -margin.left + 12) // 12px from left border
         .attr('y', yScale(current) - 5)
         .attr('font-size', '10px')
-        .attr('fill', '#666666') // Grey color
+        .attr('fill', CHART_COLORS.CURRENT_PRICE_GREY)
         .attr('font-weight', 'bold')
         .text(`Current: ${current.toFixed(0)}`);
         
@@ -757,9 +760,9 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         if (minPrice !== null && maxPrice !== null) {
           // Check if current price is within the selected range
           const isInRange = current >= minPrice && current <= maxPrice;
-          dotColor = isInRange ? "#d63384" : "#888888"; // Pink if in range, grey if out
+          dotColor = getColorForPrice(current, minPrice, maxPrice);
         } else {
-          dotColor = "#2196F3"; // Default blue when no range is selected
+          dotColor = CHART_COLORS.PRIMARY_BLUE;
         }
         
         // Check if dot already exists and update it, otherwise create new one
@@ -779,11 +782,11 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
     }
 
     // Create minimap controls on the right side
-    const minimapWidth = 40;
+    const minimapWidth = CHART_DIMENSIONS.MINIMAP_WIDTH;
     const minimapX = width + 160; // Position near the right border
     
     // Get full data range for minimap scale
-    const minimapPrices = [...data.map(d => d.value), ...liquidityData.map(d => d.price0)];
+    const minimapPrices = [...calculateAllPrices(data), ...liquidityData.map(d => d.price0)];
     const dataMin = Math.min(...minimapPrices);
     const dataMax = Math.max(...minimapPrices);
     
@@ -801,7 +804,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       .attr('y', -margin.top)
       .attr('width', 8)
       .attr('height', dimensions.height) // Full container height
-      .attr('fill', '#333333')
+      .attr('fill', CHART_COLORS.TOOLTIP_BACKGROUND)
       .attr('rx', 4);
     
     // Calculate current viewport bounds based on zoom and pan using full data range
@@ -819,9 +822,9 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       .attr('y', minimapYScale(viewportMaxPrice))
       .attr('width', 12)
       .attr('height', viewportHeight)
-      .attr('fill', '#ffffff')
+      .attr('fill', CHART_COLORS.HANDLE_FILL)
       .attr('fill-opacity', 0.2)
-      .attr('stroke', '#ffffff')
+      .attr('stroke', CHART_COLORS.HANDLE_STROKE)
       .attr('stroke-width', 1)
       .attr('stroke-opacity', 0.4)
       .attr('rx', 2);
@@ -834,7 +837,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       .attr('y', minimapYScale(maxPrice || 0))
       .attr('width', 8)
       .attr('height', currentRangeHeight)
-      .attr('fill', '#ff69b4')
+      .attr('fill', CHART_COLORS.RANGE_OVERLAY_PINK)
       .attr('rx', 4)
       .attr('cursor', 'move');
     
@@ -894,8 +897,8 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       .attr('cx', minimapX + 4)
       .attr('cy', minimapYScale(maxPrice || 0))
       .attr('r', handleRadius)
-      .attr('fill', '#ffffff')
-      .attr('stroke', '#ff69b4')
+      .attr('fill', CHART_COLORS.HANDLE_FILL)
+      .attr('stroke', CHART_COLORS.RANGE_OVERLAY_PINK)
       .attr('stroke-width', 3)
       .attr('cursor', 'ns-resize');
     
@@ -905,8 +908,8 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       .attr('cx', minimapX + 4)
       .attr('cy', minimapYScale(minPrice || 0))
       .attr('r', handleRadius)
-      .attr('fill', '#ffffff')
-      .attr('stroke', '#ff69b4')
+      .attr('fill', CHART_COLORS.HANDLE_FILL)
+      .attr('stroke', CHART_COLORS.RANGE_OVERLAY_PINK)
       .attr('stroke-width', 3)
       .attr('cursor', 'ns-resize');
     
@@ -917,7 +920,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       .attr('cx', minimapX + 4)
       .attr('cy', centerY)
       .attr('r', 6)
-      .attr('fill', '#ff69b4')
+      .attr('fill', CHART_COLORS.RANGE_OVERLAY_PINK)
       .attr('cursor', 'move');
     
     // Add drag behavior to top handle (max price)
@@ -1124,10 +1127,10 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       {/* Controls Panel - Outside Chart */}
       <div style={{ 
         marginBottom: '10px',
-        background: '#f9f9f9',
+        background: CHART_COLORS.BACKGROUND_GREY,
         padding: dimensions.width <= 768 ? '8px' : '12px',
         borderRadius: '4px',
-        border: '1px solid #ddd',
+        border: `1px solid ${CHART_COLORS.BORDER_GREY}`,
         display: 'flex',
         gap: dimensions.width <= 768 ? '8px' : '20px',
         alignItems: 'flex-start',
@@ -1179,7 +1182,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
               {dimensions.width <= 768 ? 'Center' : 'Center Range'}
             </button>
           </div>
-          <div style={{ fontSize: '10px', color: '#666', textAlign: 'center' }}>
+          <div style={{ fontSize: TYPOGRAPHY.LABEL_FONT_SIZE + 'px', color: CHART_COLORS.TEXT_GREY, textAlign: 'center' }}>
             Scroll to pan
           </div>
         </div>
@@ -1272,7 +1275,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
                 right: 130, // Move another 100px to the left (30 + 100 = 130)
                 top: tooltip.y - 18,
                 background: 'rgba(255, 255, 255, 0.95)',
-                border: '1px solid #ddd',
+                border: `1px solid ${CHART_COLORS.BORDER_GREY}`,
                 borderRadius: '8px',
                 padding: '8px 12px',
                 fontSize: '12px',
@@ -1289,7 +1292,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
                   width: '16px', 
                   height: '16px', 
                   borderRadius: '50%', 
-                  background: 'linear-gradient(135deg, #627EEA 0%, #4F7DD9 100%)',
+                  background: `linear-gradient(135deg, ${CHART_COLORS.GRADIENT_START} 0%, ${CHART_COLORS.GRADIENT_END} 100%)`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -1300,10 +1303,10 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
                   Ξ
                 </div>
                 <span>ETH</span>
-                <span style={{ color: '#666' }}>
+                <span style={{ color: CHART_COLORS.TEXT_GREY }}>
                   ${(tooltip.data.amount0Locked || 0).toFixed(1)}K
                 </span>
-                <span style={{ color: '#666' }}>100%</span>
+                <span style={{ color: CHART_COLORS.TEXT_GREY }}>100%</span>
               </div>
             </div>
             

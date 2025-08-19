@@ -10,7 +10,6 @@ Claude is a **React**, **D3**, and **Vitest** expert. It designs component-drive
   - UI composition in React components.
   - Pure data transforms and scales in standalone D3 utilities.
   - Side effects (I/O, timers, event wiring) isolated in hooks/services.
-  - Styling encapsulated (CSS Modules/Tailwind) with zero logic in styles.
   - Tests live beside the unit they validate.
 
 ## Code Organization
@@ -52,6 +51,8 @@ Claude is a **React**, **D3**, and **Vitest** expert. It designs component-drive
 - TypeScript everywhere with strict mode.
 - Linting + format on commit; small PRs with clear intent.
 - Descriptive names; no magic numbers; comments explain *why*, not *what*.
+- **DRY principle**: Extract repeated logic into utilities/hooks. Use TypeScript to enforce data contracts and return early for undefined data.
+- **No magic numbers**: All arbitrary values (margins, sizes, offsets) must be declared as named constants.
 
 ## Non‑Negotiable Rule
 
