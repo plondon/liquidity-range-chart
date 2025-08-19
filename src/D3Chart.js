@@ -334,9 +334,9 @@ const D3Chart = ({ data, liquidityData }) => {
     // Add invisible overlay for better hover detection across the entire liquidity area
     const liquidityOverlay = g.append("rect")
       .attr("class", "liquidity-overlay")
-      .attr("x", width + 50) // Move further right to avoid any overlap with price range
+      .attr("x", width + 10) // Cover the full liquidity area
       .attr("y", 0)
-      .attr("width", liquidityWidth - 40)
+      .attr("width", liquidityWidth + 40) // Full liquidity area width
       .attr("height", height)
       .attr("fill", "transparent")
       .attr("cursor", "pointer");
@@ -360,9 +360,8 @@ const D3Chart = ({ data, liquidityData }) => {
           }
         });
         
-        // Calculate position for the line connection
-        const barY = liquidityYScale(closestData.price0);
-        const mouseX = d3.pointer(event, this)[0] + margin.left; // Actual hover position
+        // Use actual mouse position for tooltip, not data point position
+        const tooltipMouseY = d3.pointer(event, this)[1] + margin.top; // Actual hover Y position
         const liquidityBarsEndX = width + 10 + liquidityWidth - 40; // Where liquidity bars end
         
         // Fixed position: 30px from right edge of chart
@@ -371,7 +370,7 @@ const D3Chart = ({ data, liquidityData }) => {
         setTooltip({
           visible: true,
           x: fixedTooltipX,
-          y: barY,
+          y: tooltipMouseY, // Use mouse position, not data position
           data: closestData,
           lineEndX: liquidityBarsEndX
         });
@@ -393,9 +392,8 @@ const D3Chart = ({ data, liquidityData }) => {
           }
         });
         
-        // Calculate position for the line connection
-        const barY = liquidityYScale(closestData.price0);
-        const mouseX = d3.pointer(event, this)[0] + margin.left; // Actual hover position
+        // Use actual mouse position for tooltip, not data point position
+        const tooltipMouseY = d3.pointer(event, this)[1] + margin.top; // Actual hover Y position
         const liquidityBarsEndX = width + 10 + liquidityWidth - 40; // Where liquidity bars end
         
         // Fixed position: 30px from right edge of chart
@@ -404,7 +402,7 @@ const D3Chart = ({ data, liquidityData }) => {
         setTooltip({
           visible: true,
           x: fixedTooltipX,
-          y: barY,
+          y: tooltipMouseY, // Use mouse position, not data position
           data: closestData,
           lineEndX: liquidityBarsEndX
         });
