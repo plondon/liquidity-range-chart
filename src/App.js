@@ -1,5 +1,5 @@
 import React from 'react';
-import D3Chart from './D3Chart';
+import D3Chart from './LiquidityRangeChart/D3Chart';
 import './App.css';
 
 const priceData = [
