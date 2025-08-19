@@ -1,5 +1,13 @@
 import { useState, useRef } from 'react';
 import { createAnimateToState } from '../utils/animationUtils';
+import { PriceDataPoint, LiquidityDataPoint } from '../types';
+
+export type ChartState = {
+  zoomLevel: number;
+  panY: number;
+  minPrice: number | null;
+  maxPrice: number | null;
+};
 
 export function useChartState() {
   // Default state object
@@ -11,7 +19,7 @@ export function useChartState() {
   });
   
   // Main state object
-  const [chartState, setChartState] = useState({
+  const [chartState, setChartState] = useState<ChartState>({
     zoomLevel: 1,
     panY: 0,
     minPrice: null,
@@ -22,8 +30,8 @@ export function useChartState() {
   const { zoomLevel, panY, minPrice, maxPrice } = chartState;
   
   // Helper functions for updating individual state properties
-  const setMinPrice = (price) => setChartState(prev => ({ ...prev, minPrice: price }));
-  const setMaxPrice = (price) => setChartState(prev => ({ ...prev, maxPrice: price }));
+  const setMinPrice = (price: number | null) => setChartState(prev => ({ ...prev, minPrice: price }));
+  const setMaxPrice = (price: number | null) => setChartState(prev => ({ ...prev, maxPrice: price }));
   
   // Create the animation function with current chart state
   const animateToState = createAnimateToState(setChartState);
@@ -52,7 +60,7 @@ export function useChartState() {
     );
   };
 
-  const handleCenterRange = (data, liquidityData) => {
+  const handleCenterRange = (data: PriceDataPoint[], liquidityData: LiquidityDataPoint[]) => {
     if (minPrice === null || maxPrice === null || !data || !liquidityData) return;
     
     // Calculate all prices to get data bounds

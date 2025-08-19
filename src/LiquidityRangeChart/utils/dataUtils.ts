@@ -1,7 +1,9 @@
-// Cache for price data lookups
-const priceDataCache = new Map();
+import { LiquidityDataPoint } from "LiquidityRangeChart/types";
 
-export function findClosestElementBinarySearch(data, target) {
+// Cache for price data lookups
+const priceDataCache = new Map<string, LiquidityDataPoint>();
+
+export function findClosestElementBinarySearch(data: LiquidityDataPoint[], target: number) {
   let left = 0;
   let right = data.length - 1;
 

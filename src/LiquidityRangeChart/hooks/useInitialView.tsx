@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, RefObject } from 'react';
 import * as d3 from 'd3';
+import { LiquidityDataPoint, PriceDataPoint } from 'LiquidityRangeChart/types';
+import { ChartState } from './useChartState';
 
-export function useInitialView(data, liquidityData, setChartState, defaultState) {
+export function useInitialView(data: PriceDataPoint[], liquidityData: LiquidityDataPoint[], setChartState: (state: ChartState) => void, defaultState: RefObject<ChartState>) {
   const [initialViewSet, setInitialViewSet] = useState(false);
   
   useEffect(() => {
@@ -11,7 +13,7 @@ export function useInitialView(data, liquidityData, setChartState, defaultState)
         ...liquidityData.map(d => d.price0)
       ];
       const priceExtent = d3.extent(allPrices);
-      const priceRange = priceExtent[1] - priceExtent[0];
+      const priceRange = priceExtent?.[1] && priceExtent?.[0] ? priceExtent[1] - priceExtent[0] : 0;
       
       // Filter out extreme outliers for initial view - focus on middle 20% of liquidity
       const liquidityPrices = liquidityData.map(d => d.price0).sort((a, b) => a - b);
@@ -24,7 +26,7 @@ export function useInitialView(data, liquidityData, setChartState, defaultState)
       
       // Center the view on the current price (last data point)
       const currentPrice = data[data.length - 1]?.value;
-      const originalCenter = priceExtent[0] + priceRange * 0.5;
+      const originalCenter = priceExtent?.[0] && priceExtent?.[0] ? priceExtent[0] + priceRange * 0.5 : 0;
       const panOffset = (currentPrice - originalCenter) / priceRange;
       
       // Set default brush range - use a symmetrical range around current price

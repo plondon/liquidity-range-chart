@@ -1,13 +1,15 @@
 import { useEffect } from 'react';
 import * as d3 from 'd3';
+import { PriceDataPoint, LiquidityDataPoint } from '../types';
+import { ChartState } from './useChartState';
 
 export function useChartInteractions(
-  svgRef, 
-  data, 
-  liquidityData, 
-  zoomLevel, 
-  panY, 
-  setChartState
+  svgRef: React.RefObject<SVGSVGElement | null>, 
+  data: PriceDataPoint[], 
+  liquidityData: LiquidityDataPoint[], 
+  zoomLevel: number, 
+  panY: number, 
+  setChartState: React.Dispatch<React.SetStateAction<ChartState>>
 ) {
   useEffect(() => {
     if (!data || !liquidityData) return;
@@ -23,14 +25,14 @@ export function useChartInteractions(
     const priceExtent = d3.extent(allPrices);
     
     // Setup wheel event handler
-    const handleWheel = (event) => {
+    const handleWheel = (event: WheelEvent) => {
       event.preventDefault();
       event.stopPropagation();
       
       // Calculate current view bounds
-      const priceRange = priceExtent[1] - priceExtent[0];
+      const priceRange = priceExtent[1] && priceExtent[0] ? priceExtent[1] - priceExtent[0] : 0;
       const zoomedRange = priceRange / zoomLevel;
-      const currentCenter = priceExtent[0] + priceRange * 0.5 + panY * priceRange;
+      const currentCenter = priceExtent[0] && priceExtent[0] ? priceExtent[0] + priceRange * 0.5 + panY * priceRange : 0;
       
       // Natural scroll sensitivity based on current view range
       const scrollSensitivity = zoomedRange / 600; // Faster scrolling for larger ranges
@@ -39,7 +41,7 @@ export function useChartInteractions(
       // Apply scroll (invert deltaY for natural direction)
       const scrollAmount = rawScrollAmount / priceRange; // Normalize to pan range
       
-      setChartState(prev => {
+      setChartState((prev) => {
         const newPanY = prev.panY - scrollAmount;
         
         // Dynamic bounds based on data and zoom level
@@ -48,8 +50,8 @@ export function useChartInteractions(
         const halfZoomedRange = zoomedRange / 2;
         
         // Calculate max pan bounds to keep view within data
-        const maxPanUp = (dataMax - halfZoomedRange - (priceExtent[0] + priceRange * 0.5)) / priceRange;
-        const maxPanDown = (dataMin + halfZoomedRange - (priceExtent[0] + priceRange * 0.5)) / priceRange;
+        const maxPanUp = (dataMax - halfZoomedRange - (priceExtent[0] && priceExtent[0] ? priceExtent[0] + priceRange * 0.5 : 0)) / priceRange;
+        const maxPanDown = (dataMin + halfZoomedRange - (priceExtent[0] && priceExtent[0] ? priceExtent[0] + priceRange * 0.5 : 0)) / priceRange;
         
         // Constrain to bounds
         const constrainedPanY = Math.max(maxPanDown, Math.min(maxPanUp, newPanY));
@@ -59,10 +61,10 @@ export function useChartInteractions(
     };
 
     // Add touch support for mobile
-    let touchStartY = null;
-    let lastTouchY = null;
+    let touchStartY: number | null = null;
+    let lastTouchY: number | null = null;
     
-    const handleTouchStart = (event) => {
+    const handleTouchStart = (event: TouchEvent) => {
       if (event.touches.length === 1) {
         touchStartY = event.touches[0].clientY;
         lastTouchY = touchStartY;
@@ -70,13 +72,13 @@ export function useChartInteractions(
       }
     };
     
-    const handleTouchMove = (event) => {
+    const handleTouchMove = (event: TouchEvent) => {
       if (event.touches.length === 1 && touchStartY !== null) {
         const currentTouchY = event.touches[0].clientY;
-        const deltaY = lastTouchY - currentTouchY; // Inverted for natural scrolling
+        const deltaY = lastTouchY && currentTouchY ? lastTouchY - currentTouchY : 0; // Inverted for natural scrolling
         
         // Convert touch movement to pan
-        const priceRange = priceExtent[1] - priceExtent[0];
+        const priceRange = priceExtent[1] && priceExtent[0] ? priceExtent[1] - priceExtent[0] : 0;
         const zoomedRange = priceRange / zoomLevel;
         const touchSensitivity = zoomedRange / 400; // Scale based on current zoom
         const scrollAmount = deltaY * touchSensitivity / priceRange;
@@ -88,8 +90,8 @@ export function useChartInteractions(
           const halfZoomedRange = zoomedRange / 2;
           const dataMin = Math.min(...allPrices);
           const dataMax = Math.max(...allPrices);
-          const maxPanUp = (dataMax - halfZoomedRange - (priceExtent[0] + priceRange * 0.5)) / priceRange;
-          const maxPanDown = (dataMin + halfZoomedRange - (priceExtent[0] + priceRange * 0.5)) / priceRange;
+          const maxPanUp = (dataMax - halfZoomedRange - (priceExtent[0] && priceExtent[0] ? priceExtent[0] + priceRange * 0.5 : 0)) / priceRange;
+          const maxPanDown = (dataMin + halfZoomedRange - (priceExtent[0] && priceExtent[0] ? priceExtent[0] + priceRange * 0.5 : 0)) / priceRange;
           const constrainedPanY = Math.max(maxPanDown, Math.min(maxPanUp, newPanY));
           
           return { ...prev, panY: constrainedPanY };
@@ -100,7 +102,7 @@ export function useChartInteractions(
       }
     };
     
-    const handleTouchEnd = (event) => {
+    const handleTouchEnd = (event: TouchEvent) => {
       touchStartY = null;
       lastTouchY = null;
       event.preventDefault();

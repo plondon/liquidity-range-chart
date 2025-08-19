@@ -1,12 +1,14 @@
+import { ChartState } from "LiquidityRangeChart/hooks/useChartState";
+
 // Smooth animation utility function with optional price range animation
-export function createAnimateToState(setChartState) {
+export function createAnimateToState(setChartState: (state: React.SetStateAction<ChartState>) => void) {
   return function animateToState(
-    zoomLevel, 
-    panY, 
-    minPrice, 
-    maxPrice, 
-    targetZoom, 
-    targetPan, 
+    zoomLevel: number, 
+    panY: number, 
+    minPrice: number | null, 
+    maxPrice: number | null, 
+    targetZoom: number, 
+    targetPan: number, 
     targetMinPrice = null, 
     targetMaxPrice = null, 
     duration = 400

@@ -5,11 +5,11 @@ import { useResponsiveDimensions } from './hooks/useResponsiveDimensions';
 import { useChartState } from './hooks/useChartState';
 import { useInitialView } from './hooks/useInitialView';
 import { useChartInteractions } from './hooks/useChartInteractions';
+import { PriceDataPoint, LiquidityDataPoint } from './types';
 
-
-const D3Chart = ({ data, liquidityData }) => {
-  const svgRef = useRef();
-  const containerRef = useRef();
+const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityData: LiquidityDataPoint[] }) => {
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   
   // Use custom hooks
   const dimensions = useResponsiveDimensions();
@@ -33,11 +33,18 @@ const D3Chart = ({ data, liquidityData }) => {
   useChartInteractions(svgRef, data, liquidityData, zoomLevel, panY, setChartState);
   
   // Tooltip state
-  const [tooltip, setTooltip] = useState({
+  const [tooltip, setTooltip] = useState<{
+    visible: boolean;
+    x: number;
+    y: number;
+    data: LiquidityDataPoint | null;
+    lineEndX: number;
+  }>({
     visible: false,
     x: 0,
     y: 0,
-    data: null
+    data: null,
+    lineEndX: 0
   });
   
   // Calculate current price from the last entry
@@ -62,9 +69,9 @@ const D3Chart = ({ data, liquidityData }) => {
     ];
     const priceExtent = d3.extent(allPrices);
     
-    const priceRange = priceExtent[1] - priceExtent[0];
+    const priceRange = priceExtent?.[1] ? priceExtent?.[1] - priceExtent?.[0] : 0;
     const zoomedRange = priceRange / zoomLevel;
-    const centerPrice = priceExtent[0] + priceRange * 0.5 + panY * priceRange;
+    const centerPrice = priceExtent?.[0] ? priceExtent?.[0] + priceRange * 0.5 + panY * priceRange : 0;
     
     return d3.scaleLinear()
       .domain([
@@ -107,12 +114,13 @@ const D3Chart = ({ data, liquidityData }) => {
     const priceExtent = d3.extent(allPrices);
 
     // Scales for price line chart
+    const dateExtent = d3.extent(priceData, d => d.date);
     const xScale = d3.scaleTime()
-      .domain(d3.extent(priceData, d => d.date))
+      .domain(dateExtent[0] && dateExtent[1] ? dateExtent : [new Date(), new Date()])
       .range([-margin.left, width - 40]); // Extend left but stop before liquidity section
 
     // Line generator for price
-    const line = d3.line()
+    const line = d3.line<{ date: Date; value: number }>()
       .x(d => xScale(d.date))
       .y(d => yScale(d.value))
       .curve(d3.curveMonotoneX);
@@ -157,9 +165,9 @@ const D3Chart = ({ data, liquidityData }) => {
     const liquidityYScale = yScale;
 
     // Calculate current visible price range for filtering liquidity data
-    const currentPriceRange = priceExtent[1] - priceExtent[0];
+    const currentPriceRange = priceExtent?.[1] ? priceExtent?.[1] - priceExtent?.[0] : 0;
     const currentZoomedRange = currentPriceRange / zoomLevel;
-    const currentCenterPrice = priceExtent[0] + currentPriceRange * 0.5 + panY * currentPriceRange;
+    const currentCenterPrice = priceExtent?.[0] ? priceExtent?.[0] + currentPriceRange * 0.5 + panY * currentPriceRange : 0;
     const visibleMinPrice = currentCenterPrice - currentZoomedRange / 2;
     const visibleMaxPrice = currentCenterPrice + currentZoomedRange / 2;
 
@@ -174,11 +182,11 @@ const D3Chart = ({ data, liquidityData }) => {
       : d3.max(liquidityData, d => d.activeLiquidity); // Fallback if no visible data
 
     const liquidityXScale = d3.scaleLinear()
-      .domain([0, maxVisibleLiquidity])
+      .domain([0, maxVisibleLiquidity || 0])
       .range([0, liquidityWidth]); // Back to liquidity section width
 
     // Draw very thin grey horizontal liquidity bars using data join for better performance
-    const bars = g.selectAll(".liquidity-bar")
+    const bars = g.selectAll<SVGRectElement, LiquidityDataPoint>(".liquidity-bar")
       .data(liquidityData, d => d.price0); // Use price as key for consistent updates
     
     // Remove bars that are no longer needed
@@ -207,12 +215,10 @@ const D3Chart = ({ data, liquidityData }) => {
       .attr("width", d => liquidityXScale(d.activeLiquidity))
       .attr("fill", d => {
         // Check if bar is within the price range - ensure proper number comparison
-        const price = parseFloat(d.price0);
-        const min = parseFloat(minPrice);
-        const max = parseFloat(maxPrice);
+        const price = d.price0;
         
         if (minPrice !== null && maxPrice !== null && 
-            price >= min && price <= max) {
+            price >= minPrice && price <= maxPrice) {
           return "#d63384"; // Dark pink for bars within range
         }
         return "#888888"; // Default grey
@@ -330,15 +336,15 @@ const D3Chart = ({ data, liquidityData }) => {
         .attr('fill', 'transparent') // Invisible, just for interactions
         .attr('stroke', 'none')
         .attr('cursor', 'move')
-        .call(d3.drag()
+        .call(d3.drag<SVGRectElement, unknown>()
           .on('start', function(event) {
             // Store the initial click offset relative to the range center
             const currentRangeCenterY = (yScale(maxPrice) + yScale(minPrice)) / 2;
-            this._dragOffsetY = event.y - currentRangeCenterY;
+            (this as any)._dragOffsetY = event.y - currentRangeCenterY;
           })
           .on('drag', function(event) {
             // Apply the stored offset to maintain consistent drag feel
-            const adjustedY = event.y - this._dragOffsetY;
+            const adjustedY = event.y - (this as any)._dragOffsetY;
             const newCenterY = Math.max(0, Math.min(height, adjustedY));
             const draggedPrice = yScale.invert(newCenterY);
             const rangeSize = maxPrice - minPrice;
@@ -389,7 +395,7 @@ const D3Chart = ({ data, liquidityData }) => {
               // Update liquidity bar colors
               g.selectAll('.liquidity-bar')
                 .attr('fill', d => {
-                  const price = parseFloat(d.price0);
+                  const price = (d as LiquidityDataPoint).price0;
                   if (price >= newMinPrice && price <= newMaxPrice) {
                     return "#d63384";
                   }
@@ -399,7 +405,7 @@ const D3Chart = ({ data, liquidityData }) => {
               // Update price line segment colors
               g.selectAll('.price-segment')
                 .attr('stroke', function() {
-                  const datum = d3.select(this).datum();
+                  const datum = d3.select(this).datum() as Array<{date: Date, value: number}>;
                   if (datum && datum.length > 0) {
                     const value = datum[0].value;
                     return (value >= newMinPrice && value <= newMaxPrice) ? "#d63384" : "#888888";
@@ -422,7 +428,7 @@ const D3Chart = ({ data, liquidityData }) => {
           })
           .on('end', function(event) {
             // Apply the same offset calculation for consistency
-            const adjustedY = event.y - this._dragOffsetY;
+            const adjustedY = event.y - (this as any)._dragOffsetY;
             const newCenterY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, adjustedY));
             const draggedPrice = yScale.invert(newCenterY);
             const rangeSize = maxPrice - minPrice;
@@ -458,7 +464,7 @@ const D3Chart = ({ data, liquidityData }) => {
         .attr('stroke-width', 2)
         .attr('opacity', 0.08)
         .attr('cursor', 'ns-resize')
-        .call(d3.drag()
+        .call(d3.drag<SVGLineElement, unknown>  ()
           .on('drag', function(event) {
             const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
             const newPrice = yScale.invert(newY);
@@ -515,7 +521,7 @@ const D3Chart = ({ data, liquidityData }) => {
             // Update liquidity bar colors
             g.selectAll('.liquidity-bar')
               .attr('fill', d => {
-                const price = parseFloat(d.price0);
+                const price = (d as LiquidityDataPoint).price0;
                 if (price >= draggedMinPrice && price <= draggedMaxPrice) {
                   return "#d63384";
                 }
@@ -525,7 +531,7 @@ const D3Chart = ({ data, liquidityData }) => {
             // Update price line segment colors
             g.selectAll('.price-segment')
               .attr('stroke', function() {
-                const datum = d3.select(this).datum();
+                const datum = d3.select(this).datum() as Array<{date: Date, value: number}>;
                 if (datum && datum.length > 0) {
                   const value = datum[0].value;
                   return (value >= draggedMinPrice && value <= draggedMaxPrice) ? "#d63384" : "#888888";
@@ -581,7 +587,7 @@ const D3Chart = ({ data, liquidityData }) => {
         .attr('stroke-width', 2)
         .attr('opacity', 0.08)
         .attr('cursor', 'ns-resize')
-        .call(d3.drag()
+        .call(d3.drag<SVGLineElement, unknown>  ()
           .on('drag', function(event) {
             const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
             const newPrice = yScale.invert(newY);
@@ -638,7 +644,7 @@ const D3Chart = ({ data, liquidityData }) => {
             // Update liquidity bar colors
             g.selectAll('.liquidity-bar')
               .attr('fill', d => {
-                const price = parseFloat(d.price0);
+                const price = (d as LiquidityDataPoint).price0;
                 if (price >= draggedMinPrice && price <= draggedMaxPrice) {
                   return "#d63384";
                 }
@@ -648,7 +654,7 @@ const D3Chart = ({ data, liquidityData }) => {
             // Update price line segment colors
             g.selectAll('.price-segment')
               .attr('stroke', function() {
-                const datum = d3.select(this).datum();
+                const datum = d3.select(this).datum() as Array<{date: Date, value: number}>;
                 if (datum && datum.length > 0) {
                   const value = datum[0].value;
                   return (value >= draggedMinPrice && value <= draggedMaxPrice) ? "#d63384" : "#888888";
@@ -701,7 +707,7 @@ const D3Chart = ({ data, liquidityData }) => {
         .attr('font-size', '10px')
         .attr('fill', '#131313')
         .attr('font-weight', 'bold')
-        .text(`Min: ${minPrice.toFixed(0)}`);
+        .text(`Min: ${minPrice?.toFixed(0)}`);
         
       // Add max price label
       g.append('text')
@@ -757,7 +763,7 @@ const D3Chart = ({ data, liquidityData }) => {
         }
         
         // Check if dot already exists and update it, otherwise create new one
-        let currentDot = g.select('.current-price-dot');
+        let currentDot: d3.Selection<any, unknown, null, undefined> = g.select('.current-price-dot');
         if (currentDot.empty()) {
           currentDot = g.append('circle')
             .attr('class', 'current-price-dot')
@@ -821,11 +827,11 @@ const D3Chart = ({ data, liquidityData }) => {
       .attr('rx', 2);
     
     // Draw current range indicator (pink bar) with drag functionality
-    const currentRangeHeight = minimapYScale(minPrice) - minimapYScale(maxPrice);
+    const currentRangeHeight = minimapYScale(minPrice || 0) - minimapYScale(maxPrice || 0);
     const minimapRange = g.append('rect')
       .attr('class', 'minimap-range')
       .attr('x', minimapX)
-      .attr('y', minimapYScale(maxPrice))
+      .attr('y', minimapYScale(maxPrice || 0))
       .attr('width', 8)
       .attr('height', currentRangeHeight)
       .attr('fill', '#ff69b4')
@@ -833,11 +839,11 @@ const D3Chart = ({ data, liquidityData }) => {
       .attr('cursor', 'move');
     
     // Add drag behavior to the minimap range bar
-    minimapRange.call(d3.drag()
+    minimapRange.call(d3.drag<SVGRectElement, unknown>()
       .on('drag', function(event) {
         const newCenterY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, event.y));
         const newCenterPrice = minimapYScale.invert(newCenterY);
-        const rangeSize = maxPrice - minPrice;
+        const rangeSize = maxPrice && minPrice ? maxPrice - minPrice : 0;
         
         // Calculate new min/max based on center position
         let newMaxPrice = newCenterPrice + rangeSize / 2;
@@ -886,7 +892,7 @@ const D3Chart = ({ data, liquidityData }) => {
     const topHandle = g.append('circle')
       .attr('class', 'minimap-handle max-handle')
       .attr('cx', minimapX + 4)
-      .attr('cy', minimapYScale(maxPrice))
+      .attr('cy', minimapYScale(maxPrice || 0))
       .attr('r', handleRadius)
       .attr('fill', '#ffffff')
       .attr('stroke', '#ff69b4')
@@ -897,7 +903,7 @@ const D3Chart = ({ data, liquidityData }) => {
     const bottomHandle = g.append('circle')
       .attr('class', 'minimap-handle min-handle')
       .attr('cx', minimapX + 4)
-      .attr('cy', minimapYScale(minPrice))
+      .attr('cy', minimapYScale(minPrice || 0))
       .attr('r', handleRadius)
       .attr('fill', '#ffffff')
       .attr('stroke', '#ff69b4')
@@ -905,7 +911,7 @@ const D3Chart = ({ data, liquidityData }) => {
       .attr('cursor', 'ns-resize');
     
     // Center handle (for dragging entire range)
-    const centerY = (minimapYScale(maxPrice) + minimapYScale(minPrice)) / 2;
+    const centerY = (minimapYScale(maxPrice || 0) + minimapYScale(minPrice || 0)) / 2;
     const centerHandle = g.append('circle')
       .attr('class', 'minimap-handle center-handle')
       .attr('cx', minimapX + 4)
@@ -915,13 +921,13 @@ const D3Chart = ({ data, liquidityData }) => {
       .attr('cursor', 'move');
     
     // Add drag behavior to top handle (max price)
-    topHandle.call(d3.drag()
+    topHandle.call(d3.drag<SVGCircleElement, unknown>()
       .on('drag', function(event) {
         const newY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, event.y));
         const newMaxPrice = minimapYScale.invert(newY);
         
         // Ensure max stays above min
-        const constrainedMaxPrice = Math.max(newMaxPrice, minPrice);
+        const constrainedMaxPrice = Math.max(newMaxPrice, minPrice || 0);
         
         // Update visual position
         d3.select(this).attr('cy', minimapYScale(constrainedMaxPrice));
@@ -929,21 +935,21 @@ const D3Chart = ({ data, liquidityData }) => {
         // Update range bar
         g.select('.minimap-range')
           .attr('y', minimapYScale(constrainedMaxPrice))
-          .attr('height', minimapYScale(minPrice) - minimapYScale(constrainedMaxPrice));
+          .attr('height', minimapYScale(minPrice || 0) - minimapYScale(constrainedMaxPrice));
         
         // Update center handle position
-        const newCenterY = (minimapYScale(constrainedMaxPrice) + minimapYScale(minPrice)) / 2;
+        const newCenterY = (minimapYScale(constrainedMaxPrice) + minimapYScale(minPrice || 0)) / 2;
         centerHandle.attr('cy', newCenterY);
         
         // Update main chart price range elements
         g.select('.price-range-bg')
           .attr('y', yScale(constrainedMaxPrice))
-          .attr('height', yScale(minPrice) - yScale(constrainedMaxPrice));
+          .attr('height', yScale(minPrice || 0) - yScale(constrainedMaxPrice));
         
         // Update visual background
         g.select('.price-range-visual-bg')
           .attr('y', yScale(constrainedMaxPrice))
-          .attr('height', yScale(minPrice) - yScale(constrainedMaxPrice));
+          .attr('height', yScale(minPrice || 0) - yScale(constrainedMaxPrice));
           
         g.select('.max-line')
           .attr('y1', yScale(constrainedMaxPrice))
@@ -963,41 +969,41 @@ const D3Chart = ({ data, liquidityData }) => {
         }
         
         // Ensure max stays above min
-        const constrainedMaxPrice = Math.max(newMaxPrice, minPrice);
+        const constrainedMaxPrice = Math.max(newMaxPrice, minPrice || 0);
         setMaxPrice(constrainedMaxPrice);
       })
     );
     
     // Add drag behavior to bottom handle (min price)
-    bottomHandle.call(d3.drag()
+    bottomHandle.call(d3.drag<SVGCircleElement, unknown>()
       .on('drag', function(event) {
         const newY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, event.y));
         const newMinPrice = minimapYScale.invert(newY);
         
         // Ensure min stays below max
-        const constrainedMinPrice = Math.min(newMinPrice, maxPrice);
+        const constrainedMinPrice = Math.min(newMinPrice, maxPrice || 0);
         
         // Update visual position
         d3.select(this).attr('cy', minimapYScale(constrainedMinPrice));
         
         // Update range bar
         g.select('.minimap-range')
-          .attr('y', minimapYScale(maxPrice))
-          .attr('height', minimapYScale(constrainedMinPrice) - minimapYScale(maxPrice));
+          .attr('y', minimapYScale(maxPrice || 0))
+          .attr('height', minimapYScale(constrainedMinPrice) - minimapYScale(maxPrice || 0));
         
         // Update center handle position
-        const newCenterY = (minimapYScale(maxPrice) + minimapYScale(constrainedMinPrice)) / 2;
+        const newCenterY = (minimapYScale(maxPrice || 0) + minimapYScale(constrainedMinPrice)) / 2;
         centerHandle.attr('cy', newCenterY);
         
         // Update main chart price range elements
         g.select('.price-range-bg')
-          .attr('y', yScale(maxPrice))
-          .attr('height', yScale(constrainedMinPrice) - yScale(maxPrice));
+          .attr('y', yScale(maxPrice || 0))
+          .attr('height', yScale(constrainedMinPrice) - yScale(maxPrice || 0));
         
         // Update visual background
         g.select('.price-range-visual-bg')
-          .attr('y', yScale(maxPrice))
-          .attr('height', yScale(constrainedMinPrice) - yScale(maxPrice));
+          .attr('y', yScale(maxPrice || 0))
+          .attr('height', yScale(constrainedMinPrice) - yScale(maxPrice || 0));
           
         g.select('.min-line')
           .attr('y1', yScale(constrainedMinPrice))
@@ -1017,17 +1023,17 @@ const D3Chart = ({ data, liquidityData }) => {
         }
         
         // Ensure min stays below max
-        const constrainedMinPrice = Math.min(newMinPrice, maxPrice);
+        const constrainedMinPrice = Math.min(newMinPrice, maxPrice || 0);
         setMinPrice(constrainedMinPrice);
       })
     );
     
     // Add drag behavior to center handle (drag entire range)
-    centerHandle.call(d3.drag()
+    centerHandle.call(d3.drag<SVGCircleElement, unknown>()
       .on('drag', function(event) {
         const newCenterY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, event.y));
         const newCenterPrice = minimapYScale.invert(newCenterY);
-        const rangeSize = maxPrice - minPrice;
+        const rangeSize = maxPrice && minPrice ? maxPrice - minPrice : 0;
         
         // Calculate new min/max based on center position
         let newMaxPrice = newCenterPrice + rangeSize / 2;
@@ -1082,7 +1088,7 @@ const D3Chart = ({ data, liquidityData }) => {
       .on('end', function(event) {
         const newCenterY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, event.y));
         const newCenterPrice = minimapYScale.invert(newCenterY);
-        const rangeSize = maxPrice - minPrice;
+        const rangeSize = maxPrice && minPrice ? maxPrice - minPrice : 0;
         
         // Calculate new min/max based on center position
         let newMaxPrice = newCenterPrice + rangeSize / 2;
