@@ -1,116 +1,36 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import * as d3 from 'd3';
+import { findClosestElementBinarySearch } from './utils/dataUtils';
+import { useResponsiveDimensions } from './hooks/useResponsiveDimensions';
+import { useChartState } from './hooks/useChartState';
+import { useInitialView } from './hooks/useInitialView';
+import { useChartInteractions } from './hooks/useChartInteractions';
 
-// Cache for price data lookups
-const priceDataCache = new Map();
-
-function findClosestElementBinarySearch(data, target) {
-  let left = 0;
-  let right = data.length - 1;
-
-  if (!target) {
-    return null;
-  }
-
-  if (priceDataCache.has(target.toString())) {
-    return priceDataCache.get(target.toString());
-  }
-
-  while (left <= right) {
-    const mid = Math.floor((left + right) / 2);
-
-    if (data[mid].price0 === target) {
-      priceDataCache.set(target.toString(), data[mid]);
-      return data[mid];
-    } else if (data[mid].price0 < target) {
-      left = mid + 1;
-    } else {
-      right = mid - 1;
-    }
-  }
-
-  // After binary search, left and right are the closest bounds
-  const closest = data[right] ?? { price0: Infinity }; // Handle bounds
-  const nextClosest = data[left] ?? { price0: Infinity };
-
-  // Return the element with the closest `price0`
-  const closestElement =
-    Math.abs(closest.price0 - target) <= Math.abs(nextClosest.price0 - target) ? closest : nextClosest;
-
-  priceDataCache.set(target.toString(), closestElement);
-  return closestElement;
-}
-
-function scaleToInteger(a, precision = 18) {
-  const scaleFactor = Math.pow(10, precision);
-  return Math.round(a * scaleFactor);
-}
 
 const D3Chart = ({ data, liquidityData }) => {
   const svgRef = useRef();
   const containerRef = useRef();
-  const [initialViewSet, setInitialViewSet] = useState(false);
-  const [dragInProgress, setDragInProgress] = useState(false);
-  const [dimensions, setDimensions] = useState(() => {
-    // Initialize with viewport-based dimensions
-    const isMobile = window.innerWidth <= 768;
-    return {
-      width: Math.max(300, Math.min(window.innerWidth - 20, 900)),
-      height: isMobile ? Math.min(300, window.innerHeight * 0.4) : 400
-    };
-  });
   
-  // Handle resize for responsiveness
-  useEffect(() => {
-      const handleResize = () => {
-      // Always calculate based on window size for immediate responsiveness
-      const isMobile = window.innerWidth <= 768;
-      const height = isMobile ? Math.min(300, window.innerHeight * 0.4) : 400;
-      const width = Math.max(300, Math.min(window.innerWidth - 20, isMobile ? window.innerWidth - 20 : 900));
-      
-      setDimensions(prev => {
-        // Only update if dimensions actually changed to avoid unnecessary re-renders
-        if (prev.width !== width || prev.height !== height) {
-          return { width, height };
-        }
-        return prev;
-      });
-    };
-
-    // Use a timeout to ensure DOM is ready and multiple calls for better reliability
-    const timeoutId = setTimeout(handleResize, 100);
-    const intervalId = setInterval(handleResize, 500); // Check periodically initially
-    
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('orientationchange', () => {
-      setTimeout(handleResize, 300); // Handle mobile orientation changes
-    });
-    
-    // Stop the interval after a few seconds
-    setTimeout(() => clearInterval(intervalId), 3000);
-    
-    return () => {
-      clearTimeout(timeoutId);
-      clearInterval(intervalId);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  // Use custom hooks
+  const dimensions = useResponsiveDimensions();
+  const {
+    zoomLevel,
+    panY,
+    minPrice,
+    maxPrice,
+    defaultState,
+    setChartState,
+    setMinPrice,
+    setMaxPrice,
+    handleZoomIn,
+    handleZoomOut,
+    handleResetZoom,
+    handleCenterRange
+  } = useChartState();
   
-  // Default state object
-  const defaultState = useRef({
-    zoomLevel: 1,
-    panY: 0,
-    minPrice: null,
-    maxPrice: null
-  });
-  
-  // Main state object
-  const [chartState, setChartState] = useState({
-    zoomLevel: 1,
-    panY: 0,
-    minPrice: null,
-    maxPrice: null
-  });
+  // Initialize hooks
+  useInitialView(data, liquidityData, setChartState, defaultState);
+  useChartInteractions(svgRef, data, liquidityData, zoomLevel, panY, setChartState);
   
   // Tooltip state
   const [tooltip, setTooltip] = useState({
@@ -119,9 +39,6 @@ const D3Chart = ({ data, liquidityData }) => {
     y: 0,
     data: null
   });
-  
-  // Destructure for easier access
-  const { zoomLevel, panY, minPrice, maxPrice } = chartState;
   
   // Calculate current price from the last entry
   const current = useMemo(() => {
@@ -134,35 +51,6 @@ const D3Chart = ({ data, liquidityData }) => {
     return findClosestElementBinarySearch(liquidityData, current)?.tick;
   }, [current, liquidityData]);
   
-  // Brush extent as [min, max] array
-  const brushExtent = useMemo(() => {
-    if (minPrice !== null && maxPrice !== null) {
-      return [minPrice, maxPrice];
-    }
-    return null;
-  }, [minPrice, maxPrice]);
-  
-  const setBrushExtent = (extent) => {
-    if (extent && extent.length === 2) {
-      setChartState(prev => ({
-        ...prev,
-        minPrice: extent[0],
-        maxPrice: extent[1]
-      }));
-    } else {
-      setChartState(prev => ({
-        ...prev,
-        minPrice: null,
-        maxPrice: null
-      }));
-    }
-  };
-  
-  // Helper functions for updating individual state properties
-  const setMinPrice = (price) => setChartState(prev => ({ ...prev, minPrice: price }));
-  const setMaxPrice = (price) => setChartState(prev => ({ ...prev, maxPrice: price }));
-  const setZoomLevel = (zoom) => setChartState(prev => ({ ...prev, zoomLevel: zoom }));
-  const setPanY = (pan) => setChartState(prev => ({ ...prev, panY: pan }));
 
   // Calculate yScale outside useEffect so it's available for Brush component
   const yScale = useMemo(() => {
@@ -419,10 +307,6 @@ const D3Chart = ({ data, liquidityData }) => {
       // Remove existing range elements
       g.selectAll(".price-range-element").remove();
       
-      // Check if lines are too close together (less than 5px apart)
-      const minY = yScale(minPrice);
-      const maxY = yScale(maxPrice);
-      const linesAreTooClose = Math.abs(minY - maxY) < 5;
       
       // Draw visual pink background that extends over liquidity area (no interactions)
       g.append('rect')
@@ -448,7 +332,6 @@ const D3Chart = ({ data, liquidityData }) => {
         .attr('cursor', 'move')
         .call(d3.drag()
           .on('start', function(event) {
-            setDragInProgress(true);
             // Store the initial click offset relative to the range center
             const currentRangeCenterY = (yScale(maxPrice) + yScale(minPrice)) / 2;
             this._dragOffsetY = event.y - currentRangeCenterY;
@@ -535,20 +418,6 @@ const D3Chart = ({ data, liquidityData }) => {
               g.select('.price-range-visual-bg')
                 .attr('y', yScale(newMaxPrice))
                 .attr('height', yScale(newMinPrice) - yScale(newMaxPrice));
-                
-              // Update minimap controls to reflect new positions
-              g.select('.minimap-range')
-                .attr('y', minimapYScale(newMaxPrice))
-                .attr('height', minimapYScale(newMinPrice) - minimapYScale(newMaxPrice));
-                
-              g.select('.max-handle')
-                .attr('cy', minimapYScale(newMaxPrice));
-                
-              g.select('.min-handle')
-                .attr('cy', minimapYScale(newMinPrice));
-                
-              g.select('.center-handle')
-                .attr('cy', (minimapYScale(newMaxPrice) + minimapYScale(newMinPrice)) / 2);
             }
           })
           .on('end', function(event) {
@@ -575,8 +444,6 @@ const D3Chart = ({ data, liquidityData }) => {
               setMinPrice(newMinPrice);
               setMaxPrice(newMaxPrice);
             }
-            
-            setDragInProgress(false);
           })
         );
 
@@ -592,9 +459,6 @@ const D3Chart = ({ data, liquidityData }) => {
         .attr('opacity', 0.08)
         .attr('cursor', 'ns-resize')
         .call(d3.drag()
-          .on('start', function() {
-            setDragInProgress(true);
-          })
           .on('drag', function(event) {
             const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
             const newPrice = yScale.invert(newY);
@@ -703,8 +567,6 @@ const D3Chart = ({ data, liquidityData }) => {
               // Normal case - just update min
               setMinPrice(newPrice);
             }
-            
-            setDragInProgress(false);
           })
         );
 
@@ -720,9 +582,6 @@ const D3Chart = ({ data, liquidityData }) => {
         .attr('opacity', 0.08)
         .attr('cursor', 'ns-resize')
         .call(d3.drag()
-          .on('start', function() {
-            setDragInProgress(true);
-          })
           .on('drag', function(event) {
             const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
             const newPrice = yScale.invert(newY);
@@ -831,8 +690,6 @@ const D3Chart = ({ data, liquidityData }) => {
               // Normal case - just update max
               setMaxPrice(newPrice);
             }
-            
-            setDragInProgress(false);
           })
         );
         
@@ -977,9 +834,6 @@ const D3Chart = ({ data, liquidityData }) => {
     
     // Add drag behavior to the minimap range bar
     minimapRange.call(d3.drag()
-      .on('start', function() {
-        setDragInProgress(true);
-      })
       .on('drag', function(event) {
         const newCenterY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, event.y));
         const newCenterPrice = minimapYScale.invert(newCenterY);
@@ -1023,9 +877,6 @@ const D3Chart = ({ data, liquidityData }) => {
           panY: dataCenterPosition
         }));
       })
-      .on('end', function() {
-        setDragInProgress(false);
-      })
     );
     
     // Draw drag handles
@@ -1065,9 +916,6 @@ const D3Chart = ({ data, liquidityData }) => {
     
     // Add drag behavior to top handle (max price)
     topHandle.call(d3.drag()
-      .on('start', function() {
-        setDragInProgress(true);
-      })
       .on('drag', function(event) {
         const newY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, event.y));
         const newMaxPrice = minimapYScale.invert(newY);
@@ -1117,15 +965,11 @@ const D3Chart = ({ data, liquidityData }) => {
         // Ensure max stays above min
         const constrainedMaxPrice = Math.max(newMaxPrice, minPrice);
         setMaxPrice(constrainedMaxPrice);
-        setDragInProgress(false);
       })
     );
     
     // Add drag behavior to bottom handle (min price)
     bottomHandle.call(d3.drag()
-      .on('start', function() {
-        setDragInProgress(true);
-      })
       .on('drag', function(event) {
         const newY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, event.y));
         const newMinPrice = minimapYScale.invert(newY);
@@ -1175,15 +1019,11 @@ const D3Chart = ({ data, liquidityData }) => {
         // Ensure min stays below max
         const constrainedMinPrice = Math.min(newMinPrice, maxPrice);
         setMinPrice(constrainedMinPrice);
-        setDragInProgress(false);
       })
     );
     
     // Add drag behavior to center handle (drag entire range)
     centerHandle.call(d3.drag()
-      .on('start', function() {
-        setDragInProgress(true);
-      })
       .on('drag', function(event) {
         const newCenterY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, event.y));
         const newCenterPrice = minimapYScale.invert(newCenterY);
@@ -1260,278 +1100,12 @@ const D3Chart = ({ data, liquidityData }) => {
         
         setMinPrice(newMinPrice);
         setMaxPrice(newMaxPrice);
-        setDragInProgress(false);
       })
     );
 
 
-    // Setup wheel event handler
-    const handleWheel = (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      
-      // Calculate current view bounds
-      const priceRange = priceExtent[1] - priceExtent[0];
-      const zoomedRange = priceRange / zoomLevel;
-      const currentCenter = priceExtent[0] + priceRange * 0.5 + panY * priceRange;
-      const currentMin = currentCenter - zoomedRange / 2;
-      const currentMax = currentCenter + zoomedRange / 2;
-      
-      // Natural scroll sensitivity based on current view range
-      const scrollSensitivity = zoomedRange / 600; // Faster scrolling for larger ranges
-      const rawScrollAmount = event.deltaY * scrollSensitivity;
-      
-      // Apply scroll (invert deltaY for natural direction)
-      const scrollAmount = rawScrollAmount / priceRange; // Normalize to pan range
-      
-      setChartState(prev => {
-        const newPanY = prev.panY - scrollAmount;
-        
-        // Dynamic bounds based on data and zoom level
-        const dataMin = Math.min(...allPrices);
-        const dataMax = Math.max(...allPrices);
-        const halfZoomedRange = zoomedRange / 2;
-        
-        // Calculate max pan bounds to keep view within data
-        const maxPanUp = (dataMax - halfZoomedRange - (priceExtent[0] + priceRange * 0.5)) / priceRange;
-        const maxPanDown = (dataMin + halfZoomedRange - (priceExtent[0] + priceRange * 0.5)) / priceRange;
-        
-        // Constrain to bounds
-        const constrainedPanY = Math.max(maxPanDown, Math.min(maxPanUp, newPanY));
-        
-        return { ...prev, panY: constrainedPanY };
-      });
-    };
-
-    // Add wheel event listener
-    const svgElement = svgRef.current;
-    if (svgElement) {
-      svgElement.addEventListener('wheel', handleWheel, { passive: false });
-      
-      // Add touch support for mobile
-      let touchStartY = null;
-      let lastTouchY = null;
-      let touchStartTime = null;
-      
-      const handleTouchStart = (event) => {
-        if (event.touches.length === 1) {
-          touchStartY = event.touches[0].clientY;
-          lastTouchY = touchStartY;
-          touchStartTime = Date.now();
-          event.preventDefault();
-        }
-      };
-      
-      const handleTouchMove = (event) => {
-        if (event.touches.length === 1 && touchStartY !== null) {
-          const currentTouchY = event.touches[0].clientY;
-          const deltaY = lastTouchY - currentTouchY; // Inverted for natural scrolling
-          
-          // Convert touch movement to pan
-          const allPrices = [
-            ...data.map(d => d.value),
-            ...liquidityData.map(d => d.price0)
-          ];
-          const priceExtent = d3.extent(allPrices);
-          const priceRange = priceExtent[1] - priceExtent[0];
-          const zoomedRange = priceRange / zoomLevel;
-          const touchSensitivity = zoomedRange / 400; // Scale based on current zoom
-          const scrollAmount = deltaY * touchSensitivity / priceRange;
-          
-          setChartState(prev => {
-            const newPanY = prev.panY + scrollAmount;
-            
-            // Apply bounds like in wheel handler
-            const halfZoomedRange = zoomedRange / 2;
-            const dataMin = Math.min(...allPrices);
-            const dataMax = Math.max(...allPrices);
-            const maxPanUp = (dataMax - halfZoomedRange - (priceExtent[0] + priceRange * 0.5)) / priceRange;
-            const maxPanDown = (dataMin + halfZoomedRange - (priceExtent[0] + priceRange * 0.5)) / priceRange;
-            const constrainedPanY = Math.max(maxPanDown, Math.min(maxPanUp, newPanY));
-            
-            return { ...prev, panY: constrainedPanY };
-          });
-          
-          lastTouchY = currentTouchY;
-          event.preventDefault();
-        }
-      };
-      
-      const handleTouchEnd = (event) => {
-        touchStartY = null;
-        lastTouchY = null;
-        touchStartTime = null;
-        event.preventDefault();
-      };
-      
-      svgElement.addEventListener('touchstart', handleTouchStart, { passive: false });
-      svgElement.addEventListener('touchmove', handleTouchMove, { passive: false });
-      svgElement.addEventListener('touchend', handleTouchEnd, { passive: false });
-      
-      return () => {
-        svgElement.removeEventListener('wheel', handleWheel);
-        svgElement.removeEventListener('touchstart', handleTouchStart);
-        svgElement.removeEventListener('touchmove', handleTouchMove);
-        svgElement.removeEventListener('touchend', handleTouchEnd);
-      };
-    }
 
   }, [data, liquidityData, zoomLevel, panY, yScale, current, currentTick, minPrice, maxPrice, dimensions]);
-
-
-  // Set reasonable initial view on first load
-  useEffect(() => {
-    if (!initialViewSet && data && liquidityData && liquidityData.length > 0) {
-      const allPrices = [
-        ...data.map(d => d.value),
-        ...liquidityData.map(d => d.price0)
-      ];
-      const priceExtent = d3.extent(allPrices);
-      const priceRange = priceExtent[1] - priceExtent[0];
-      
-      // Filter out extreme outliers for initial view - focus on middle 20% of liquidity
-      const liquidityPrices = liquidityData.map(d => d.price0).sort((a, b) => a - b);
-      const percentile20 = liquidityPrices[Math.floor(liquidityPrices.length * 0.2)];
-      const percentile80 = liquidityPrices[Math.floor(liquidityPrices.length * 0.8)];
-      
-      // Set initial zoom to focus on the 20-80% range of liquidity with tighter view
-      const focusRange = percentile80 - percentile20;
-      const desiredZoom = Math.min(priceRange / (focusRange * 1), 25); // Show ~1x the focus range, max 25x zoom
-      
-      // Center the view on the current price (last data point)
-      const currentPrice = data[data.length - 1]?.value;
-      const originalCenter = priceExtent[0] + priceRange * 0.5;
-      const panOffset = (currentPrice - originalCenter) / priceRange;
-      
-      // Set default brush range - use a symmetrical range around current price
-      // Use 10% of the total price range for the brush range (tighter)
-      const brushRangeSize = priceRange * 0.1;
-      const defaultMinPrice = currentPrice - brushRangeSize / 2;
-      const defaultMaxPrice = currentPrice + brushRangeSize / 2;
-      
-      // Update both current state and default state
-      const newDefaultState = {
-        zoomLevel: desiredZoom,
-        panY: panOffset,
-        minPrice: defaultMinPrice,
-        maxPrice: defaultMaxPrice
-      };
-      
-      defaultState.current = newDefaultState;
-      setChartState(newDefaultState);
-      
-      setInitialViewSet(true);
-    }
-  }, [data, liquidityData, initialViewSet]);
-
-  const handleZoomIn = () => {
-    const targetZoom = Math.min(zoomLevel * 1.3, 50);
-    animateToState(targetZoom, panY, null, null, 300); // Faster for zoom buttons
-  };
-
-  const handleZoomOut = () => {
-    const targetZoom = Math.max(zoomLevel / 1.3, 0.1);
-    animateToState(targetZoom, panY, null, null, 300); // Faster for zoom buttons
-  };
-
-  // Smooth animation utility function with optional price range animation
-  const animateToState = (targetZoom, targetPan, targetMinPrice = null, targetMaxPrice = null, duration = 400) => {
-    const startZoom = zoomLevel;
-    const startPan = panY;
-    const startMinPrice = minPrice;
-    const startMaxPrice = maxPrice;
-    const startTime = Date.now();
-    
-    const animate = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      
-      // Modern easeOutQuart for snappy, smooth feel
-      const easeProgress = 1 - Math.pow(1 - progress, 4);
-      
-      // Interpolate zoom and pan values
-      const currentZoom = startZoom + (targetZoom - startZoom) * easeProgress;
-      const currentPan = startPan + (targetPan - startPan) * easeProgress;
-      
-      // Interpolate price range if targets provided
-      let currentMinPrice = startMinPrice;
-      let currentMaxPrice = startMaxPrice;
-      
-      if (targetMinPrice !== null && targetMaxPrice !== null) {
-        if (startMinPrice !== null && startMaxPrice !== null) {
-          currentMinPrice = startMinPrice + (targetMinPrice - startMinPrice) * easeProgress;
-          currentMaxPrice = startMaxPrice + (targetMaxPrice - startMaxPrice) * easeProgress;
-        } else {
-          // If no current range, just set the target at the end
-          if (progress === 1) {
-            currentMinPrice = targetMinPrice;
-            currentMaxPrice = targetMaxPrice;
-          }
-        }
-      }
-      
-      setChartState(prev => ({
-        ...prev,
-        zoomLevel: currentZoom,
-        panY: currentPan,
-        minPrice: currentMinPrice,
-        maxPrice: currentMaxPrice
-      }));
-      
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      }
-    };
-    
-    animate();
-  };
-
-  const handleResetZoom = () => {
-    // Animate reset of zoom, pan, and price range
-    animateToState(
-      defaultState.current.zoomLevel, 
-      defaultState.current.panY,
-      defaultState.current.minPrice,
-      defaultState.current.maxPrice,
-      500 // Slightly longer for full reset
-    );
-  };
-
-  const handleCenterRange = () => {
-    if (minPrice === null || maxPrice === null || !data || !liquidityData) return;
-    
-    // Calculate all prices to get data bounds
-    const allPrices = [
-      ...data.map(d => d.value),
-      ...liquidityData.map(d => d.price0)
-    ];
-    const priceExtent = d3.extent(allPrices);
-    const totalPriceRange = priceExtent[1] - priceExtent[0];
-    
-    // Calculate range center and size
-    const rangeCenter = (minPrice + maxPrice) / 2;
-    const rangeSize = maxPrice - minPrice;
-    
-    // Calculate required pan to center the range
-    const originalCenter = priceExtent[0] + totalPriceRange * 0.5;
-    const targetPanY = (rangeCenter - originalCenter) / totalPriceRange;
-    
-    // Calculate required zoom to fit the range (with some padding)
-    const paddingFactor = 1.2; // 20% padding around the range
-    const visibleRangeNeeded = rangeSize * paddingFactor;
-    const currentVisibleRange = totalPriceRange / zoomLevel;
-    
-    let targetZoomLevel = zoomLevel;
-    if (visibleRangeNeeded > currentVisibleRange) {
-      // Need to zoom out to fit the range
-      targetZoomLevel = totalPriceRange / visibleRangeNeeded;
-      targetZoomLevel = Math.max(targetZoomLevel, 0.1); // Don't zoom out too far
-    }
-    
-    // Animate the transition with faster, smoother timing
-    animateToState(targetZoomLevel, targetPanY, null, null, 500);
-  };
-
 
   return (
     <div ref={containerRef} style={{ 
@@ -1586,7 +1160,7 @@ const D3Chart = ({ data, liquidityData }) => {
               Reset
             </button>
             <button 
-              onClick={handleCenterRange} 
+              onClick={() => handleCenterRange(data, liquidityData)} 
               disabled={minPrice === null || maxPrice === null}
               style={{ 
                 fontSize: dimensions.width <= 768 ? '10px' : '12px', 
