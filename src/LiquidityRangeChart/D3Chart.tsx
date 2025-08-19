@@ -344,6 +344,8 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
             // Store the initial click offset relative to the range center
             const currentRangeCenterY = (yScale(maxPrice) + yScale(minPrice)) / 2;
             (this as any)._dragOffsetY = event.y - currentRangeCenterY;
+            document.body.classList.add('dragging-range');
+            document.body.style.setProperty('cursor', 'move', 'important');
           })
           .on('drag', function(event) {
             // Apply the stored offset to maintain consistent drag feel
@@ -430,6 +432,8 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
             }
           })
           .on('end', function(event) {
+            document.body.classList.remove('dragging-range');
+            document.body.style.removeProperty('cursor');
             // Apply the same offset calculation for consistency
             const adjustedY = event.y - (this as any)._dragOffsetY;
             const newCenterY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, adjustedY));
@@ -1113,6 +1117,271 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
     );
 
 
+
+    // Add areas above and below current range for creating new ranges (drawn last to be on top)
+    if (minPrice !== null && maxPrice !== null) {
+      // Area above current range (for dragging above max price)
+      g.append('rect')
+        .attr('class', 'price-range-element above-range-area')
+        .attr('x', -margin.left)
+        .attr('y', 0)
+        .attr('width', width + margin.left + 10)
+        .attr('height', yScale(maxPrice))
+        .attr('fill', 'transparent')
+        .attr('cursor', 'crosshair')
+        .style('pointer-events', 'all')
+        .call(d3.drag<SVGRectElement, unknown>()
+          .on('start', function(event) {
+            (this as any)._startY = event.y;
+            d3.select(this).attr('cursor', 'move');
+            document.body.classList.add('dragging-range');
+            document.body.style.setProperty('cursor', 'move', 'important');
+          })
+          .on('drag', function(event) {
+            const startY = (this as any)._startY;
+            const currentY = event.y;
+            const startPrice = yScale.invert(startY);
+            const currentPrice = yScale.invert(currentY);
+            
+            // Determine new min/max based on drag direction
+            const newMinPrice = Math.min(startPrice, currentPrice);
+            const newMaxPrice = Math.max(startPrice, currentPrice);
+            
+            // Get data bounds
+            const allPrices = [
+              ...data.map(d => d.value),
+              ...liquidityData.map(d => d.price0)
+            ];
+            const dataMin = Math.min(...allPrices);
+            const dataMax = Math.max(...allPrices);
+            
+            // Constrain to data bounds
+            const constrainedMinPrice = Math.max(newMinPrice, dataMin);
+            const constrainedMaxPrice = Math.min(newMaxPrice, dataMax);
+            
+            // Only update if we have a valid range
+            if (constrainedMaxPrice > constrainedMinPrice) {
+              // Update range background position and size
+              g.select('.price-range-bg')
+                .attr('y', yScale(constrainedMaxPrice))
+                .attr('height', yScale(constrainedMinPrice) - yScale(constrainedMaxPrice));
+              
+              // Update visual background
+              g.select('.price-range-visual-bg')
+                .attr('y', yScale(constrainedMaxPrice))
+                .attr('height', yScale(constrainedMinPrice) - yScale(constrainedMaxPrice));
+              
+              // Update min line
+              g.select('.min-line')
+                .attr('y1', yScale(constrainedMinPrice))
+                .attr('y2', yScale(constrainedMinPrice));
+                
+              // Update max line
+              g.select('.max-line')
+                .attr('y1', yScale(constrainedMaxPrice))
+                .attr('y2', yScale(constrainedMaxPrice));
+                
+              // Update labels
+              g.select('.min-label')
+                .attr('y', yScale(constrainedMinPrice) - 5)
+                .text(`Min: ${constrainedMinPrice.toFixed(0)}`);
+                
+              g.select('.max-label')
+                .attr('y', yScale(constrainedMaxPrice) + 15)
+                .text(`Max: ${constrainedMaxPrice.toFixed(0)}`);
+                
+              // Update liquidity bar colors
+              g.selectAll('.liquidity-bar')
+                .attr('fill', d => {
+                  const price = (d as LiquidityDataPoint).price0;
+                  if (price >= constrainedMinPrice && price <= constrainedMaxPrice) {
+                    return CHART_COLORS.IN_RANGE_PINK;
+                  }
+                  return CHART_COLORS.OUT_RANGE_GREY;
+                });
+                
+              // Update price line segment colors
+              g.selectAll('.price-segment')
+                .attr('stroke', function() {
+                  const datum = d3.select(this).datum() as Array<{date: Date, value: number}>;
+                  if (datum && datum.length > 0) {
+                    const value = datum[0].value;
+                    return getColorForPrice(value, constrainedMinPrice, constrainedMaxPrice);
+                  }
+                  return CHART_COLORS.OUT_RANGE_GREY;
+                });
+                
+              // Update current price dot color
+              if (current !== null) {
+                const currentDotColor = getColorForPrice(current, constrainedMinPrice, constrainedMaxPrice);
+                g.select('.current-price-dot').attr('fill', currentDotColor);
+              }
+            }
+          })
+          .on('end', function(event) {
+            d3.select(this).attr('cursor', 'crosshair');
+            document.body.classList.remove('dragging-range');
+            document.body.style.removeProperty('cursor');
+            const startY = (this as any)._startY;
+            const endY = event.y;
+            const startPrice = yScale.invert(startY);
+            const endPrice = yScale.invert(endY);
+            
+            // Determine new min/max based on drag direction
+            const newMinPrice = Math.min(startPrice, endPrice);
+            const newMaxPrice = Math.max(startPrice, endPrice);
+            
+            // Get data bounds
+            const allPrices = [
+              ...data.map(d => d.value),
+              ...liquidityData.map(d => d.price0)
+            ];
+            const dataMin = Math.min(...allPrices);
+            const dataMax = Math.max(...allPrices);
+            
+            // Constrain to data bounds
+            const constrainedMinPrice = Math.max(newMinPrice, dataMin);
+            const constrainedMaxPrice = Math.min(newMaxPrice, dataMax);
+            
+            // Only update state if we have a valid range
+            if (constrainedMaxPrice > constrainedMinPrice) {
+              setMinPrice(constrainedMinPrice);
+              setMaxPrice(constrainedMaxPrice);
+            }
+          })
+        );
+      
+      // Area below current range (for dragging below min price)
+      g.append('rect')
+        .attr('class', 'price-range-element below-range-area')
+        .attr('x', -margin.left)
+        .attr('y', yScale(minPrice))
+        .attr('width', width + margin.left + 10)
+        .attr('height', height - yScale(minPrice))
+        .attr('fill', 'transparent')
+        .attr('cursor', 'crosshair')
+        .style('pointer-events', 'all')
+        .call(d3.drag<SVGRectElement, unknown>()
+          .on('start', function(event) {
+            (this as any)._startY = event.y;
+            d3.select(this).attr('cursor', 'move');
+            document.body.classList.add('dragging-range');
+            document.body.style.setProperty('cursor', 'move', 'important');
+          })
+          .on('drag', function(event) {
+            const startY = (this as any)._startY;
+            const currentY = event.y;
+            const startPrice = yScale.invert(startY);
+            const currentPrice = yScale.invert(currentY);
+            
+            // Determine new min/max based on drag direction
+            const newMinPrice = Math.min(startPrice, currentPrice);
+            const newMaxPrice = Math.max(startPrice, currentPrice);
+            
+            // Get data bounds
+            const allPrices = [
+              ...data.map(d => d.value),
+              ...liquidityData.map(d => d.price0)
+            ];
+            const dataMin = Math.min(...allPrices);
+            const dataMax = Math.max(...allPrices);
+            
+            // Constrain to data bounds
+            const constrainedMinPrice = Math.max(newMinPrice, dataMin);
+            const constrainedMaxPrice = Math.min(newMaxPrice, dataMax);
+            
+            // Only update if we have a valid range
+            if (constrainedMaxPrice > constrainedMinPrice) {
+              // Update range background position and size
+              g.select('.price-range-bg')
+                .attr('y', yScale(constrainedMaxPrice))
+                .attr('height', yScale(constrainedMinPrice) - yScale(constrainedMaxPrice));
+              
+              // Update visual background
+              g.select('.price-range-visual-bg')
+                .attr('y', yScale(constrainedMaxPrice))
+                .attr('height', yScale(constrainedMinPrice) - yScale(constrainedMaxPrice));
+              
+              // Update min line
+              g.select('.min-line')
+                .attr('y1', yScale(constrainedMinPrice))
+                .attr('y2', yScale(constrainedMinPrice));
+                
+              // Update max line
+              g.select('.max-line')
+                .attr('y1', yScale(constrainedMaxPrice))
+                .attr('y2', yScale(constrainedMaxPrice));
+                
+              // Update labels
+              g.select('.min-label')
+                .attr('y', yScale(constrainedMinPrice) - 5)
+                .text(`Min: ${constrainedMinPrice.toFixed(0)}`);
+                
+              g.select('.max-label')
+                .attr('y', yScale(constrainedMaxPrice) + 15)
+                .text(`Max: ${constrainedMaxPrice.toFixed(0)}`);
+                
+              // Update liquidity bar colors
+              g.selectAll('.liquidity-bar')
+                .attr('fill', d => {
+                  const price = (d as LiquidityDataPoint).price0;
+                  if (price >= constrainedMinPrice && price <= constrainedMaxPrice) {
+                    return CHART_COLORS.IN_RANGE_PINK;
+                  }
+                  return CHART_COLORS.OUT_RANGE_GREY;
+                });
+                
+              // Update price line segment colors
+              g.selectAll('.price-segment')
+                .attr('stroke', function() {
+                  const datum = d3.select(this).datum() as Array<{date: Date, value: number}>;
+                  if (datum && datum.length > 0) {
+                    const value = datum[0].value;
+                    return getColorForPrice(value, constrainedMinPrice, constrainedMaxPrice);
+                  }
+                  return CHART_COLORS.OUT_RANGE_GREY;
+                });
+                
+              // Update current price dot color
+              if (current !== null) {
+                const currentDotColor = getColorForPrice(current, constrainedMinPrice, constrainedMaxPrice);
+                g.select('.current-price-dot').attr('fill', currentDotColor);
+              }
+            }
+          })
+          .on('end', function(event) {
+            d3.select(this).attr('cursor', 'crosshair');
+            document.body.classList.remove('dragging-range');
+            document.body.style.removeProperty('cursor');
+            const startY = (this as any)._startY;
+            const endY = event.y;
+            const startPrice = yScale.invert(startY);
+            const endPrice = yScale.invert(endY);
+            
+            // Determine new min/max based on drag direction
+            const newMinPrice = Math.min(startPrice, endPrice);
+            const newMaxPrice = Math.max(startPrice, endPrice);
+            
+            // Get data bounds
+            const allPrices = [
+              ...data.map(d => d.value),
+              ...liquidityData.map(d => d.price0)
+            ];
+            const dataMin = Math.min(...allPrices);
+            const dataMax = Math.max(...allPrices);
+            
+            // Constrain to data bounds
+            const constrainedMinPrice = Math.max(newMinPrice, dataMin);
+            const constrainedMaxPrice = Math.min(newMaxPrice, dataMax);
+            
+            // Only update state if we have a valid range
+            if (constrainedMaxPrice > constrainedMinPrice) {
+              setMinPrice(constrainedMinPrice);
+              setMaxPrice(constrainedMaxPrice);
+            }
+          })
+        );
+    }
 
   }, [data, liquidityData, zoomLevel, panY, yScale, current, currentTick, minPrice, maxPrice, dimensions]);
 

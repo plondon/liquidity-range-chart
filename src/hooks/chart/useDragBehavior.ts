@@ -5,7 +5,7 @@ import { CHART_BEHAVIOR } from '../../LiquidityRangeChart/constants';
 // Reusable drag behavior hook to eliminate repeated drag logic
 export const useDragBehavior = () => {
   
-  const createRangeDrag = useCallback((yScale, setMinPrice, setMaxPrice, priceExtent) => {
+  const createRangeDrag = useCallback((yScale: d3.ScaleLinear<number, number>, setMinPrice: React.Dispatch<React.SetStateAction<number | null>>, setMaxPrice: React.Dispatch<React.SetStateAction<number | null>>, priceExtent: [number, number]) => {
     return d3.drag()
       .on('drag', function(event) {
         if (!yScale || !priceExtent) return;
@@ -27,7 +27,7 @@ export const useDragBehavior = () => {
       });
   }, []);
 
-  const createMinPriceDrag = useCallback((yScale, setMinPrice, setMaxPrice, priceExtent) => {
+  const createMinPriceDrag = useCallback((yScale: d3.ScaleLinear<number, number>, setMinPrice: React.Dispatch<React.SetStateAction<number | null>>, setMaxPrice: React.Dispatch<React.SetStateAction<number | null>>, priceExtent: [number, number]) => {
     return d3.drag()
       .on('drag', function(event) {
         if (!yScale || !priceExtent) return;
@@ -48,7 +48,7 @@ export const useDragBehavior = () => {
       });
   }, []);
 
-  const createMaxPriceDrag = useCallback((yScale, setMinPrice, setMaxPrice, priceExtent) => {
+  const createMaxPriceDrag = useCallback((yScale: d3.ScaleLinear<number, number>, setMinPrice: React.Dispatch<React.SetStateAction<number | null>>, setMaxPrice: React.Dispatch<React.SetStateAction<number | null>>, priceExtent: [number, number]) => {
     return d3.drag()
       .on('drag', function(event) {
         if (!yScale || !priceExtent) return;
@@ -69,7 +69,7 @@ export const useDragBehavior = () => {
       });
   }, []);
 
-  const createMinimapDrag = useCallback((minimapScale, setZoomLevel, setPanY) => {
+  const createMinimapDrag = useCallback((minimapScale: d3.ScaleLinear<number, number>, setZoomLevel: React.Dispatch<React.SetStateAction<number>>, setPanY: React.Dispatch<React.SetStateAction<number>>) => {
     return d3.drag()
       .on('drag', function(event) {
         if (!minimapScale) return;
@@ -85,7 +85,7 @@ export const useDragBehavior = () => {
       });
   }, []);
 
-  const createMinimapHandleDrag = useCallback((minimapScale, handleType, setZoomLevel, setPanY, setMinPrice, setMaxPrice) => {
+  const createMinimapHandleDrag = useCallback((minimapScale: d3.ScaleLinear<number, number>, handleType: 'min' | 'max', setZoomLevel: React.Dispatch<React.SetStateAction<number>>, setPanY: React.Dispatch<React.SetStateAction<number>>, setMinPrice: React.Dispatch<React.SetStateAction<number | null>>, setMaxPrice: React.Dispatch<React.SetStateAction<number | null>>) => {
     return d3.drag()
       .on('drag', function(event) {
         if (!minimapScale) return;

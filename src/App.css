@@ -54,6 +54,12 @@ h1 {
   }
 }
 
+/* Dragging state - force cursor for entire page */
+body.dragging-range,
+body.dragging-range * {
+  cursor: move !important;
+}
+
 /* Touch-friendly styles */
 @media (hover: none) and (pointer: coarse) {
   /* This targets touch devices */
