@@ -531,6 +531,11 @@ const D3Chart = ({ data, liquidityData }) => {
                 g.select('.current-price-dot').attr('fill', currentDotColor);
               }
                 
+              // Update visual background position
+              g.select('.price-range-visual-bg')
+                .attr('y', yScale(newMaxPrice))
+                .attr('height', yScale(newMinPrice) - yScale(newMaxPrice));
+                
               // Update minimap controls to reflect new positions
               g.select('.minimap-range')
                 .attr('y', minimapYScale(newMaxPrice))
