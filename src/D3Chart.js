@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import * as d3 from 'd3';
-import PriceRange from './PriceRange';
-import PriceDragPoints from './PriceDragPoints';
 
 // Cache for price data lookups
 const priceDataCache = new Map();
@@ -112,6 +110,14 @@ const D3Chart = ({ data, liquidityData }) => {
     panY: 0,
     minPrice: null,
     maxPrice: null
+  });
+  
+  // Tooltip state
+  const [tooltip, setTooltip] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+    data: null
   });
   
   // Destructure for easier access
@@ -322,6 +328,90 @@ const D3Chart = ({ data, liquidityData }) => {
           return "#d63384"; // Dark pink for bars within range
         }
         return "#888888"; // Default grey
+      })
+      .attr("cursor", "pointer");
+    
+    // Add invisible overlay for better hover detection across the entire liquidity area
+    const liquidityOverlay = g.append("rect")
+      .attr("class", "liquidity-overlay")
+      .attr("x", width + 50) // Move further right to avoid any overlap with price range
+      .attr("y", 0)
+      .attr("width", liquidityWidth - 40)
+      .attr("height", height)
+      .attr("fill", "transparent")
+      .attr("cursor", "pointer");
+    
+    // Add event listeners to the overlay for continuous hover detection
+    liquidityOverlay
+      .on("mouseenter", function(event) {
+        // Find closest liquidity data point
+        const mouseY = d3.pointer(event, this)[1];
+        const hoveredPrice = liquidityYScale.invert(mouseY);
+        
+        // Find the closest data point
+        let closestData = liquidityData[0];
+        let minDistance = Math.abs(closestData.price0 - hoveredPrice);
+        
+        liquidityData.forEach(d => {
+          const distance = Math.abs(d.price0 - hoveredPrice);
+          if (distance < minDistance) {
+            minDistance = distance;
+            closestData = d;
+          }
+        });
+        
+        // Calculate position for the line connection
+        const barY = liquidityYScale(closestData.price0);
+        const mouseX = d3.pointer(event, this)[0] + margin.left; // Actual hover position
+        const liquidityBarsEndX = width + 10 + liquidityWidth - 40; // Where liquidity bars end
+        
+        // Fixed position: 30px from right edge of chart
+        const fixedTooltipX = dimensions.width - 30;
+        
+        setTooltip({
+          visible: true,
+          x: fixedTooltipX,
+          y: barY,
+          data: closestData,
+          lineEndX: liquidityBarsEndX
+        });
+      })
+      .on("mousemove", function(event) {
+        // Update tooltip position as mouse moves
+        const mouseY = d3.pointer(event, this)[1];
+        const hoveredPrice = liquidityYScale.invert(mouseY);
+        
+        // Find the closest data point
+        let closestData = liquidityData[0];
+        let minDistance = Math.abs(closestData.price0 - hoveredPrice);
+        
+        liquidityData.forEach(d => {
+          const distance = Math.abs(d.price0 - hoveredPrice);
+          if (distance < minDistance) {
+            minDistance = distance;
+            closestData = d;
+          }
+        });
+        
+        // Calculate position for the line connection
+        const barY = liquidityYScale(closestData.price0);
+        const mouseX = d3.pointer(event, this)[0] + margin.left; // Actual hover position
+        const liquidityBarsEndX = width + 10 + liquidityWidth - 40; // Where liquidity bars end
+        
+        // Fixed position: 30px from right edge of chart
+        const fixedTooltipX = dimensions.width - 30;
+        
+        setTooltip({
+          visible: true,
+          x: fixedTooltipX,
+          y: barY,
+          data: closestData,
+          lineEndX: liquidityBarsEndX
+        });
+      })
+      .on("mouseleave", function() {
+        // Hide tooltip
+        setTooltip(prev => ({ ...prev, visible: false }));
       });
 
     // No price labels needed
@@ -336,16 +426,27 @@ const D3Chart = ({ data, liquidityData }) => {
       const maxY = yScale(maxPrice);
       const linesAreTooClose = Math.abs(minY - maxY) < 5;
       
-      // Draw transparent pink background between min and max - extend to cover full chart area
+      // Draw visual pink background that extends over liquidity area (no interactions)
       g.append('rect')
-        .attr('class', 'price-range-element price-range-bg')
+        .attr('class', 'price-range-element price-range-visual-bg')
         .attr('x', -margin.left) // Extend left to cover the margin area
         .attr('y', yScale(maxPrice))
         .attr('width', dimensions.width) // Cover the entire SVG width
         .attr('height', yScale(minPrice) - yScale(maxPrice))
         .attr('fill', '#ff69b4')
         .attr('fill-opacity', 0.15)
-        .attr('stroke', 'none') // Remove any border from background
+        .attr('stroke', 'none')
+        .style('pointer-events', 'none'); // No interactions on this visual layer
+      
+      // Draw interactive pink background only over main chart area (for dragging)
+      g.append('rect')
+        .attr('class', 'price-range-element price-range-bg')
+        .attr('x', -margin.left) // Extend left to cover the margin area
+        .attr('y', yScale(maxPrice))
+        .attr('width', width + margin.left + 10) // Stop before liquidity area
+        .attr('height', yScale(minPrice) - yScale(maxPrice))
+        .attr('fill', 'transparent') // Invisible, just for interactions
+        .attr('stroke', 'none')
         .attr('cursor', 'move')
         .call(d3.drag()
           .on('start', function(event) {
@@ -424,6 +525,13 @@ const D3Chart = ({ data, liquidityData }) => {
                   }
                   return "#888888";
                 });
+                
+              // Update current price dot color
+              if (current !== null) {
+                const isCurrentInRange = current >= newMinPrice && current <= newMaxPrice;
+                const currentDotColor = isCurrentInRange ? "#d63384" : "#888888";
+                g.select('.current-price-dot').attr('fill', currentDotColor);
+              }
                 
               // Update minimap controls to reflect new positions
               g.select('.minimap-range')
@@ -553,6 +661,13 @@ const D3Chart = ({ data, liquidityData }) => {
                 return "#888888";
               });
               
+            // Update current price dot color
+            if (current !== null) {
+              const isCurrentInRange = current >= draggedMinPrice && current <= draggedMaxPrice;
+              const currentDotColor = isCurrentInRange ? "#d63384" : "#888888";
+              g.select('.current-price-dot').attr('fill', currentDotColor);
+            }
+              
             // Update minimap controls for min line drag
             g.select('.minimap-range')
               .attr('y', minimapYScale(draggedMaxPrice))
@@ -669,6 +784,13 @@ const D3Chart = ({ data, liquidityData }) => {
                 return "#888888";
               });
               
+            // Update current price dot color
+            if (current !== null) {
+              const isCurrentInRange = current >= draggedMinPrice && current <= draggedMaxPrice;
+              const currentDotColor = isCurrentInRange ? "#d63384" : "#888888";
+              g.select('.current-price-dot').attr('fill', currentDotColor);
+            }
+              
             // Update minimap controls for max line drag
             g.select('.minimap-range')
               .attr('y', minimapYScale(draggedMaxPrice))
@@ -727,6 +849,7 @@ const D3Chart = ({ data, liquidityData }) => {
       // Remove existing current price line
       g.selectAll('.current-price-line').remove();
       g.selectAll('.current-price-label').remove();
+      g.selectAll('.current-price-dot').remove();
       
       // Draw dotted line across the entire chart for current price
       g.append('line')
@@ -749,6 +872,34 @@ const D3Chart = ({ data, liquidityData }) => {
         .attr('fill', '#666666') // Grey color
         .attr('font-weight', 'bold')
         .text(`Current: ${current.toFixed(0)}`);
+        
+      // Draw a circle at the last data point (current price)
+      const lastDataPoint = priceData[priceData.length - 1];
+      if (lastDataPoint) {
+        // Determine color based on whether current price is in range
+        let dotColor;
+        if (minPrice !== null && maxPrice !== null) {
+          // Check if current price is within the selected range
+          const isInRange = current >= minPrice && current <= maxPrice;
+          dotColor = isInRange ? "#d63384" : "#888888"; // Pink if in range, grey if out
+        } else {
+          dotColor = "#2196F3"; // Default blue when no range is selected
+        }
+        
+        // Check if dot already exists and update it, otherwise create new one
+        let currentDot = g.select('.current-price-dot');
+        if (currentDot.empty()) {
+          currentDot = g.append('circle')
+            .attr('class', 'current-price-dot')
+            .attr('cx', xScale(lastDataPoint.date))
+            .attr('cy', yScale(lastDataPoint.value))
+            .attr('r', 4)
+            .attr('opacity', 1);
+        }
+        
+        // Update the dot color
+        currentDot.attr('fill', dotColor);
+      }
     }
 
     // Create minimap controls on the right side
@@ -1353,6 +1504,7 @@ const D3Chart = ({ data, liquidityData }) => {
     animateToState(targetZoomLevel, targetPanY, null, null, 500);
   };
 
+
   return (
     <div ref={containerRef} style={{ 
       width: '100%', 
@@ -1501,6 +1653,67 @@ const D3Chart = ({ data, liquidityData }) => {
           }}
         >
         </svg>
+        
+        {/* Liquidity Tooltip */}
+        {tooltip.visible && tooltip.data && (
+          <>            
+            {/* Tooltip */}
+            <div
+              style={{
+                position: 'absolute',
+                right: 130, // Move another 100px to the left (30 + 100 = 130)
+                top: tooltip.y - 18,
+                background: 'rgba(255, 255, 255, 0.95)',
+                border: '1px solid #ddd',
+                borderRadius: '8px',
+                padding: '8px 12px',
+                fontSize: '12px',
+                fontWeight: 'bold',
+                pointerEvents: 'none',
+                zIndex: 1000,
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                minWidth: '120px',
+                textAlign: 'center'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+                <div style={{ 
+                  width: '16px', 
+                  height: '16px', 
+                  borderRadius: '50%', 
+                  background: 'linear-gradient(135deg, #627EEA 0%, #4F7DD9 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '8px',
+                  color: 'white',
+                  fontWeight: 'bold'
+                }}>
+                  Ξ
+                </div>
+                <span>ETH</span>
+                <span style={{ color: '#666' }}>
+                  ${(tooltip.data.amount0Locked || 0).toFixed(1)}K
+                </span>
+                <span style={{ color: '#666' }}>100%</span>
+              </div>
+            </div>
+            
+            {/* Connecting line from tooltip's right edge to liquidity bars */}
+            <div
+              style={{
+                position: 'absolute',
+                right: 30,
+                top: tooltip.y - 1,
+                width: `${tooltip.lineEndX - (dimensions.width - 210)}px`, // From tooltip to liquidity bars (adjusted for 20px shift)
+                height: '2px',
+                background: '#666',
+                pointerEvents: 'none',
+                zIndex: 999
+              }}
+            />
+          </>
+        )}
       </div>
     </div>
   );
