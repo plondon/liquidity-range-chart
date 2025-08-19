@@ -633,6 +633,11 @@ const D3Chart = ({ data, liquidityData }) => {
               .attr('y', yScale(draggedMaxPrice))
               .attr('height', yScale(draggedMinPrice) - yScale(draggedMaxPrice));
             
+            // Update visual background
+            g.select('.price-range-visual-bg')
+              .attr('y', yScale(draggedMaxPrice))
+              .attr('height', yScale(draggedMinPrice) - yScale(draggedMaxPrice));
+            
             // Update labels
             g.select('.min-label')
               .attr('x', -68)
@@ -753,6 +758,11 @@ const D3Chart = ({ data, liquidityData }) => {
             
             // Update background
             g.select('.price-range-bg')
+              .attr('y', yScale(draggedMaxPrice))
+              .attr('height', yScale(draggedMinPrice) - yScale(draggedMaxPrice));
+            
+            // Update visual background
+            g.select('.price-range-visual-bg')
               .attr('y', yScale(draggedMaxPrice))
               .attr('height', yScale(draggedMinPrice) - yScale(draggedMaxPrice));
             
@@ -1081,6 +1091,11 @@ const D3Chart = ({ data, liquidityData }) => {
         g.select('.price-range-bg')
           .attr('y', yScale(constrainedMaxPrice))
           .attr('height', yScale(minPrice) - yScale(constrainedMaxPrice));
+        
+        // Update visual background
+        g.select('.price-range-visual-bg')
+          .attr('y', yScale(constrainedMaxPrice))
+          .attr('height', yScale(minPrice) - yScale(constrainedMaxPrice));
           
         g.select('.max-line')
           .attr('y1', yScale(constrainedMaxPrice))
@@ -1132,6 +1147,11 @@ const D3Chart = ({ data, liquidityData }) => {
         
         // Update main chart price range elements
         g.select('.price-range-bg')
+          .attr('y', yScale(maxPrice))
+          .attr('height', yScale(constrainedMinPrice) - yScale(maxPrice));
+        
+        // Update visual background
+        g.select('.price-range-visual-bg')
           .attr('y', yScale(maxPrice))
           .attr('height', yScale(constrainedMinPrice) - yScale(maxPrice));
           
@@ -1195,6 +1215,11 @@ const D3Chart = ({ data, liquidityData }) => {
           
         // Update main chart price range elements
         g.select('.price-range-bg')
+          .attr('y', yScale(newMaxPrice))
+          .attr('height', yScale(newMinPrice) - yScale(newMaxPrice));
+        
+        // Update visual background
+        g.select('.price-range-visual-bg')
           .attr('y', yScale(newMaxPrice))
           .attr('height', yScale(newMinPrice) - yScale(newMaxPrice));
           
