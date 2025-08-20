@@ -1059,10 +1059,10 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         .attr('class', 'price-range-element min-line')
         .attr('x1', -margin.left) // Start from left margin
         .attr('x2', dimensions.width - margin.left) // Extend to right edge
-        .attr('y1', yScale(minPrice))
-        .attr('y2', yScale(minPrice))
+        .attr('y1', yScale(minPrice) + CHART_DIMENSIONS.MIN_MAX_LINE_HEIGHT / 2)
+        .attr('y2', yScale(minPrice) + CHART_DIMENSIONS.MIN_MAX_LINE_HEIGHT / 2)
         .attr('stroke', CHART_COLORS.BOUNDARY_LINE)
-        .attr('stroke-width', 2)
+        .attr('stroke-width', CHART_DIMENSIONS.MIN_MAX_LINE_HEIGHT)
         .attr('opacity', 0.08)
         .attr('cursor', 'ns-resize')
         .call(createPriceLineDrag(
@@ -1082,10 +1082,10 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         .attr('class', 'price-range-element max-line')
         .attr('x1', -margin.left) // Start from left margin
         .attr('x2', dimensions.width - margin.left) // Extend to right edge
-        .attr('y1', yScale(maxPrice))
-        .attr('y2', yScale(maxPrice))
+        .attr('y1', yScale(maxPrice) - CHART_DIMENSIONS.MIN_MAX_LINE_HEIGHT / 2)
+        .attr('y2', yScale(maxPrice) - CHART_DIMENSIONS.MIN_MAX_LINE_HEIGHT / 2)
         .attr('stroke', CHART_COLORS.BOUNDARY_LINE)
-        .attr('stroke-width', 2)
+        .attr('stroke-width', CHART_DIMENSIONS.MIN_MAX_LINE_HEIGHT)
         .attr('opacity', 0.08)
         .attr('cursor', 'ns-resize')
         .call(createPriceLineDrag(
@@ -1187,7 +1187,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         .attr('x', -margin.left)
         .attr('y', 0)
         .attr('width', width + margin.left + 10)
-        .attr('height', yScale(maxPrice))
+        .attr('height', yScale(maxPrice) - CHART_DIMENSIONS.MIN_MAX_LINE_HEIGHT)
         .attr('fill', 'transparent')
         .attr('cursor', 'crosshair')
         .style('pointer-events', 'all')
@@ -1262,7 +1262,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       g.append('rect')
         .attr('class', 'price-range-element below-range-area')
         .attr('x', -margin.left)
-        .attr('y', yScale(minPrice))
+        .attr('y', yScale(minPrice) + CHART_DIMENSIONS.MIN_MAX_LINE_HEIGHT)
         .attr('width', width + margin.left + 10)
         .attr('height', height - yScale(minPrice))
         .attr('fill', 'transparent')
