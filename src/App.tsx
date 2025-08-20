@@ -8,7 +8,7 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>TradingView Chart MVP</h1>
+        <h1>Liquidity Range Chart</h1>
         <D3Chart data={priceData} liquidityData={liquidityData} />
       </header>
     </div>
