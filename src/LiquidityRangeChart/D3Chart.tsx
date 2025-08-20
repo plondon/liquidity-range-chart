@@ -84,10 +84,6 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
     return findClosestElementBinarySearch(liquidityData, current)?.tick;
   }, [current, liquidityData]);
 
-  console.log('current', current);
-  console.log('currentTick', currentTick);
-  
-
   // Calculate yScale outside useEffect so it's available for Brush component
   const yScale = useMemo(() => {
     const allPrices = [
@@ -909,8 +905,9 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         .attr('y1', yScale(current))
         .attr('y2', yScale(current))
         .attr('stroke', CHART_COLORS.CURRENT_PRICE_GREY)
-        .attr('stroke-width', 2)
-        .attr('stroke-dasharray', '5,5') // Dotted line pattern
+        .attr('stroke-width', 1.5)
+        .attr('stroke-linecap', 'round')
+        .attr('stroke-dasharray', '0,6') // Dotted line pattern
         .attr('opacity', 0.8);
         
       // Add current price label on the left like min/max
