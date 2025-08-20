@@ -1,4630 +1,4609 @@
 const liquidityData = [
     {
-        "activeLiquidity": 33290938086561090,
+        "activeLiquidity": 44111233834839540,
         "price0": 2.9395446e-27,
         "tick": -887270,
         "amount0Locked": 0,
         "amount1Locked": 0
     },
     {
-        "activeLiquidity": 33291592478409576,
+        "activeLiquidity": 44111888226688024,
         "price0": 0.00020000434,
         "tick": -361500,
-        "amount0Locked": 0.235343,
-        "amount1Locked": 1176.6894810305184
+        "amount0Locked": 0.311832,
+        "amount1Locked": 1559.1261870916435
     },
     {
-        "activeLiquidity": 33291592512822364,
+        "activeLiquidity": 44111888261100820,
         "price0": 0.00099950345,
         "tick": -345410,
-        "amount0Locked": 0.526097,
-        "amount1Locked": 526.3583616112269
+        "amount0Locked": 0.697087,
+        "amount1Locked": 697.4333083452012
     },
     {
-        "activeLiquidity": 33306213308545420,
+        "activeLiquidity": 44126509056823870,
         "price0": 0.10001029,
         "tick": -299350,
-        "amount0Locked": 5.267177,
-        "amount1Locked": 52.66635250530454
+        "amount0Locked": 6.97759,
+        "amount1Locked": 69.76872327956472
     },
     {
-        "activeLiquidity": 33214762896005124,
+        "activeLiquidity": 44035058644283576,
         "price0": 0.19998421,
         "tick": -292420,
-        "amount0Locked": 7.404084,
-        "amount1Locked": 37.02334358480888
+        "amount0Locked": 9.822754,
+        "amount1Locked": 49.117648623523955
     },
     {
-        "activeLiquidity": 33199539440320050,
+        "activeLiquidity": 44019835188598504,
         "price0": 1.0004027,
         "tick": -276320,
-        "amount0Locked": 16.590521,
-        "amount1Locked": 16.583842605443987
+        "amount0Locked": 22.000135,
+        "amount1Locked": 21.991279004349497
     },
     {
-        "activeLiquidity": 33389299742435410,
+        "activeLiquidity": 44209595490713864,
         "price0": 18.233444,
         "tick": -247290,
-        "amount0Locked": 71.670859,
-        "amount1Locked": 3.9307362602842058
+        "amount0Locked": 94.765606,
+        "amount1Locked": 5.197350902854485
     },
     {
-        "activeLiquidity": 33583872472971330,
+        "activeLiquidity": 44404168221249784,
         "price0": 20.010414,
         "tick": -246360,
-        "amount0Locked": 75.527901,
-        "amount1Locked": 3.774429720388835
+        "amount0Locked": 99.721857,
+        "amount1Locked": 4.983497963662003
     },
     {
-        "activeLiquidity": 33389299742435410,
+        "activeLiquidity": 44209595490713864,
         "price0": 20.994289,
         "tick": -245880,
-        "amount0Locked": 76.025522,
-        "amount1Locked": 3.621247811411984
+        "amount0Locked": 100.807127,
+        "amount1Locked": 4.801645268854319
     },
     {
-        "activeLiquidity": 33390042677366410,
+        "activeLiquidity": 44210338425644856,
         "price0": 44.979748,
         "tick": -238260,
-        "amount0Locked": 111.937311,
-        "amount1Locked": 2.4886158064015484
+        "amount0Locked": 148.210636,
+        "amount1Locked": 3.2950526337587864
     },
     {
-        "activeLiquidity": 33392457637839530,
+        "activeLiquidity": 44212753386117980,
         "price0": 100.00022,
         "tick": -230270,
-        "amount0Locked": 166.924466,
-        "amount1Locked": 1.6692409823416658
+        "amount0Locked": 221.009777,
+        "amount1Locked": 2.2100929007410604
     },
     {
-        "activeLiquidity": 33390042677366410,
+        "activeLiquidity": 44210338425644856,
         "price0": 199.96408,
         "tick": -223340,
-        "amount0Locked": 235.994174,
-        "amount1Locked": 1.1801828413761128
+        "amount0Locked": 312.475401,
+        "amount1Locked": 1.5626576722708427
     },
     {
-        "activeLiquidity": 33390047890799132,
+        "activeLiquidity": 44210343639077580,
         "price0": 311.10039,
         "tick": -218920,
-        "amount0Locked": 294.379193,
-        "amount1Locked": 0.9462514569193119
+        "amount0Locked": 389.774966,
+        "amount1Locked": 1.25289129876844
     },
     {
-        "activeLiquidity": 33927129314565624,
+        "activeLiquidity": 44747425062844080,
         "price0": 500.24196,
         "tick": -214170,
-        "amount0Locked": 385.299212,
-        "amount1Locked": 0.7702257016391589
+        "amount0Locked": 506.26677,
+        "amount1Locked": 1.012043798677275
     },
     {
-        "activeLiquidity": 36904589889949304,
+        "activeLiquidity": 47724885638227750,
         "price0": 699.99633,
         "tick": -210810,
-        "amount0Locked": 527.430314,
-        "amount1Locked": 0.7534758248783712
+        "amount0Locked": 670.526066,
+        "amount1Locked": 0.9578993987854084
     },
     {
-        "activeLiquidity": 37087352610973736,
+        "activeLiquidity": 47907648359252184,
         "price0": 749.99883,
         "tick": -210120,
-        "amount0Locked": 510.188607,
-        "amount1Locked": 0.6802525376261487
+        "amount0Locked": 658.307054,
+        "amount1Locked": 0.8777441085051397
     },
     {
-        "activeLiquidity": 37090860989045540,
+        "activeLiquidity": 47911156737323990,
         "price0": 849.8547,
         "tick": -208870,
-        "amount0Locked": 540.530319,
-        "amount1Locked": 0.6360267438500968
+        "amount0Locked": 698.201093,
+        "amount1Locked": 0.8215534857599147
     },
     {
-        "activeLiquidity": 37231069280010540,
+        "activeLiquidity": 48051365028288990,
         "price0": 899.70105,
         "tick": -208300,
-        "amount0Locked": 560.307952,
-        "amount1Locked": 0.6227712518351961
+        "amount0Locked": 722.536758,
+        "amount1Locked": 0.8030853741597516
     },
     {
-        "activeLiquidity": 37233876298684510,
+        "activeLiquidity": 48054172046962970,
         "price0": 994.31847,
         "tick": -207300,
-        "amount0Locked": 586.912651,
-        "amount1Locked": 0.5902662670100998
+        "amount0Locked": 757.45868,
+        "amount1Locked": 0.7617867951835949
     },
     {
-        "activeLiquidity": 41938868110341780,
+        "activeLiquidity": 52759163858620220,
         "price0": 1000.302,
         "tick": -207240,
-        "amount0Locked": 737.394307,
-        "amount1Locked": 0.7371716712267083
+        "amount0Locked": 908.452717,
+        "amount1Locked": 0.9081784348808838
     },
     {
-        "activeLiquidity": 42407973803325336,
+        "activeLiquidity": 53228269551603790,
         "price0": 1001.3028,
         "tick": -207230,
-        "amount0Locked": 678.184143,
-        "amount1Locked": 0.6773017774501119
+        "amount0Locked": 849.328098,
+        "amount1Locked": 0.8482230620566469
     },
     {
-        "activeLiquidity": 42530579695633570,
+        "activeLiquidity": 53350875443912024,
         "price0": 1096.6909,
         "tick": -206320,
-        "amount0Locked": 706.046522,
-        "amount1Locked": 0.6437971952678738
+        "amount0Locked": 885.156993,
+        "amount1Locked": 0.8071162051063046
     },
     {
-        "activeLiquidity": 42650594637545760,
+        "activeLiquidity": 53470890385824210,
         "price0": 1188.0263,
         "tick": -205520,
-        "amount0Locked": 736.882421,
-        "amount1Locked": 0.6202576608367347
+        "amount0Locked": 923.302157,
+        "amount1Locked": 0.7771731552086131
     },
     {
-        "activeLiquidity": 43276760308739740,
+        "activeLiquidity": 54097056057018190,
         "price0": 1199.9656,
         "tick": -205420,
-        "amount0Locked": 760.182006,
-        "amount1Locked": 0.6335031788785288
+        "amount0Locked": 947.536128,
+        "amount1Locked": 0.7896360930046173
     },
     {
-        "activeLiquidity": 43329499191224820,
+        "activeLiquidity": 54149794939503260,
         "price0": 1202.3678,
         "tick": -205400,
-        "amount0Locked": 751.917766,
-        "amount1Locked": 0.6253641973365563
+        "amount0Locked": 939.459326,
+        "amount1Locked": 0.7813410640098272
     },
     {
-        "activeLiquidity": 44791553290141870,
+        "activeLiquidity": 55611849038420320,
         "price0": 1250.1841,
         "tick": -205010,
-        "amount0Locked": 817.470937,
-        "amount1Locked": 0.6538804473006562
+        "amount0Locked": 1008.70526,
+        "amount1Locked": 0.8068453773095112
     },
     {
-        "activeLiquidity": 44843288105713896,
+        "activeLiquidity": 55663583853992344,
         "price0": 1289.5448,
         "tick": -204700,
-        "amount0Locked": 805.853576,
-        "amount1Locked": 0.6249132185595584
+        "amount0Locked": 1000.074972,
+        "amount1Locked": 0.7755255894693457
     },
     {
-        "activeLiquidity": 45010654976201544,
+        "activeLiquidity": 55830950724479990,
         "price0": 1299.902,
         "tick": -204620,
-        "amount0Locked": 814.183397,
-        "amount1Locked": 0.6263421425074988
+        "amount0Locked": 1009.183195,
+        "amount1Locked": 0.7763532968959117
     },
     {
-        "activeLiquidity": 45162203727545900,
+        "activeLiquidity": 55982499475824360,
         "price0": 1318.2277,
         "tick": -204480,
-        "amount0Locked": 822.365662,
-        "amount1Locked": 0.6238419004682746
+        "amount0Locked": 1018.735179,
+        "amount1Locked": 0.772806695984405
     },
     {
-        "activeLiquidity": 45193709085147020,
+        "activeLiquidity": 56014004833425480,
         "price0": 1339.4879,
         "tick": -204320,
-        "amount0Locked": 827.350926,
-        "amount1Locked": 0.6176621173900626
+        "amount0Locked": 1025.29762,
+        "amount1Locked": 0.7654400074052637
     },
     {
-        "activeLiquidity": 45340259700093120,
+        "activeLiquidity": 56160555448371570,
         "price0": 1344.8563,
         "tick": -204280,
-        "amount0Locked": 833.802421,
-        "amount1Locked": 0.6199936897459906
+        "amount0Locked": 1032.145385,
+        "amount1Locked": 0.7674763343010802
     },
     {
-        "activeLiquidity": 47926883112726056,
+        "activeLiquidity": 58747178861004510,
         "price0": 1350.2462,
         "tick": -204240,
-        "amount0Locked": 927.798638,
-        "amount1Locked": 0.6871329220990505
+        "amount0Locked": 1126.538665,
+        "amount1Locked": 0.8343209108472666
     },
     {
-        "activeLiquidity": 47926877899293336,
+        "activeLiquidity": 58747173647571784,
         "price0": 1355.6578,
         "tick": -204200,
-        "amount0Locked": 882.051312,
-        "amount1Locked": 0.6506445339628756
+        "amount0Locked": 1081.189197,
+        "amount1Locked": 0.7975384556853997
     },
     {
-        "activeLiquidity": 49061988689791090,
+        "activeLiquidity": 59882284438069544,
         "price0": 1357.014,
         "tick": -204190,
-        "amount0Locked": 924.294819,
-        "amount1Locked": 0.6811239967994006
+        "amount0Locked": 1123.532293,
+        "amount1Locked": 0.8279444936944467
     },
     {
-        "activeLiquidity": 49062156036239920,
+        "activeLiquidity": 59882451784518370,
         "price0": 1373.3955,
         "tick": -204070,
-        "amount0Locked": 908.836253,
-        "amount1Locked": 0.6617440298514495
+        "amount0Locked": 1109.272685,
+        "amount1Locked": 0.8076862849088366
     },
     {
-        "activeLiquidity": 49064949309975100,
+        "activeLiquidity": 59885245058253550,
         "price0": 1374.7695,
         "tick": -204060,
-        "amount0Locked": 909.391198,
-        "amount1Locked": 0.6614863136724365
+        "amount0Locked": 1109.927869,
+        "amount1Locked": 0.8073556200255998
     },
     {
-        "activeLiquidity": 49250541161355650,
+        "activeLiquidity": 60070836909634104,
         "price0": 1394.1506,
         "tick": -203920,
-        "amount0Locked": 922.654427,
-        "amount1Locked": 0.6618039694757919
+        "amount0Locked": 1124.599708,
+        "amount1Locked": 0.8066558063842861
     },
     {
-        "activeLiquidity": 49258462965402760,
+        "activeLiquidity": 60078758713681220,
         "price0": 1395.5454,
         "tick": -203910,
-        "amount0Locked": 919.946155,
-        "amount1Locked": 0.6592018744903511
+        "amount0Locked": 1121.992429,
+        "amount1Locked": 0.8039813073198638
     },
     {
-        "activeLiquidity": 49855534284803590,
+        "activeLiquidity": 60675830033082040,
         "price0": 1399.7381,
         "tick": -203880,
-        "amount0Locked": 943.510469,
-        "amount1Locked": 0.6740621326977219
+        "amount0Locked": 1145.860025,
+        "amount1Locked": 0.8186245702638462
     },
     {
-        "activeLiquidity": 53378948757754700,
+        "activeLiquidity": 64199244506033160,
         "price0": 1402.5403,
         "tick": -203860,
-        "amount0Locked": 1065.191518,
-        "amount1Locked": 0.7594730382666918
+        "amount0Locked": 1267.743514,
+        "amount1Locked": 0.9038909924182031
     },
     {
-        "activeLiquidity": 53921757200103430,
+        "activeLiquidity": 64742052948381880,
         "price0": 1409.5702,
         "tick": -203810,
-        "amount0Locked": 1022.108788,
-        "amount1Locked": 0.7251208947030493
+        "amount0Locked": 1225.167773,
+        "amount1Locked": 0.8691782735353043
     },
     {
-        "activeLiquidity": 54663833448933760,
+        "activeLiquidity": 65484129197212210,
         "price0": 1416.6353,
         "tick": -203760,
-        "amount0Locked": 1042.377071,
-        "amount1Locked": 0.7358118593608767
+        "amount0Locked": 1245.944312,
+        "amount1Locked": 0.8795095617302083
     },
     {
-        "activeLiquidity": 54668762595453920,
+        "activeLiquidity": 65489058343732376,
         "price0": 1422.3129,
         "tick": -203720,
-        "amount0Locked": 1030.660674,
-        "amount1Locked": 0.7246370708733011
+        "amount0Locked": 1234.635437,
+        "amount1Locked": 0.8680476797391204
     },
     {
-        "activeLiquidity": 59912512514063096,
+        "activeLiquidity": 70732808262341550,
         "price0": 1425.1603,
         "tick": -203700,
-        "amount0Locked": 1229.497761,
-        "amount1Locked": 0.8627084246992321
+        "amount0Locked": 1433.67659,
+        "amount1Locked": 1.005975701396228
     },
     {
-        "activeLiquidity": 60013996176055850,
+        "activeLiquidity": 70834291924334300,
         "price0": 1428.0133,
         "tick": -203680,
-        "amount0Locked": 1135.513152,
-        "amount1Locked": 0.7951698781088419
+        "amount0Locked": 1339.896253,
+        "amount1Locked": 0.9382939671811956
     },
     {
-        "activeLiquidity": 60123817523258730,
+        "activeLiquidity": 70944113271537176,
         "price0": 1449.5939,
         "tick": -203530,
-        "amount0Locked": 1146.30978,
-        "amount1Locked": 0.7907799649229236
+        "amount0Locked": 1352.231439,
+        "amount1Locked": 0.9328346914218026
     },
     {
-        "activeLiquidity": 60201698584824730,
+        "activeLiquidity": 71021994333103176,
         "price0": 1458.3171,
         "tick": -203470,
-        "amount0Locked": 1150.630628,
-        "amount1Locked": 0.7890126266700923
+        "amount0Locked": 1357.170949,
+        "amount1Locked": 0.9306418491328668
     },
     {
-        "activeLiquidity": 60460652285060710,
+        "activeLiquidity": 71280948033339160,
         "price0": 1468.5606,
         "tick": -203400,
-        "amount0Locked": 1163.093462,
-        "amount1Locked": 0.7919955261460142
+        "amount0Locked": 1370.357904,
+        "amount1Locked": 0.9331299372284058
     },
     {
-        "activeLiquidity": 60520251085567850,
+        "activeLiquidity": 71340546833846296,
         "price0": 1471.5006,
         "tick": -203380,
-        "amount0Locked": 1161.577351,
-        "amount1Locked": 0.7893828807737
+        "amount0Locked": 1369.049151,
+        "amount1Locked": 0.9303762352173894
     },
     {
-        "activeLiquidity": 60733657094686824,
+        "activeLiquidity": 71553952842965270,
         "price0": 1472.9727,
         "tick": -203370,
-        "amount0Locked": 1169.20284,
-        "amount1Locked": 0.7937708702455141
+        "amount0Locked": 1376.778397,
+        "amount1Locked": 0.9346937493941717
     },
     {
-        "activeLiquidity": 60815603788513940,
+        "activeLiquidity": 71635899536792390,
         "price0": 1484.8032,
         "tick": -203290,
-        "amount0Locked": 1172.935131,
-        "amount1Locked": 0.7899600117530632
+        "amount0Locked": 1381.34261,
+        "amount1Locked": 0.9303203524139367
     },
     {
-        "activeLiquidity": 60879030016256910,
+        "activeLiquidity": 71699325764535370,
         "price0": 1490.754,
         "tick": -203250,
-        "amount0Locked": 1176.149883,
-        "amount1Locked": 0.788963100769285
+        "amount0Locked": 1384.974574,
+        "amount1Locked": 0.9290430158463567
     },
     {
-        "activeLiquidity": 60879641548068250,
+        "activeLiquidity": 71699937296346696,
         "price0": 1495.2327,
         "tick": -203220,
-        "amount0Locked": 1176.713061,
-        "amount1Locked": 0.7869765252930246
+        "amount0Locked": 1385.851208,
+        "amount1Locked": 0.926846488232343
     },
     {
-        "activeLiquidity": 63443027196133400,
+        "activeLiquidity": 74263322944411860,
         "price0": 1499.7249,
         "tick": -203190,
-        "amount0Locked": 1277.708151,
-        "amount1Locked": 0.85196165997482
+        "amount0Locked": 1487.160225,
+        "amount1Locked": 0.9916219857781331
     },
     {
-        "activeLiquidity": 63445643640365660,
+        "activeLiquidity": 74265939388644110,
         "price0": 1504.2306,
         "tick": -203160,
-        "amount0Locked": 1230.032708,
-        "amount1Locked": 0.8177154951393907
+        "amount0Locked": 1439.799181,
+        "amount1Locked": 0.9571664985291628
     },
     {
-        "activeLiquidity": 63471199792741560,
+        "activeLiquidity": 74291495541020020,
         "price0": 1560.9268,
         "tick": -202790,
-        "amount0Locked": 1253.956661,
-        "amount1Locked": 0.8033411279684107
+        "amount0Locked": 1467.639734,
+        "amount1Locked": 0.940236130986044
     },
     {
-        "activeLiquidity": 63580068214482290,
+        "activeLiquidity": 74400363962760740,
         "price0": 1579.7698,
         "tick": -202670,
-        "amount0Locked": 1265.320731,
-        "amount1Locked": 0.8009526181299295
+        "amount0Locked": 1480.289692,
+        "amount1Locked": 0.9370287511697671
     },
     {
-        "activeLiquidity": 63583789795733760,
+        "activeLiquidity": 74404085544012210,
         "price0": 1581.3502,
         "tick": -202660,
-        "amount0Locked": 1263.937475,
-        "amount1Locked": 0.7992773749125425
+        "amount0Locked": 1479.013942,
+        "amount1Locked": 0.935285490305453
     },
     {
-        "activeLiquidity": 63682947075978820,
+        "activeLiquidity": 74503242824257260,
         "price0": 1584.516,
         "tick": -202640,
-        "amount0Locked": 1269.073802,
-        "amount1Locked": 0.8009220722217584
+        "amount0Locked": 1484.365442,
+        "amount1Locked": 0.9367942540988694
     },
     {
-        "activeLiquidity": 63684152402521016,
+        "activeLiquidity": 74504448150799470,
         "price0": 1589.2764,
         "tick": -202610,
-        "amount0Locked": 1269.050886,
-        "amount1Locked": 0.798508607182761
+        "amount0Locked": 1484.66569,
+        "amount1Locked": 0.9341771439840693
     },
     {
-        "activeLiquidity": 63698499190493970,
+        "activeLiquidity": 74518794938772420,
         "price0": 1590.8664,
         "tick": -202600,
-        "amount0Locked": 1270.233568,
-        "amount1Locked": 0.798453957646153
+        "amount0Locked": 1485.956201,
+        "amount1Locked": 0.9340546805461942
     },
     {
-        "activeLiquidity": 70273560264806330,
+        "activeLiquidity": 81093856013084780,
         "price0": 1594.0512,
         "tick": -202580,
-        "amount0Locked": 1533.652384,
-        "amount1Locked": 0.9621098941851689
+        "amount0Locked": 1749.590836,
+        "amount1Locked": 1.0975750904523753
     },
     {
-        "activeLiquidity": 77227944324701980,
+        "activeLiquidity": 88048240072980430,
         "price0": 1597.2423,
         "tick": -202560,
-        "amount0Locked": 1681.690457,
-        "amount1Locked": 1.0528712358002763
+        "amount0Locked": 1897.844945,
+        "amount1Locked": 1.1882010415662705
     },
     {
-        "activeLiquidity": 77228414721781010,
+        "activeLiquidity": 88048710470059460,
         "price0": 1600.4398,
         "tick": -202540,
-        "amount0Locked": 1544.326644,
-        "amount1Locked": 0.9649389120560534
+        "amount0Locked": 1760.697384,
+        "amount1Locked": 1.1001334625532104
     },
     {
-        "activeLiquidity": 77370598215023170,
+        "activeLiquidity": 88190893963301620,
         "price0": 1606.8541,
         "tick": -202500,
-        "amount0Locked": 1553.106607,
-        "amount1Locked": 0.9665511277907638
+        "amount0Locked": 1769.910499,
+        "amount1Locked": 1.101475572370135
     },
     {
-        "activeLiquidity": 77370992323939090,
+        "activeLiquidity": 88191288072217550,
         "price0": 1608.4616,
         "tick": -202490,
-        "amount0Locked": 1551.048792,
-        "amount1Locked": 0.9643057396507511
+        "amount0Locked": 1767.961109,
+        "amount1Locked": 1.0991627430944204
     },
     {
-        "activeLiquidity": 77371584764301900,
+        "activeLiquidity": 88191880512580370,
         "price0": 1626.2515,
         "tick": -202380,
-        "amount0Locked": 1559.618574,
-        "amount1Locked": 0.9590266817905623
+        "amount0Locked": 1777.727135,
+        "amount1Locked": 1.0931440442104488
     },
     {
-        "activeLiquidity": 77407261373047840,
+        "activeLiquidity": 88227557121326290,
         "price0": 1634.4027,
         "tick": -202330,
-        "amount0Locked": 1564.952224,
-        "amount1Locked": 0.9575071182248992
+        "amount0Locked": 1783.606711,
+        "amount1Locked": 1.0912896225873543
     },
     {
-        "activeLiquidity": 77413283829847360,
+        "activeLiquidity": 88233579578125810,
         "price0": 1657.4441,
         "tick": -202190,
-        "amount0Locked": 1575.463869,
-        "amount1Locked": 0.9505381599324461
+        "amount0Locked": 1795.65423,
+        "amount1Locked": 1.0833875033532192
     },
     {
-        "activeLiquidity": 77429630979789730,
+        "activeLiquidity": 88249926728068200,
         "price0": 1687.5467,
         "tick": -202010,
-        "amount0Locked": 1590.253999,
-        "amount1Locked": 0.9423466595422185
+        "amount0Locked": 1812.434918,
+        "amount1Locked": 1.0740057825284393
     },
     {
-        "activeLiquidity": 77894149713278180,
+        "activeLiquidity": 88714445461556620,
         "price0": 1699.4004,
         "tick": -201940,
-        "amount0Locked": 1614.635992,
-        "amount1Locked": 0.9501210035711372
+        "amount0Locked": 1837.595868,
+        "amount1Locked": 1.0813201482643122
     },
     {
-        "activeLiquidity": 77931057036614640,
+        "activeLiquidity": 88751352784893090,
         "price0": 1738.9375,
         "tick": -201710,
-        "amount0Locked": 1625.166697,
-        "amount1Locked": 0.9345745066005938
+        "amount0Locked": 1850.705282,
+        "amount1Locked": 1.0642735782003678
     },
     {
-        "activeLiquidity": 77932487955443800,
+        "activeLiquidity": 88752783703722260,
         "price0": 1744.1619,
         "tick": -201680,
-        "amount0Locked": 1626.895444,
-        "amount1Locked": 0.93276628620639
+        "amount0Locked": 1852.772573,
+        "amount1Locked": 1.0622709642933068
     },
     {
-        "activeLiquidity": 99312311513321680,
+        "activeLiquidity": 110132607261600130,
         "price0": 1749.402,
         "tick": -201650,
-        "amount0Locked": 2523.268739,
-        "amount1Locked": 1.442360719656731
+        "amount0Locked": 2749.484921,
+        "amount1Locked": 1.5716712960628052
     },
     {
-        "activeLiquidity": 99318944328794460,
+        "activeLiquidity": 110139240077072930,
         "price0": 1754.6578,
         "tick": -201620,
-        "amount0Locked": 2079.682529,
-        "amount1Locked": 1.1852353731934426
+        "amount0Locked": 2306.238273,
+        "amount1Locked": 1.3143521388750177
     },
     {
-        "activeLiquidity": 99327098582161800,
+        "activeLiquidity": 110147394330440260,
         "price0": 1779.3946,
         "tick": -201480,
-        "amount0Locked": 2094.494658,
-        "amount1Locked": 1.1770827611254508
+        "amount0Locked": 2322.641776,
+        "amount1Locked": 1.3052989103395463
     },
     {
-        "activeLiquidity": 99229262887590750,
+        "activeLiquidity": 110049558635869200,
         "price0": 1790.1025,
         "tick": -201420,
-        "amount0Locked": 2096.476664,
-        "amount1Locked": 1.1711489632586556
+        "amount0Locked": 2325.309217,
+        "amount1Locked": 1.2989810597507065
     },
     {
-        "activeLiquidity": 99260479686409820,
+        "activeLiquidity": 110080775434688290,
         "price0": 1799.075,
         "tick": -201370,
-        "amount0Locked": 2105.122082,
-        "amount1Locked": 1.1701136043418279
+        "amount0Locked": 2334.527403,
+        "amount1Locked": 1.2976265354472192
     },
     {
-        "activeLiquidity": 114294692034104210,
+        "activeLiquidity": 125114987782382660,
         "price0": 1800.8748,
         "tick": -201360,
-        "amount0Locked": 2743.323923,
-        "amount1Locked": 1.5233284734360872
+        "amount0Locked": 2972.843969,
+        "amount1Locked": 1.650777666863385
     },
     {
-        "activeLiquidity": 114294993122640270,
+        "activeLiquidity": 125115288870918720,
         "price0": 1815.3389,
         "tick": -201280,
-        "amount0Locked": 2434.147735,
-        "amount1Locked": 1.3408778605109584
+        "amount0Locked": 2664.587654,
+        "amount1Locked": 1.4678183009460737
     },
     {
-        "activeLiquidity": 114327925052534830,
+        "activeLiquidity": 125148220800813280,
         "price0": 1818.973,
         "tick": -201260,
-        "amount0Locked": 2437.980666,
-        "amount1Locked": 1.340306113644735
+        "amount0Locked": 2668.651129,
+        "amount1Locked": 1.467119683624113
     },
     {
-        "activeLiquidity": 114329098147546160,
+        "activeLiquidity": 125149393895824620,
         "price0": 1839.0912,
         "tick": -201150,
-        "amount0Locked": 2450.770196,
-        "amount1Locked": 1.3325985339017838
+        "amount0Locked": 2682.712778,
+        "amount1Locked": 1.4587165784361373
     },
     {
-        "activeLiquidity": 114291237071131440,
+        "activeLiquidity": 125111532819409890,
         "price0": 1844.6165,
         "tick": -201120,
-        "amount0Locked": 2452.798134,
-        "amount1Locked": 1.329706310212635
+        "amount0Locked": 2685.088873,
+        "amount1Locked": 1.4556353286551516
     },
     {
-        "activeLiquidity": 114337440756443230,
+        "activeLiquidity": 125157736504721680,
         "price0": 1850.1583,
         "tick": -201090,
-        "amount0Locked": 2459.280716,
-        "amount1Locked": 1.329227166333992
+        "amount0Locked": 2691.920136,
+        "amount1Locked": 1.454967442753979
     },
     {
-        "activeLiquidity": 114337273409994400,
+        "activeLiquidity": 125157569158272850,
         "price0": 1852.0093,
         "tick": -201080,
-        "amount0Locked": 2459.509513,
-        "amount1Locked": 1.3280222098251604
+        "amount0Locked": 2692.265276,
+        "amount1Locked": 1.4536996349763929
     },
     {
-        "activeLiquidity": 114329351605947300,
+        "activeLiquidity": 125149647354225740,
         "price0": 1868.7518,
         "tick": -200990,
-        "amount0Locked": 2470.262957,
-        "amount1Locked": 1.321878571830044
+        "amount0Locked": 2704.068428,
+        "amount1Locked": 1.4469917470147906
     },
     {
-        "activeLiquidity": 114322718790474500,
+        "activeLiquidity": 125143014538752960,
         "price0": 1870.6214,
         "tick": -200980,
-        "amount0Locked": 2471.382808,
-        "amount1Locked": 1.32115607187425
+        "amount0Locked": 2705.305206,
+        "amount1Locked": 1.4462067097052975
     },
     {
-        "activeLiquidity": 114322126350111700,
+        "activeLiquidity": 125142422098390140,
         "price0": 1872.4929,
         "tick": -200970,
-        "amount0Locked": 2472.736584,
-        "amount1Locked": 1.320558622743984
+        "amount0Locked": 2706.775966,
+        "amount1Locked": 1.4455467536923363
     },
     {
-        "activeLiquidity": 114418486932221520,
+        "activeLiquidity": 125238782680499970,
         "price0": 1879.9974,
         "tick": -200930,
-        "amount0Locked": 2481.876437,
-        "amount1Locked": 1.3201488322227366
+        "amount0Locked": 2716.384343,
+        "amount1Locked": 1.4448872493484153
     },
     {
-        "activeLiquidity": 114424194942877340,
+        "activeLiquidity": 125244490691155800,
         "price0": 1881.8783,
         "tick": -200920,
-        "amount0Locked": 2481.275702,
-        "amount1Locked": 1.318510188219493
+        "amount0Locked": 2715.900885,
+        "amount1Locked": 1.4431862546271923
     },
     {
-        "activeLiquidity": 126928536983027650,
+        "activeLiquidity": 137748832731306100,
         "price0": 1895.097,
         "tick": -200850,
-        "amount0Locked": 3034.035393,
-        "amount1Locked": 1.6009921427922704
+        "amount0Locked": 3269.483162,
+        "amount1Locked": 1.725232627618734
     },
     {
-        "activeLiquidity": 135114206556966180,
+        "activeLiquidity": 145934502305244600,
         "price0": 1900.7905,
         "tick": -200820,
-        "amount0Locked": 3122.861129,
-        "amount1Locked": 1.642927547050133
+        "amount0Locked": 3358.662317,
+        "amount1Locked": 1.7669818201635843
     },
     {
-        "activeLiquidity": 135144920222980220,
+        "activeLiquidity": 145965215971258660,
         "price0": 1904.5957,
         "tick": -200800,
-        "amount0Locked": 2948.7608,
-        "amount1Locked": 1.5482344919507174
+        "amount0Locked": 3184.797896,
+        "amount1Locked": 1.6721647793470644
     },
     {
-        "activeLiquidity": 135145010161732380,
+        "activeLiquidity": 145965305910010850,
         "price0": 1923.7363,
         "tick": -200700,
-        "amount0Locked": 2962.871373,
-        "amount1Locked": 1.5401650508016593
+        "amount0Locked": 3200.09155,
+        "amount1Locked": 1.6634772638426347
     },
     {
-        "activeLiquidity": 135254719146631740,
+        "activeLiquidity": 146075014894910200,
         "price0": 1925.6609,
         "tick": -200690,
-        "amount0Locked": 2969.163977,
-        "amount1Locked": 1.5418934958378554
+        "amount0Locked": 3206.502787,
+        "amount1Locked": 1.6651440708426917
     },
     {
-        "activeLiquidity": 135261149801715120,
+        "activeLiquidity": 146081445549993570,
         "price0": 1927.5874,
         "tick": -200680,
-        "amount0Locked": 2968.523479,
-        "amount1Locked": 1.5400201704291996
+        "amount0Locked": 3205.980982,
+        "amount1Locked": 1.6632091385565264
     },
     {
-        "activeLiquidity": 135259944475172930,
+        "activeLiquidity": 146080240223451400,
         "price0": 1937.249,
         "tick": -200630,
-        "amount0Locked": 2975.759187,
-        "amount1Locked": 1.5360747137014819
+        "amount0Locked": 3213.811047,
+        "amount1Locked": 1.6589561095795702
     },
     {
-        "activeLiquidity": 135257151201437740,
+        "activeLiquidity": 146077446949716200,
         "price0": 1939.1871,
         "tick": -200620,
-        "amount0Locked": 2977.150927,
-        "amount1Locked": 1.53525717596767
+        "amount0Locked": 3215.321837,
+        "amount1Locked": 1.6580771497110605
     },
     {
-        "activeLiquidity": 135257619691801820,
+        "activeLiquidity": 146077915440080260,
         "price0": 1941.1272,
         "tick": -200610,
-        "amount0Locked": 2978.721949,
-        "amount1Locked": 1.5345320977638228
+        "amount0Locked": 3217.011969,
+        "amount1Locked": 1.6572906803128056
     },
     {
-        "activeLiquidity": 136399285157968480,
+        "activeLiquidity": 147219580906246940,
         "price0": 1950.8566,
         "tick": -200560,
-        "amount0Locked": 3036.577884,
-        "amount1Locked": 1.5565356509452941
+        "amount0Locked": 3275.464344,
+        "amount1Locked": 1.6789877354043656
     },
     {
-        "activeLiquidity": 136402022503650510,
+        "activeLiquidity": 147222318251928960,
         "price0": 1960.6348,
         "tick": -200510,
-        "amount0Locked": 3019.031262,
-        "amount1Locked": 1.5398233247267386
+        "amount0Locked": 3258.515656,
+        "amount1Locked": 1.6619696769128882
     },
     {
-        "activeLiquidity": 136370805704831420,
+        "activeLiquidity": 147191101453109900,
         "price0": 1976.382,
         "tick": -200430,
-        "amount0Locked": 3029.682764,
-        "amount1Locked": 1.532943886572388
+        "amount0Locked": 3270.126965,
+        "amount1Locked": 1.6546026530823499
     },
     {
-        "activeLiquidity": 136426641768981700,
+        "activeLiquidity": 147246937517260160,
         "price0": 1982.3198,
         "tick": -200400,
-        "amount0Locked": 3037.410456,
-        "amount1Locked": 1.5322504829512407
+        "amount0Locked": 3278.215576,
+        "amount1Locked": 1.653726907281141
     },
     {
-        "activeLiquidity": 136778763590476590,
+        "activeLiquidity": 147599059338755040,
         "price0": 1994.2489,
         "tick": -200340,
-        "amount0Locked": 3061.009543,
-        "amount1Locked": 1.5349185341190317
+        "amount0Locked": 3302.538127,
+        "amount1Locked": 1.6560310935192184
     },
     {
-        "activeLiquidity": 136792286399783000,
+        "activeLiquidity": 147612582148061470,
         "price0": 1998.2412,
         "tick": -200320,
-        "amount0Locked": 3056.808382,
-        "amount1Locked": 1.5297494885915346
+        "amount0Locked": 3298.578603,
+        "amount1Locked": 1.6507410018670345
     },
     {
-        "activeLiquidity": 163469806745603970,
+        "activeLiquidity": 174290102493882400,
         "price0": 2000.2403,
         "tick": -200310,
-        "amount0Locked": 4250.803578,
-        "amount1Locked": 2.125146459371501
+        "amount0Locked": 4492.694709,
+        "amount1Locked": 2.2460774953898435
     },
     {
-        "activeLiquidity": 163470023699350850,
+        "activeLiquidity": 174290319447629300,
         "price0": 2004.2446,
         "tick": -200290,
-        "amount0Locked": 3658.084956,
-        "amount1Locked": 1.8251689429398261
+        "amount0Locked": 3900.218086,
+        "amount1Locked": 1.9459791139031741
     },
     {
-        "activeLiquidity": 163469185563317250,
+        "activeLiquidity": 174289481311595700,
         "price0": 2006.2497,
         "tick": -200280,
-        "amount0Locked": 3659.871977,
-        "amount1Locked": 1.8242355045392489
+        "amount0Locked": 3902.126198,
+        "amount1Locked": 1.9449852886437045
     },
     {
-        "activeLiquidity": 163469583643007780,
+        "activeLiquidity": 174289879391286240,
         "price0": 2010.266,
         "tick": -200260,
-        "amount0Locked": 3663.570123,
-        "amount1Locked": 1.8224304917611462
+        "amount0Locked": 3906.066707,
+        "amount1Locked": 1.9430595923357603
     },
     {
-        "activeLiquidity": 163490771828437920,
+        "activeLiquidity": 174311067576716350,
         "price0": 2016.3056,
         "tick": -200230,
-        "amount0Locked": 3670.011525,
-        "amount1Locked": 1.8201663211861503
+        "amount0Locked": 3912.87211,
+        "amount1Locked": 1.9406146234733117
     },
     {
-        "activeLiquidity": 166521200470660830,
+        "activeLiquidity": 177341496218939300,
         "price0": 2020.342,
         "tick": -200210,
-        "amount0Locked": 3809.37865,
-        "amount1Locked": 1.8855117540898638
+        "amount0Locked": 4052.482204,
+        "amount1Locked": 2.0058396738486466
     },
     {
-        "activeLiquidity": 166526328783179230,
+        "activeLiquidity": 177346624531457660,
         "price0": 2024.3866,
         "tick": -200190,
-        "amount0Locked": 3745.266545,
-        "amount1Locked": 1.8500747945876157
+        "amount0Locked": 3988.613312,
+        "amount1Locked": 1.9702824525905218
     },
     {
-        "activeLiquidity": 166522607201927740,
+        "activeLiquidity": 177342902950206200,
         "price0": 2026.4119,
         "tick": -200180,
-        "amount0Locked": 3746.856681,
-        "amount1Locked": 1.8490104421665752
+        "amount0Locked": 3990.325146,
+        "amount1Locked": 1.969158014505296
     },
     {
-        "activeLiquidity": 166523390051636930,
+        "activeLiquidity": 177343685799915360,
         "price0": 2044.731,
         "tick": -200090,
-        "amount0Locked": 3763.874189,
-        "amount1Locked": 1.8407674482372653
+        "amount0Locked": 4008.440676,
+        "amount1Locked": 1.9603755981363857
     },
     {
-        "activeLiquidity": 166852663547640260,
+        "activeLiquidity": 177672959295918720,
         "price0": 2050.8741,
         "tick": -200060,
-        "amount0Locked": 3784.41343,
-        "amount1Locked": 1.845268568268979
+        "amount0Locked": 4029.347024,
+        "amount1Locked": 1.9646974495689153
     },
     {
-        "activeLiquidity": 166855372830483620,
+        "activeLiquidity": 177675668578762080,
         "price0": 2063.2157,
         "tick": -200000,
-        "amount0Locked": 3788.430182,
-        "amount1Locked": 1.8361774961804553
+        "amount0Locked": 4034.099643,
+        "amount1Locked": 1.955248645473443
     },
     {
-        "activeLiquidity": 166876807115372930,
+        "activeLiquidity": 177697102863651400,
         "price0": 2065.2798,
         "tick": -199990,
-        "amount0Locked": 3791.237029,
-        "amount1Locked": 1.8357013919626641
+        "amount0Locked": 4037.029349,
+        "amount1Locked": 1.9547130233922994
     },
     {
-        "activeLiquidity": 159922423055477280,
+        "activeLiquidity": 170742718803755740,
         "price0": 2071.4846,
         "tick": -199960,
-        "amount0Locked": 3480.016357,
-        "amount1Locked": 1.6799624194074083
+        "amount0Locked": 3726.177623,
+        "amount1Locked": 1.7987956757976886
     },
     {
-        "activeLiquidity": 159998519155312100,
+        "activeLiquidity": 170818814903590560,
         "price0": 2075.6316,
         "tick": -199940,
-        "amount0Locked": 3645.333993,
-        "amount1Locked": 1.7562529282170714
+        "amount0Locked": 3891.741532,
+        "amount1Locked": 1.8749674171320825
     },
     {
-        "activeLiquidity": 159998125046396160,
+        "activeLiquidity": 170818420794674620,
         "price0": 2079.7868,
         "tick": -199920,
-        "amount0Locked": 3647.228352,
-        "amount1Locked": 1.7536549506858676
+        "amount0Locked": 3893.882409,
+        "amount1Locked": 1.8722507901615102
     },
     {
-        "activeLiquidity": 159998125484493600,
+        "activeLiquidity": 170818421232772030,
         "price0": 2086.0352,
         "tick": -199890,
-        "amount0Locked": 3652.712043,
-        "amount1Locked": 1.7510308941145118
+        "amount0Locked": 3899.73634,
+        "amount1Locked": 1.8694489819768838
     },
     {
-        "activeLiquidity": 164174940753938530,
+        "activeLiquidity": 174995236502217000,
         "price0": 2092.3024,
         "tick": -199860,
-        "amount0Locked": 3849.192232,
-        "amount1Locked": 1.8396921467705
+        "amount0Locked": 4096.587325,
+        "amount1Locked": 1.957932749554107
     },
     {
-        "activeLiquidity": 164140161287445540,
+        "activeLiquidity": 174960457035724000,
         "price0": 2094.3956,
         "tick": -199850,
-        "amount0Locked": 3753.979617,
-        "amount1Locked": 1.792392802112406
+        "amount0Locked": 4001.498433,
+        "amount1Locked": 1.910574302666298
     },
     {
-        "activeLiquidity": 164268517195006100,
+        "activeLiquidity": 175088812943284580,
         "price0": 2100.6879,
         "tick": -199820,
-        "amount0Locked": 3766.292525,
-        "amount1Locked": 1.7928853189104121
+        "amount0Locked": 4014.182878,
+        "amount1Locked": 1.9108896883647521
     },
     {
-        "activeLiquidity": 164322753291087800,
+        "activeLiquidity": 175143049039366270,
         "price0": 2111.2171,
         "tick": -199770,
-        "amount0Locked": 3775.262892,
-        "amount1Locked": 1.7881926198646123
+        "amount0Locked": 4023.773716,
+        "amount1Locked": 1.9059023619795128
     },
     {
-        "activeLiquidity": 164221269629095070,
+        "activeLiquidity": 175041565377373540,
         "price0": 2115.4436,
         "tick": -199750,
-        "amount0Locked": 3773.126728,
-        "amount1Locked": 1.783610192241895
+        "amount0Locked": 4021.886174,
+        "amount1Locked": 1.9012022890059577
     },
     {
-        "activeLiquidity": 164227719355599360,
+        "activeLiquidity": 175048015103877800,
         "price0": 2128.1738,
         "tick": -199690,
-        "amount0Locked": 3787.100113,
-        "amount1Locked": 1.7795070080036817
+        "amount0Locked": 4036.606921,
+        "amount1Locked": 1.8967468749553134
     },
     {
-        "activeLiquidity": 164236834917966180,
+        "activeLiquidity": 175057130666244600,
         "price0": 2130.3029,
         "tick": -199680,
-        "amount0Locked": 3789.265847,
-        "amount1Locked": 1.7787451112931325
+        "amount0Locked": 4038.897433,
+        "amount1Locked": 1.8959263757255012
     },
     {
-        "activeLiquidity": 169808099222035330,
+        "activeLiquidity": 180628394970313800,
         "price0": 2149.5612,
         "tick": -199590,
-        "amount0Locked": 4064.368922,
-        "amount1Locked": 1.8907900616956927
+        "amount0Locked": 4315.126325,
+        "amount1Locked": 2.0074452213497804
     },
     {
-        "activeLiquidity": 169826987664774750,
+        "activeLiquidity": 180647283413053220,
         "price0": 2160.3354,
         "tick": -199540,
-        "amount0Locked": 3945.984007,
-        "amount1Locked": 1.8265608543971867
+        "amount0Locked": 4197.369057,
+        "amount1Locked": 1.9429247552381765
     },
     {
-        "activeLiquidity": 176559120722151700,
+        "activeLiquidity": 187379416470430180,
         "price0": 2175.51,
         "tick": -199470,
-        "amount0Locked": 4273.2865,
-        "amount1Locked": 1.9642688368368804
+        "amount0Locked": 4525.552895,
+        "amount1Locked": 2.080226196185401
     },
     {
-        "activeLiquidity": 178490804737338370,
+        "activeLiquidity": 189311100485616800,
         "price0": 2177.6865,
         "tick": -199460,
-        "amount0Locked": 4208.5072,
-        "amount1Locked": 1.9325588040621078
+        "amount0Locked": 4460.899753,
+        "amount1Locked": 2.0484582019245763
     },
     {
-        "activeLiquidity": 189647076220508930,
+        "activeLiquidity": 200467371968787400,
         "price0": 2197.3731,
         "tick": -199370,
-        "amount0Locked": 4705.032001,
-        "amount1Locked": 2.1412075680209117
+        "amount0Locked": 4958.562823,
+        "amount1Locked": 2.2565866163839376
     },
     {
-        "activeLiquidity": 191760103394026660,
+        "activeLiquidity": 202580399142305100,
         "price0": 2199.5715,
         "tick": -199360,
-        "amount0Locked": 4544.921561,
-        "amount1Locked": 2.0662758872239015
+        "amount0Locked": 4798.579173,
+        "amount1Locked": 2.1815972630170353
     },
     {
-        "activeLiquidity": 188236688921075520,
+        "activeLiquidity": 199056984669354000,
         "price0": 2201.7721,
         "tick": -199350,
-        "amount0Locked": 4332.354766,
-        "amount1Locked": 1.9676672411642533
+        "amount0Locked": 4586.139233,
+        "amount1Locked": 2.0829309739386783
     },
     {
-        "activeLiquidity": 188305413241812930,
+        "activeLiquidity": 199125708990091360,
         "price0": 2221.6765,
         "tick": -199260,
-        "amount0Locked": 4438.144212,
-        "amount1Locked": 1.9976555106496325
+        "amount0Locked": 4693.073225,
+        "amount1Locked": 2.112401747661708
     },
     {
-        "activeLiquidity": 188430968218302340,
+        "activeLiquidity": 199251263966580800,
         "price0": 2230.5805,
         "tick": -199220,
-        "amount0Locked": 4451.334593,
-        "amount1Locked": 1.9955946761542591
+        "amount0Locked": 4706.773949,
+        "amount1Locked": 2.1101116616254236
     },
     {
-        "activeLiquidity": 188433628563638460,
+        "activeLiquidity": 199253924311916900,
         "price0": 2232.8121,
         "tick": -199210,
-        "amount0Locked": 4450.720864,
-        "amount1Locked": 1.9933253104349693
+        "amount0Locked": 4706.287965,
+        "amount1Locked": 2.107785054486397
     },
     {
-        "activeLiquidity": 188435860000438900,
+        "activeLiquidity": 199256155748717340,
         "price0": 2241.7608,
         "tick": -199170,
-        "amount0Locked": 4459.673427,
-        "amount1Locked": 1.9893618723361635
+        "amount0Locked": 4715.752148,
+        "amount1Locked": 2.1035929370571296
     },
     {
-        "activeLiquidity": 188436314650872670,
+        "activeLiquidity": 199256610399151140,
         "price0": 2244.0036,
         "tick": -199160,
-        "amount0Locked": 4461.872404,
-        "amount1Locked": 1.9883535388987055
+        "amount0Locked": 4718.079189,
+        "amount1Locked": 2.1025275047852947
     },
     {
-        "activeLiquidity": 188437797962187840,
+        "activeLiquidity": 199258093710466270,
         "price0": 2246.2486,
         "tick": -199150,
-        "amount0Locked": 4464.163295,
-        "amount1Locked": 1.9873861527352517
+        "amount0Locked": 4720.49821,
+        "amount1Locked": 2.1015030491991764
     },
     {
-        "activeLiquidity": 192032235070126720,
+        "activeLiquidity": 202852530818405200,
         "price0": 2250.7453,
         "tick": -199130,
-        "amount0Locked": 4639.070506,
-        "amount1Locked": 2.0611263466870784
+        "amount0Locked": 4895.661872,
+        "amount1Locked": 2.175129189306308
     },
     {
-        "activeLiquidity": 192037224071266340,
+        "activeLiquidity": 202857519819544770,
         "price0": 2266.555,
         "tick": -199060,
-        "amount0Locked": 4570.035385,
-        "amount1Locked": 2.0162913874022057
+        "amount0Locked": 4827.526348,
+        "amount1Locked": 2.129895936884441
     },
     {
-        "activeLiquidity": 192047609194073440,
+        "activeLiquidity": 202867904942351870,
         "price0": 2277.9156,
         "tick": -199010,
-        "amount0Locked": 4581.850681,
-        "amount1Locked": 2.011422482923739
+        "amount0Locked": 4839.986145,
+        "amount1Locked": 2.12474339014637
     },
     {
-        "activeLiquidity": 192975921862630850,
+        "activeLiquidity": 203796217610909280,
         "price0": 2282.4758,
         "tick": -198990,
-        "amount0Locked": 4630.523672,
-        "amount1Locked": 2.028728506193283
+        "amount0Locked": 4888.917388,
+        "amount1Locked": 2.141936154961008
     },
     {
-        "activeLiquidity": 193413770525757220,
+        "activeLiquidity": 204234066274035680,
         "price0": 2287.0451,
         "tick": -198970,
-        "amount0Locked": 4633.898544,
-        "amount1Locked": 2.026150953741536
+        "amount0Locked": 4892.55077,
+        "amount1Locked": 2.139245457089227
     },
     {
-        "activeLiquidity": 194578530745966430,
+        "activeLiquidity": 205398826494244900,
         "price0": 2300.8079,
         "tick": -198910,
-        "amount0Locked": 4693.175471,
-        "amount1Locked": 2.039794577348692
+        "amount0Locked": 4952.604779,
+        "amount1Locked": 2.152550322138896
     },
     {
-        "activeLiquidity": 194577747896257280,
+        "activeLiquidity": 205398043644535740,
         "price0": 2303.1097,
         "tick": -198900,
-        "amount0Locked": 4667.544508,
-        "amount1Locked": 2.026627054136583
+        "amount0Locked": 4927.103557,
+        "amount1Locked": 2.139326438137693
     },
     {
-        "activeLiquidity": 194613594275418460,
+        "activeLiquidity": 205433890023696930,
         "price0": 2305.4139,
         "tick": -198890,
-        "amount0Locked": 4671.618174,
-        "amount1Locked": 2.0263685411352044
+        "amount0Locked": 4931.307028,
+        "amount1Locked": 2.1390115921357706
     },
     {
-        "activeLiquidity": 194734864411389950,
+        "activeLiquidity": 205555160159668380,
         "price0": 2307.7203,
         "tick": -198880,
-        "amount0Locked": 4678.917618,
-        "amount1Locked": 2.0275063406309766
+        "amount0Locked": 4938.736342,
+        "amount1Locked": 2.140093086825885
     },
     {
-        "activeLiquidity": 194671438183646980,
+        "activeLiquidity": 205491733931925400,
         "price0": 2319.2873,
         "tick": -198830,
-        "amount0Locked": 4684.656086,
-        "amount1Locked": 2.019868852601162
+        "amount0Locked": 4945.125138,
+        "amount1Locked": 2.1321744979981916
     },
     {
-        "activeLiquidity": 194696369034408830,
+        "activeLiquidity": 205516664782687300,
         "price0": 2337.915,
         "tick": -198750,
-        "amount0Locked": 4706.169324,
-        "amount1Locked": 2.012977057465172
+        "amount0Locked": 4967.682286,
+        "amount1Locked": 2.124834399709784
     },
     {
-        "activeLiquidity": 194791702128075200,
+        "activeLiquidity": 205611997876353660,
         "price0": 2340.254,
         "tick": -198740,
-        "amount0Locked": 4712.530497,
-        "amount1Locked": 2.0136833420541977
+        "amount0Locked": 4974.174242,
+        "amount1Locked": 2.125484772558378
     },
     {
-        "activeLiquidity": 195375243088657730,
+        "activeLiquidity": 206195538836936160,
         "price0": 2347.285,
         "tick": -198710,
-        "amount0Locked": 4745.558922,
-        "amount1Locked": 2.021722551285474
+        "amount0Locked": 5007.595407,
+        "amount1Locked": 2.133356413532581
     },
     {
-        "activeLiquidity": 502957032202048600,
+        "activeLiquidity": 513777327950327040,
         "price0": 2359.0502,
         "tick": -198660,
-        "amount0Locked": 19678.053482,
-        "amount1Locked": 8.341515442236336
+        "amount0Locked": 19940.745845,
+        "amount1Locked": 8.452870582343381
     },
     {
-        "activeLiquidity": 502980299052834800,
+        "activeLiquidity": 513800594801113300,
         "price0": 2363.7728,
         "tick": -198640,
-        "amount0Locked": 12224.008767,
-        "amount1Locked": 5.171397590036489
+        "amount0Locked": 12486.963941,
+        "amount1Locked": 5.282641436390908
     },
     {
-        "activeLiquidity": 503021678614774200,
+        "activeLiquidity": 513841974363052700,
         "price0": 2366.1376,
         "tick": -198630,
-        "amount0Locked": 12231.5685,
-        "amount1Locked": 5.169424003191953
+        "amount0Locked": 12494.655178,
+        "amount1Locked": 5.28061224435442
     },
     {
-        "activeLiquidity": 503028361827545300,
+        "activeLiquidity": 513848657575823740,
         "price0": 2368.5048,
         "tick": -198620,
-        "amount0Locked": 12237.00405,
-        "amount1Locked": 5.166552350084617
+        "amount0Locked": 12500.222298,
+        "amount1Locked": 5.277685013948494
     },
     {
-        "activeLiquidity": 503372115620580860,
+        "activeLiquidity": 514192411368859300,
         "price0": 2385.1417,
         "tick": -198550,
-        "amount0Locked": 12296.526489,
-        "amount1Locked": 5.155470080060056
+        "amount0Locked": 12560.667568,
+        "amount1Locked": 5.266214478562955
     },
     {
-        "activeLiquidity": 503379215107270500,
+        "activeLiquidity": 514199510855549000,
         "price0": 2387.5279,
         "tick": -198540,
-        "amount0Locked": 12294.626988,
-        "amount1Locked": 5.149521851132129
+        "amount0Locked": 12558.900164,
+        "amount1Locked": 5.260210894061887
     },
     {
-        "activeLiquidity": 507208943101575700,
+        "activeLiquidity": 518029238849854140,
         "price0": 2389.9165,
         "tick": -198530,
-        "amount0Locked": 12487.768933,
-        "amount1Locked": 5.225190513731004
+        "amount0Locked": 12752.174272,
+        "amount1Locked": 5.335824228731265
     },
     {
-        "activeLiquidity": 507262605389218370,
+        "activeLiquidity": 518082901137496800,
         "price0": 2392.3075,
         "tick": -198520,
-        "amount0Locked": 12403.007723,
-        "amount1Locked": 5.184537461832451
+        "amount0Locked": 12667.545291,
+        "amount1Locked": 5.295115876519297
     },
     {
-        "activeLiquidity": 507274970627335200,
+        "activeLiquidity": 518095266375613600,
         "price0": 2397.0966,
         "tick": -198500,
-        "amount0Locked": 12414.708273,
-        "amount1Locked": 5.179060400499552
+        "amount0Locked": 12679.510498,
+        "amount1Locked": 5.2895282977150115
     },
     {
-        "activeLiquidity": 525000639994712060,
+        "activeLiquidity": 535820935742990500,
         "price0": 2399.4948,
         "tick": -198490,
-        "amount0Locked": 13288.639189,
-        "amount1Locked": 5.538098734235621
+        "amount0Locked": 13553.573841,
+        "amount1Locked": 5.6485114138206685
     },
     {
-        "activeLiquidity": 525001176024271200,
+        "activeLiquidity": 535821471772549700,
         "price0": 2404.2984,
         "tick": -198470,
-        "amount0Locked": 12867.513336,
-        "amount1Locked": 5.351878753596483
+        "amount0Locked": 13132.713042,
+        "amount1Locked": 5.462181081244402
     },
     {
-        "activeLiquidity": 525004823305044000,
+        "activeLiquidity": 535825119053322400,
         "price0": 2411.5217,
         "tick": -198440,
-        "amount0Locked": 12886.994019,
-        "amount1Locked": 5.343926147263859
+        "amount0Locked": 13152.591804,
+        "amount1Locked": 5.4540631540649995
     },
     {
-        "activeLiquidity": 524819231453663400,
+        "activeLiquidity": 535639527201941800,
         "price0": 2418.7668,
         "tick": -198410,
-        "amount0Locked": 12897.123538,
-        "amount1Locked": 5.332107077350002
+        "amount0Locked": 13163.119998,
+        "amount1Locked": 5.442079010450985
     },
     {
-        "activeLiquidity": 525908847720076540,
+        "activeLiquidity": 536729143468355000,
         "price0": 2423.6089,
         "tick": -198390,
-        "amount0Locked": 12968.219353,
-        "amount1Locked": 5.350788741790234
+        "amount0Locked": 13234.481929,
+        "amount1Locked": 5.46065076333996
     },
     {
-        "activeLiquidity": 526535073184353500,
+        "activeLiquidity": 537355368932631940,
         "price0": 2428.4608,
         "tick": -198370,
-        "amount0Locked": 12985.204404,
-        "amount1Locked": 5.347092556002887
+        "amount0Locked": 13251.733363,
+        "amount1Locked": 5.45684477616733
     },
     {
-        "activeLiquidity": 526551401784760500,
+        "activeLiquidity": 537371697533039000,
         "price0": 2430.8903,
         "tick": -198360,
-        "amount0Locked": 12977.070032,
-        "amount1Locked": 5.3384021509843285
+        "amount0Locked": 13243.732281,
+        "amount1Locked": 5.448099511030749
     },
     {
-        "activeLiquidity": 515551479867318500,
+        "activeLiquidity": 526371775615597000,
         "price0": 2433.3223,
         "tick": -198350,
-        "amount0Locked": 12440.707965,
-        "amount1Locked": 5.112642916095785
+        "amount0Locked": 12707.503572,
+        "amount1Locked": 5.2222854439978565
     },
     {
-        "activeLiquidity": 530686249499342500,
+        "activeLiquidity": 541506545247621000,
         "price0": 2438.1936,
         "tick": -198330,
-        "amount0Locked": 13471.751795,
-        "amount1Locked": 5.525300376542771
+        "amount0Locked": 13738.814318,
+        "amount1Locked": 5.63483332232047
     },
     {
-        "activeLiquidity": 530778247724172300,
+        "activeLiquidity": 541598543472450750,
         "price0": 2440.6329,
         "tick": -198320,
-        "amount0Locked": 13109.295042,
-        "amount1Locked": 5.371268782423936
+        "amount0Locked": 13376.491123,
+        "amount1Locked": 5.480746978166974
     },
     {
-        "activeLiquidity": 530964974546489150,
+        "activeLiquidity": 541785270294767550,
         "price0": 2443.0746,
         "tick": -198310,
-        "amount0Locked": 13122.804729,
-        "amount1Locked": 5.3714302556776286
+        "amount0Locked": 13390.134435,
+        "amount1Locked": 5.4808537288377925
     },
     {
-        "activeLiquidity": 530964993349132500,
+        "activeLiquidity": 541785289097410940,
         "price0": 2447.9654,
         "tick": -198290,
-        "amount0Locked": 13131.316422,
-        "amount1Locked": 5.364175714855379
+        "amount0Locked": 13398.913578,
+        "amount1Locked": 5.473489824686336
     },
     {
-        "activeLiquidity": 530966722149605100,
+        "activeLiquidity": 541787017897883600,
         "price0": 2450.4144,
         "tick": -198280,
-        "amount0Locked": 13137.968481,
-        "amount1Locked": 5.361529155165177
+        "amount0Locked": 13405.699463,
+        "amount1Locked": 5.470788624603693
     },
     {
-        "activeLiquidity": 553403077459023600,
+        "activeLiquidity": 564223373207302100,
         "price0": 2452.866,
         "tick": -198270,
-        "amount0Locked": 14255.354986,
-        "amount1Locked": 5.811713812807716
+        "amount0Locked": 14523.21986,
+        "amount1Locked": 5.9209186687878494
     },
     {
-        "activeLiquidity": 553189671449904640,
+        "activeLiquidity": 564009967198183100,
         "price0": 2460.2352,
         "tick": -198240,
-        "amount0Locked": 13709.907838,
-        "amount1Locked": 5.572600384787587
+        "amount0Locked": 13978.174791,
+        "amount1Locked": 5.681641564580936
     },
     {
-        "activeLiquidity": 553201311986661200,
+        "activeLiquidity": 564021607734939650,
         "price0": 2465.1604,
         "tick": -198220,
-        "amount0Locked": 13729.497957,
-        "amount1Locked": 5.569413670779043
+        "amount0Locked": 13998.033297,
+        "amount1Locked": 5.678345869055148
     },
     {
-        "activeLiquidity": 553352307762064800,
+        "activeLiquidity": 564172603510343230,
         "price0": 2467.6267,
         "tick": -198210,
-        "amount0Locked": 13743.57354,
-        "amount1Locked": 5.569551416543866
+        "amount0Locked": 14012.243174,
+        "amount1Locked": 5.678429164843601
     },
     {
-        "activeLiquidity": 553360299949816640,
+        "activeLiquidity": 564180595698095100,
         "price0": 2475.0403,
         "tick": -198180,
-        "amount0Locked": 13760.845951,
-        "amount1Locked": 5.5598472714479525
+        "amount0Locked": 14029.918872,
+        "amount1Locked": 5.6685618338352795
     },
     {
-        "activeLiquidity": 554981482584134300,
+        "activeLiquidity": 565801778332412740,
         "price0": 2479.9951,
         "tick": -198160,
-        "amount0Locked": 13855.123996,
-        "amount1Locked": 5.586754660376078
+        "amount0Locked": 14124.466111,
+        "amount1Locked": 5.695360567955557
     },
     {
-        "activeLiquidity": 555002059061039000,
+        "activeLiquidity": 565822354809317400,
         "price0": 2484.9598,
         "tick": -198140,
-        "amount0Locked": 13829.615426,
-        "amount1Locked": 5.565327690354735
+        "amount0Locked": 14099.227004,
+        "amount1Locked": 5.673825051594637
     },
     {
-        "activeLiquidity": 555019254087319300,
+        "activeLiquidity": 565839549835597760,
         "price0": 2489.9344,
         "tick": -198120,
-        "amount0Locked": 13843.795806,
-        "amount1Locked": 5.559903795327406
+        "amount0Locked": 14113.677118,
+        "amount1Locked": 5.668292719283248
     },
     {
-        "activeLiquidity": 599396056862866400,
+        "activeLiquidity": 610216352611144800,
         "price0": 2494.919,
         "tick": -198100,
-        "amount0Locked": 16073.135918,
-        "amount1Locked": 6.4423477486575855
+        "amount0Locked": 16343.287232,
+        "amount1Locked": 6.550628342962505
     },
     {
-        "activeLiquidity": 605075422800702800,
+        "activeLiquidity": 615895718548981400,
         "price0": 2499.9136,
         "tick": -198080,
-        "amount0Locked": 15264.026354,
-        "amount1Locked": 6.105821560943838
+        "amount0Locked": 15534.447941,
+        "amount1Locked": 6.21399393421916
     },
     {
-        "activeLiquidity": 613990231355116200,
+        "activeLiquidity": 624810527103394600,
         "price0": 2502.4146,
         "tick": -198070,
-        "amount0Locked": 15575.47168,
-        "amount1Locked": 6.224177018311707
+        "amount0Locked": 15846.028505,
+        "amount1Locked": 6.332295321687055
     },
     {
-        "activeLiquidity": 638856884129726100,
+        "activeLiquidity": 649677179878004500,
         "price0": 2509.9328,
         "tick": -198040,
-        "amount0Locked": 16621.032195,
-        "amount1Locked": 6.622102529427758
+        "amount0Locked": 16891.995139,
+        "amount1Locked": 6.730058784839101
     },
     {
-        "activeLiquidity": 638856623380449800,
+        "activeLiquidity": 649676919128728300,
         "price0": 2514.9574,
         "tick": -198020,
-        "amount0Locked": 16014.311399,
-        "amount1Locked": 6.36762726255952
+        "amount0Locked": 16285.545429,
+        "amount1Locked": 6.475475621501118
     },
     {
-        "activeLiquidity": 638909616666462300,
+        "activeLiquidity": 649729912414740700,
         "price0": 2517.4735,
         "tick": -198010,
-        "amount0Locked": 16024.984806,
-        "amount1Locked": 6.3655028657179855
+        "amount0Locked": 16296.35448,
+        "amount1Locked": 6.473297316597539
     },
     {
-        "activeLiquidity": 638920359027931900,
+        "activeLiquidity": 649740654776210400,
         "price0": 2532.623,
         "tick": -197950,
-        "amount0Locked": 16072.336935,
-        "amount1Locked": 6.346122969301852
+        "amount0Locked": 16344.5219,
+        "amount1Locked": 6.453594537703558
     },
     {
-        "activeLiquidity": 638873043083453400,
+        "activeLiquidity": 649693338831732000,
         "price0": 2535.1568,
         "tick": -197940,
-        "amount0Locked": 16077.722692,
-        "amount1Locked": 6.341904762913083
+        "amount0Locked": 16350.043776,
+        "amount1Locked": 6.449322611369979
     },
     {
-        "activeLiquidity": 638856695933511200,
+        "activeLiquidity": 649676991681789600,
         "price0": 2542.7733,
         "tick": -197910,
-        "amount0Locked": 16102.224709,
-        "amount1Locked": 6.332544449572611
+        "amount0Locked": 16374.954561,
+        "amount1Locked": 6.4398013002082894
     },
     {
-        "activeLiquidity": 1648030697759448300,
+        "activeLiquidity": 1658850993507726800,
         "price0": 2545.3172,
         "tick": -197900,
-        "amount0Locked": 67009.394424,
-        "amount1Locked": 26.32653994804293
+        "amount0Locked": 67282.260668,
+        "amount1Locked": 26.433743186258816
     },
     {
-        "activeLiquidity": 638856695933511200,
+        "activeLiquidity": 649676991681789600,
         "price0": 2547.8636,
         "tick": -197890,
-        "amount0Locked": -9343.332964,
-        "amount1Locked": -3.6671244120611686
+        "amount0Locked": -9070.33026,
+        "amount1Locked": -3.559974759549105
     },
     {
-        "activeLiquidity": 639052423885719900,
+        "activeLiquidity": 649872719633998300,
         "price0": 2550.4127,
         "tick": -197880,
-        "amount0Locked": 16136.689228,
-        "amount1Locked": 6.32708954202876
+        "amount0Locked": 16409.828461,
+        "amount1Locked": 6.434185635918538
     },
     {
-        "activeLiquidity": 639052025806029400,
+        "activeLiquidity": 649872321554307800,
         "price0": 2552.9642,
         "tick": -197870,
-        "amount0Locked": 16139.795802,
-        "amount1Locked": 6.321982780797047
+        "amount0Locked": 16413.071632,
+        "amount1Locked": 6.42902534272673
     },
     {
-        "activeLiquidity": 639232073702058600,
+        "activeLiquidity": 650052369450337000,
         "price0": 2560.6342,
         "tick": -197840,
-        "amount0Locked": 16173.140698,
-        "amount1Locked": 6.316068322200814
+        "amount0Locked": 16446.826728,
+        "amount1Locked": 6.422950448349983
     },
     {
-        "activeLiquidity": 665291620272316800,
+        "activeLiquidity": 676111916020595200,
         "price0": 2565.7604,
         "tick": -197820,
-        "amount0Locked": 17504.36951,
-        "amount1Locked": 6.822293222962759
+        "amount0Locked": 17778.32935,
+        "amount1Locked": 6.929068526050837
     },
     {
-        "activeLiquidity": 665235784208166500,
+        "activeLiquidity": 676056079956445000,
         "price0": 2573.4688,
         "tick": -197790,
-        "amount0Locked": 16867.018856,
-        "amount1Locked": 6.554195947210676
+        "amount0Locked": 17141.389923,
+        "amount1Locked": 6.6608112151910985
     },
     {
-        "activeLiquidity": 665229760660000300,
+        "activeLiquidity": 676050056408278800,
         "price0": 2583.7828,
         "tick": -197750,
-        "amount0Locked": 16901.897543,
-        "amount1Locked": 6.541531911303499
+        "amount0Locked": 17176.817874,
+        "amount1Locked": 6.647934172571936
     },
     {
-        "activeLiquidity": 666806307415239000,
+        "activeLiquidity": 677626603163517400,
         "price0": 2599.3313,
         "tick": -197690,
-        "amount0Locked": 17033.184314,
-        "amount1Locked": 6.552910084953623
+        "amount0Locked": 17308.930603,
+        "amount1Locked": 6.658993633676304
     },
     {
-        "activeLiquidity": 666830928110836200,
+        "activeLiquidity": 677651223859114600,
         "price0": 2604.5349,
         "tick": -197670,
-        "amount0Locked": 17011.264111,
-        "amount1Locked": 6.531401847942598
+        "amount0Locked": 17287.286271,
+        "amount1Locked": 6.637379371666502
     },
     {
-        "activeLiquidity": 666958336801311000,
+        "activeLiquidity": 677778632549589400,
         "price0": 2607.1406,
         "tick": -197660,
-        "amount0Locked": 17025.646622,
-        "amount1Locked": 6.53039062123463
+        "amount0Locked": 17301.806821,
+        "amount1Locked": 6.636315172210423
     },
     {
-        "activeLiquidity": 666959393084298000,
+        "activeLiquidity": 677779688832576500,
         "price0": 2617.5895,
         "tick": -197620,
-        "amount0Locked": 17056.526021,
-        "amount1Locked": 6.51611941662382
+        "amount0Locked": 17333.239065,
+        "amount1Locked": 6.621832340616754
     },
     {
-        "activeLiquidity": 667137640769828900,
+        "activeLiquidity": 677957936518107300,
         "price0": 2620.2083,
         "tick": -197610,
-        "amount0Locked": 17074.150364,
-        "amount1Locked": 6.516333193327627
+        "amount0Locked": 17351.001792,
+        "amount1Locked": 6.621993276636974
     },
     {
-        "activeLiquidity": 667135090986325500,
+        "activeLiquidity": 677955386734603900,
         "price0": 2622.8297,
         "tick": -197600,
-        "amount0Locked": 17077.995621,
-        "amount1Locked": 6.511286514617281
+        "amount0Locked": 17354.985502,
+        "amount1Locked": 6.616893783577053
     },
     {
-        "activeLiquidity": 667166371252425300,
+        "activeLiquidity": 677986667000703700,
         "price0": 2628.0803,
         "tick": -197580,
-        "amount0Locked": 17096.749737,
-        "amount1Locked": 6.505413656518734
+        "amount0Locked": 17374.016733,
+        "amount1Locked": 6.610915376437858
     },
     {
-        "activeLiquidity": 667162723971652600,
+        "activeLiquidity": 677983019719931000,
         "price0": 2633.3415,
         "tick": -197560,
-        "amount0Locked": 17112.864725,
-        "amount1Locked": 6.498536077285426
+        "amount0Locked": 17390.409112,
+        "amount1Locked": 6.603932353183795
     },
     {
-        "activeLiquidity": 667162422883116500,
+        "activeLiquidity": 677982718631395000,
         "price0": 2635.976,
         "tick": -197550,
-        "amount0Locked": 17121.501016,
-        "amount1Locked": 6.495317430192312
+        "amount0Locked": 17399.184203,
+        "amount1Locked": 6.600661023777183
     },
     {
-        "activeLiquidity": 667264299504543000,
+        "activeLiquidity": 678084595252821400,
         "price0": 2638.6132,
         "tick": -197540,
-        "amount0Locked": 17135.30278,
-        "amount1Locked": 6.494056372390037
+        "amount0Locked": 17413.124837,
+        "amount1Locked": 6.5993473102167775
     },
     {
-        "activeLiquidity": 663662781160049000,
+        "activeLiquidity": 674483076908327400,
         "price0": 2641.253,
         "tick": -197530,
-        "amount0Locked": 16956.217295,
-        "amount1Locked": 6.419762655870524
+        "amount0Locked": 17234.178291,
+        "amount1Locked": 6.525000964088924
     },
     {
-        "activeLiquidity": 664425348554120800,
+        "activeLiquidity": 675245644302399200,
         "price0": 2649.1882,
         "tick": -197500,
-        "amount0Locked": 17113.564961,
-        "amount1Locked": 6.459927859611208
+        "amount0Locked": 17391.94319,
+        "amount1Locked": 6.5650084364007
     },
     {
-        "activeLiquidity": 664417356366368900,
+        "activeLiquidity": 675237652114647400,
         "price0": 2654.4917,
         "tick": -197480,
-        "amount0Locked": 17110.636066,
-        "amount1Locked": 6.445918186581736
+        "amount0Locked": 17389.292799,
+        "amount1Locked": 6.55089374074172
     },
     {
-        "activeLiquidity": 664424466548114400,
+        "activeLiquidity": 675244762296392800,
         "price0": 2686.5358,
         "tick": -197360,
-        "amount0Locked": 17214.178813,
-        "amount1Locked": 6.407574605533618
+        "amount0Locked": 17494.512428,
+        "amount1Locked": 6.511922223393548
     },
     {
-        "activeLiquidity": 669073468036148100,
+        "activeLiquidity": 679893763784426500,
         "price0": 2691.914,
         "tick": -197340,
-        "amount0Locked": 17472.351204,
-        "amount1Locked": 6.490679528413159
+        "amount0Locked": 17752.965279,
+        "amount1Locked": 6.594922856098222
     },
     {
-        "activeLiquidity": 669212145522676600,
+        "activeLiquidity": 680032441270955000,
         "price0": 2694.6071,
         "tick": -197330,
-        "amount0Locked": 17367.657936,
-        "amount1Locked": 6.445339529898439
+        "amount0Locked": 17648.412346,
+        "amount1Locked": 6.549530751514764
     },
     {
-        "activeLiquidity": 669220642087899400,
+        "activeLiquidity": 680040937836177800,
         "price0": 2700.0015,
         "tick": -197310,
-        "amount0Locked": 17381.872906,
-        "amount1Locked": 6.4377271769492275
+        "amount0Locked": 17662.908197,
+        "amount1Locked": 6.541814264706497
     },
     {
-        "activeLiquidity": 665463400399361900,
+        "activeLiquidity": 676283696147640300,
         "price0": 2708.1132,
         "tick": -197280,
-        "amount0Locked": 17212.276494,
-        "amount1Locked": 6.355818596034779
+        "amount0Locked": 17493.733633,
+        "amount1Locked": 6.459749677938241
     },
     {
-        "activeLiquidity": 665463668859716200,
+        "activeLiquidity": 676283964607994800,
         "price0": 2710.8226,
         "tick": -197270,
-        "amount0Locked": 17318.680438,
-        "amount1Locked": 6.388717805600932
+        "amount0Locked": 17600.278333,
+        "amount1Locked": 6.492596937284593
     },
     {
-        "activeLiquidity": 665463678951745300,
+        "activeLiquidity": 676283974700023800,
         "price0": 2716.2494,
         "tick": -197250,
-        "amount0Locked": 17336.000446,
-        "amount1Locked": 6.382330218988819
+        "amount0Locked": 17617.880066,
+        "amount1Locked": 6.486105528781118
     },
     {
-        "activeLiquidity": 666475856974254100,
+        "activeLiquidity": 677296152722532500,
         "price0": 2718.9668,
         "tick": -197240,
-        "amount0Locked": 17397.432807,
-        "amount1Locked": 6.39854540652538
+        "amount0Locked": 17679.453396,
+        "amount1Locked": 6.5022688445929475
     },
     {
-        "activeLiquidity": 665547544305696600,
+        "activeLiquidity": 676367840053975000,
         "price0": 2721.687,
         "tick": -197230,
-        "amount0Locked": 17331.323273,
-        "amount1Locked": 6.367860468584276
+        "amount0Locked": 17613.4849,
+        "amount1Locked": 6.471532060304214
     },
     {
-        "activeLiquidity": 665421506720390300,
+        "activeLiquidity": 676241802468668700,
         "price0": 2724.4099,
         "tick": -197220,
-        "amount0Locked": 17357.633781,
-        "amount1Locked": 6.3711534324656816
+        "amount0Locked": 17639.936516,
+        "amount1Locked": 6.474773203557895
     },
     {
-        "activeLiquidity": 666518804921289100,
+        "activeLiquidity": 677339100669567500,
         "price0": 2727.1356,
         "tick": -197210,
-        "amount0Locked": 17426.890215,
-        "amount1Locked": 6.390181084604373
+        "amount0Locked": 17709.33413,
+        "amount1Locked": 6.493749061496836
     },
     {
-        "activeLiquidity": 700766086942211100,
+        "activeLiquidity": 711586382690489500,
         "price0": 2729.8639,
         "tick": -197200,
-        "amount0Locked": 19195.766859,
-        "amount1Locked": 7.031766872184172
+        "amount0Locked": 19478.352025,
+        "amount1Locked": 7.135283080911088
     },
     {
-        "activeLiquidity": 701058261708032100,
+        "activeLiquidity": 711878557456310500,
         "price0": 2740.8047,
         "tick": -197160,
-        "amount0Locked": 18353.286551,
-        "amount1Locked": 6.696313096488333
+        "amount0Locked": 18636.437424,
+        "amount1Locked": 6.799622489815966
     },
     {
-        "activeLiquidity": 702989028991251000,
+        "activeLiquidity": 713809324739529500,
         "price0": 2743.5468,
         "tick": -197150,
-        "amount0Locked": 18455.916521,
-        "amount1Locked": 6.727028236285054
+        "amount0Locked": 18739.208998,
+        "amount1Locked": 6.8302859904983295
     },
     {
-        "activeLiquidity": 702986450462236000,
+        "activeLiquidity": 713806746210514400,
         "price0": 2746.2915,
         "tick": -197140,
-        "amount0Locked": 18414.435412,
-        "amount1Locked": 6.705200498045261
+        "amount0Locked": 18697.869564,
+        "amount1Locked": 6.8084066390228415
     },
     {
-        "activeLiquidity": 702988726031502500,
+        "activeLiquidity": 713809021779781000,
         "price0": 2751.7893,
         "tick": -197120,
-        "amount0Locked": 18433.045083,
-        "amount1Locked": 6.69856692041286
+        "amount0Locked": 18716.762796,
+        "amount1Locked": 6.801669911724358
     },
     {
-        "activeLiquidity": 702883217944221800,
+        "activeLiquidity": 713703513692500400,
         "price0": 2779.4439,
         "tick": -197020,
-        "amount0Locked": 18519.815745,
-        "amount1Locked": 6.6631370948745285
+        "amount0Locked": 18804.955527,
+        "amount1Locked": 6.7657258832744125
     },
     {
-        "activeLiquidity": 703018260796255400,
+        "activeLiquidity": 713838556544533800,
         "price0": 2782.2246,
         "tick": -197010,
-        "amount0Locked": 18538.980218,
-        "amount1Locked": 6.663365804345568
+        "amount0Locked": 18824.2626,
+        "amount1Locked": 6.765903314308245
     },
     {
-        "activeLiquidity": 703087430509690200,
+        "activeLiquidity": 713907726257968800,
         "price0": 2785.0081,
         "tick": -197000,
-        "amount0Locked": 18548.338522,
-        "amount1Locked": 6.6600663449720345
+        "amount0Locked": 18833.763573,
+        "amount1Locked": 6.76255260129749
     },
     {
-        "activeLiquidity": 703039015255596400,
+        "activeLiquidity": 713859311003875000,
         "price0": 2787.7943,
         "tick": -196990,
-        "amount0Locked": 18553.233491,
-        "amount1Locked": 6.655165797488292
+        "amount0Locked": 18838.801283,
+        "amount1Locked": 6.7576008260295195
     },
     {
-        "activeLiquidity": 701417221089467500,
+        "activeLiquidity": 712237516837745900,
         "price0": 2793.3752,
         "tick": -196970,
-        "amount0Locked": 18487.384132,
-        "amount1Locked": 6.618296028790049
+        "amount0Locked": 18773.23762,
+        "amount1Locked": 6.7206286785007
     },
     {
-        "activeLiquidity": 701704576466302200,
+        "activeLiquidity": 712524872214580600,
         "price0": 2796.1699,
         "tick": -196960,
-        "amount0Locked": 18554.686551,
-        "amount1Locked": 6.635750874483358
+        "amount0Locked": 18840.682995,
+        "amount1Locked": 6.738032373454294
     },
     {
-        "activeLiquidity": 702311215111786900,
+        "activeLiquidity": 713131510860065400,
         "price0": 2798.9673,
         "tick": -196950,
-        "amount0Locked": 18588.451477,
-        "amount1Locked": 6.641182123255252
+        "amount0Locked": 18874.590948,
+        "amount1Locked": 6.743412496878047
     },
     {
-        "activeLiquidity": 702647346406359000,
+        "activeLiquidity": 713467642154637600,
         "price0": 2801.7675,
         "tick": -196940,
-        "amount0Locked": 18599.483835,
-        "amount1Locked": 6.638482234529163
+        "amount0Locked": 18885.766404,
+        "amount1Locked": 6.740661508170381
     },
     {
-        "activeLiquidity": 713792325607846000,
+        "activeLiquidity": 724612621356124400,
         "price0": 2804.5705,
         "tick": -196930,
-        "amount0Locked": 19189.928624,
-        "amount1Locked": 6.842376886295853
+        "amount0Locked": 19476.354363,
+        "amount1Locked": 6.9445050856536525
     },
     {
-        "activeLiquidity": 713806897497754200,
+        "activeLiquidity": 724627193246032800,
         "price0": 2807.3764,
         "tick": -196920,
-        "amount0Locked": 18905.129338,
-        "amount1Locked": 6.734091493727277
+        "amount0Locked": 19191.698318,
+        "amount1Locked": 6.83616864411763
     },
     {
-        "activeLiquidity": 714291695729292800,
+        "activeLiquidity": 725111991477571200,
         "price0": 2812.9965,
         "tick": -196900,
-        "amount0Locked": 18949.361529,
-        "amount1Locked": 6.73636166758154
+        "amount0Locked": 19236.217207,
+        "amount1Locked": 6.838336796951996
     },
     {
-        "activeLiquidity": 714245492043980900,
+        "activeLiquidity": 725065787792259500,
         "price0": 2815.8107,
         "tick": -196890,
-        "amount0Locked": 18943.528217,
-        "amount1Locked": 6.727557381551116
+        "amount0Locked": 19230.527352,
+        "amount1Locked": 6.829481538817412
     },
     {
-        "activeLiquidity": 714169395944146200,
+        "activeLiquidity": 724989691692424600,
         "price0": 2818.6278,
         "tick": -196880,
-        "amount0Locked": 18950.189215,
-        "amount1Locked": 6.723196728799584
+        "amount0Locked": 19237.331878,
+        "amount1Locked": 6.825069939176412
     },
     {
-        "activeLiquidity": 714192258008637400,
+        "activeLiquidity": 725012553756916000,
         "price0": 2824.2704,
         "tick": -196860,
-        "amount0Locked": 18972.383962,
-        "amount1Locked": 6.717623020873411
+        "amount0Locked": 19259.813897,
+        "amount1Locked": 6.819394414079002
     },
     {
-        "activeLiquidity": 714154920160974300,
+        "activeLiquidity": 724975215909252900,
         "price0": 2827.096,
         "tick": -196850,
-        "amount0Locked": 18979.279766,
-        "amount1Locked": 6.713348273926768
+        "amount0Locked": 19266.853445,
+        "amount1Locked": 6.815068796799291
     },
     {
-        "activeLiquidity": 714129989310212500,
+        "activeLiquidity": 724950285058491000,
         "price0": 2829.9243,
         "tick": -196840,
-        "amount0Locked": 18988.438288,
-        "amount1Locked": 6.7098749299119484
+        "amount0Locked": 19276.155783,
+        "amount1Locked": 6.811544607918991
     },
     {
-        "activeLiquidity": 714259648305986000,
+        "activeLiquidity": 725079944054264600,
         "price0": 2841.2661,
         "tick": -196800,
-        "amount0Locked": 19034.024725,
-        "amount1Locked": 6.699134783649081
+        "amount0Locked": 19322.318202,
+        "amount1Locked": 6.800601335656506
     },
     {
-        "activeLiquidity": 711843813501418600,
+        "activeLiquidity": 722664109249697200,
         "price0": 2849.8023,
         "tick": -196770,
-        "amount0Locked": 18930.208835,
-        "amount1Locked": 6.642639341895205
+        "amount0Locked": 19218.935054,
+        "amount1Locked": 6.743953815395362
     },
     {
-        "activeLiquidity": 711842330190103600,
+        "activeLiquidity": 722662625938382000,
         "price0": 2855.5073,
         "tick": -196750,
-        "amount0Locked": 19013.596383,
-        "amount1Locked": 6.658570360905638
+        "amount0Locked": 19302.611459,
+        "amount1Locked": 6.75978357591998
     },
     {
-        "activeLiquidity": 711838274688331800,
+        "activeLiquidity": 722658570436610200,
         "price0": 2875.565,
         "tick": -196680,
-        "amount0Locked": 19080.079577,
-        "amount1Locked": 6.6352454832074015
+        "amount0Locked": 19370.107926,
+        "amount1Locked": 6.736105088375093
     },
     {
-        "activeLiquidity": 711933838821097500,
+        "activeLiquidity": 722754134569376000,
         "price0": 2889.9781,
         "tick": -196630,
-        "amount0Locked": 19133.081881,
-        "amount1Locked": 6.620493745334381
+        "amount0Locked": 19423.836173,
+        "amount1Locked": 6.7211015294638505
     },
     {
-        "activeLiquidity": 712109175828599600,
+        "activeLiquidity": 722929471576878100,
         "price0": 2898.6606,
         "tick": -196600,
-        "amount0Locked": 19168.667,
-        "amount1Locked": 6.6129394172380875
+        "amount0Locked": 19459.857728,
+        "amount1Locked": 6.713396410054826
     },
     {
-        "activeLiquidity": 715921325701307800,
+        "activeLiquidity": 726741621449586300,
         "price0": 2901.5606,
         "tick": -196590,
-        "amount0Locked": 19378.816496,
-        "amount1Locked": 6.678756482189863
+        "amount0Locked": 19670.152849,
+        "amount1Locked": 6.779163261752378
     },
     {
-        "activeLiquidity": 715890045435208000,
+        "activeLiquidity": 726710341183486500,
         "price0": 2904.4634,
         "tick": -196580,
-        "amount0Locked": 19284.129131,
-        "amount1Locked": 6.6394807582573145
+        "amount0Locked": 19575.611181,
+        "amount1Locked": 6.739837349379769
     },
     {
-        "activeLiquidity": 715497210048624900,
+        "activeLiquidity": 726317505796903400,
         "price0": 2910.2779,
         "tick": -196560,
-        "amount0Locked": 19283.079494,
-        "amount1Locked": 6.625855063873156
+        "amount0Locked": 19574.853157,
+        "amount1Locked": 6.726111353491985
     },
     {
-        "activeLiquidity": 715651560659963800,
+        "activeLiquidity": 726471856408242300,
         "price0": 2919.0214,
         "tick": -196530,
-        "amount0Locked": 19330.969984,
-        "amount1Locked": 6.622414627212821
+        "amount0Locked": 19623.181615,
+        "amount1Locked": 6.722520652982754
     },
     {
-        "activeLiquidity": 715698785489412200,
+        "activeLiquidity": 726519081237690800,
         "price0": 2924.865,
         "tick": -196510,
-        "amount0Locked": 19348.690359,
-        "amount1Locked": 6.615242222350249
+        "amount0Locked": 19641.194333,
+        "amount1Locked": 6.715248197075561
     },
     {
-        "activeLiquidity": 715224029502949400,
+        "activeLiquidity": 726044325251227900,
         "price0": 2930.7203,
         "tick": -196490,
-        "amount0Locked": 19341.076115,
-        "amount1Locked": 6.599427540326179
+        "amount0Locked": 19633.872725,
+        "amount1Locked": 6.699333564182295
     },
     {
-        "activeLiquidity": 715493437473570300,
+        "activeLiquidity": 726313733221848700,
         "price0": 2936.5873,
         "tick": -196470,
-        "amount0Locked": 19387.880538,
-        "amount1Locked": 6.602180906689317
+        "amount0Locked": 19680.970075,
+        "amount1Locked": 6.701987078969943
     },
     {
-        "activeLiquidity": 715453203756752000,
+        "activeLiquidity": 726273499505030400,
         "price0": 2954.2589,
         "tick": -196410,
-        "amount0Locked": 19436.623042,
-        "amount1Locked": 6.5791874550003095
+        "amount0Locked": 19730.593124,
+        "amount1Locked": 6.678694672455755
     },
     {
-        "activeLiquidity": 715569961456001900,
+        "activeLiquidity": 726390257204280300,
         "price0": 2960.173,
         "tick": -196390,
-        "amount0Locked": 19463.513179,
-        "amount1Locked": 6.575126860998607
+        "amount0Locked": 19757.777363,
+        "amount1Locked": 6.674534625807264
     },
     {
-        "activeLiquidity": 715556532885177500,
+        "activeLiquidity": 726376828633456000,
         "price0": 2963.1345,
         "tick": -196380,
-        "amount0Locked": 19469.33924,
-        "amount1Locked": 6.570521530748057
+        "amount0Locked": 19763.750586,
+        "amount1Locked": 6.669879606743527
     },
     {
-        "activeLiquidity": 715755136971663400,
+        "activeLiquidity": 726575432719941900,
         "price0": 2969.0664,
         "tick": -196360,
-        "amount0Locked": 19500.001609,
-        "amount1Locked": 6.567721551827695
+        "amount0Locked": 19794.707499,
+        "amount1Locked": 6.666980324417244
     },
     {
-        "activeLiquidity": 727335999099538700,
+        "activeLiquidity": 738156294847817100,
         "price0": 2972.0368,
         "tick": -196350,
-        "amount0Locked": 20135.499037,
-        "amount1Locked": 6.774982996691779
+        "amount0Locked": 20430.35231,
+        "amount1Locked": 6.87419215497602
     },
     {
-        "activeLiquidity": 727644176855673200,
+        "activeLiquidity": 738464472603951600,
         "price0": 2975.0102,
         "tick": -196340,
-        "amount0Locked": 19846.636358,
-        "amount1Locked": 6.671115372906726
+        "amount0Locked": 20141.637086,
+        "amount1Locked": 6.770274941111653
     },
     {
-        "activeLiquidity": 729111125386259800,
+        "activeLiquidity": 739931421134538200,
         "price0": 2983.9482,
         "tick": -196310,
-        "amount0Locked": 19948.121301,
-        "amount1Locked": 6.685143304251449
+        "amount0Locked": 20243.564841,
+        "amount1Locked": 6.784154252370976
     },
     {
-        "activeLiquidity": 729135498116203100,
+        "activeLiquidity": 739955793864481500,
         "price0": 2995.9073,
         "tick": -196270,
-        "amount0Locked": 19949.25452,
-        "amount1Locked": 6.658835728243122
+        "amount0Locked": 20245.289508,
+        "amount1Locked": 6.757648861983441
     },
     {
-        "activeLiquidity": 752879719247563300,
+        "activeLiquidity": 763700014995841700,
         "price0": 2998.9045,
         "tick": -196260,
-        "amount0Locked": 21258.461082,
-        "amount1Locked": 7.088742151408724
+        "amount0Locked": 21554.644117,
+        "amount1Locked": 7.187505893367186
     },
     {
-        "activeLiquidity": 766184893358520600,
+        "activeLiquidity": 777005189106799100,
         "price0": 3001.9048,
         "tick": -196250,
-        "amount0Locked": 21347.585927,
-        "amount1Locked": 7.111346737333623
+        "amount0Locked": 21643.917083,
+        "amount1Locked": 7.210061112185985
     },
     {
-        "activeLiquidity": 765805091819524900,
+        "activeLiquidity": 776625387567803400,
         "price0": 3013.9359,
         "tick": -196210,
-        "amount0Locked": 21004.364092,
-        "amount1Locked": 6.969081301061705
+        "amount0Locked": 21301.288475,
+        "amount1Locked": 7.067598454750863
     },
     {
-        "activeLiquidity": 765798661164441500,
+        "activeLiquidity": 776618956912720000,
         "price0": 3026.0151,
         "tick": -196170,
-        "amount0Locked": 21056.502275,
-        "amount1Locked": 6.958492023233402
+        "amount0Locked": 21354.021071,
+        "amount1Locked": 7.056812349263335
     },
     {
-        "activeLiquidity": 765445383062657500,
+        "activeLiquidity": 776265678810936000,
         "price0": 3035.1064,
         "tick": -196140,
-        "amount0Locked": 21068.829344,
-        "amount1Locked": 6.941710364552286
+        "amount0Locked": 21366.79473,
+        "amount1Locked": 7.039883327772146
     },
     {
-        "activeLiquidity": 765420762367060400,
+        "activeLiquidity": 776241058115338800,
         "price0": 3041.1824,
         "tick": -196120,
-        "amount0Locked": 21098.288485,
-        "amount1Locked": 6.937528250158
+        "amount0Locked": 21396.551971,
+        "amount1Locked": 7.035603094550555
     },
     {
-        "activeLiquidity": 765411646804693500,
+        "activeLiquidity": 776231942552972000,
         "price0": 3050.3191,
         "tick": -196090,
-        "amount0Locked": 21130.134475,
-        "amount1Locked": 6.9271881063018
+        "amount0Locked": 21428.845669,
+        "amount1Locked": 7.025115955873425
     },
     {
-        "activeLiquidity": 765658610492860500,
+        "activeLiquidity": 776478906241139100,
         "price0": 3053.3708,
         "tick": -196080,
-        "amount0Locked": 21154.595888,
-        "amount1Locked": 6.928276008037219
+        "amount0Locked": 21453.456468,
+        "amount1Locked": 7.026154908543026
     },
     {
-        "activeLiquidity": 765471883670543700,
+        "activeLiquidity": 776292179418822300,
         "price0": 3068.6752,
         "tick": -196030,
-        "amount0Locked": 21190.366842,
-        "amount1Locked": 6.905379617609447
+        "amount0Locked": 21489.97547,
+        "amount1Locked": 7.0030141384498545
     },
     {
-        "activeLiquidity": 765244029270397200,
+        "activeLiquidity": 776064325018675700,
         "price0": 3071.7452,
         "tick": -196020,
-        "amount0Locked": 21193.512442,
-        "amount1Locked": 6.899502077699659
+        "amount0Locked": 21493.270905,
+        "amount1Locked": 6.9970877961564995
     },
     {
-        "activeLiquidity": 766096940725442400,
+        "activeLiquidity": 776917236473720800,
         "price0": 3074.8183,
         "tick": -196010,
-        "amount0Locked": 21257.707451,
-        "amount1Locked": 6.91348402792999
+        "amount0Locked": 21557.615823,
+        "amount1Locked": 7.011020968093637
     },
     {
-        "activeLiquidity": 765988072303701800,
+        "activeLiquidity": 776808368051980200,
         "price0": 3080.9738,
         "tick": -195990,
-        "amount0Locked": 21249.269658,
-        "amount1Locked": 6.896932890268341
+        "amount0Locked": 21549.478074,
+        "amount1Locked": 6.994372347321222
     },
     {
-        "activeLiquidity": 766039870514017000,
+        "activeLiquidity": 776860166262295600,
         "price0": 3084.0562,
         "tick": -195980,
-        "amount0Locked": 21265.79419,
-        "amount1Locked": 6.8953978007285235
+        "amount0Locked": 21566.152739,
+        "amount1Locked": 6.992788552265963
     },
     {
-        "activeLiquidity": 766074913282123800,
+        "activeLiquidity": 776895209030402200,
         "price0": 3096.4165,
         "tick": -195940,
-        "amount0Locked": 21308.874858,
-        "amount1Locked": 6.88178574550234
+        "amount0Locked": 21609.834696,
+        "amount1Locked": 6.978981920191005
     },
     {
-        "activeLiquidity": 764891313244081900,
+        "activeLiquidity": 775711608992360300,
         "price0": 3099.5143,
         "tick": -195930,
-        "amount0Locked": 21252.681112,
-        "amount1Locked": 6.856777887845018
+        "amount0Locked": 21553.791459,
+        "amount1Locked": 6.953925478693928
     },
     {
-        "activeLiquidity": 760390137874939900,
+        "activeLiquidity": 771210433623218400,
         "price0": 3108.8263,
         "tick": -195900,
-        "amount0Locked": 21066.67338,
-        "amount1Locked": 6.77640726443734
+        "amount0Locked": 21368.235709,
+        "amount1Locked": 6.8734092504678586
     },
     {
-        "activeLiquidity": 778899123092496500,
+        "activeLiquidity": 789719418840775000,
         "price0": 3121.2859,
         "tick": -195860,
-        "amount0Locked": 22268.30449,
-        "amount1Locked": 7.134336629357719
+        "amount0Locked": 22570.470517,
+        "amount1Locked": 7.231144814980548
     },
     {
-        "activeLiquidity": 778877688807607300,
+        "activeLiquidity": 789697984555885700,
         "price0": 3136.9306,
         "tick": -195810,
-        "amount0Locked": 21804.668952,
-        "amount1Locked": 6.950956647957024
+        "amount0Locked": 22107.591302,
+        "amount1Locked": 7.047523127695031
     },
     {
-        "activeLiquidity": 778853809475272400,
+        "activeLiquidity": 789674105223550800,
         "price0": 3140.069,
         "tick": -195800,
-        "amount0Locked": 21814.836127,
-        "amount1Locked": 6.947247395485388
+        "amount0Locked": 22117.909969,
+        "amount1Locked": 7.043765606633822
     },
     {
-        "activeLiquidity": 778732539339301000,
+        "activeLiquidity": 789552835087579400,
         "price0": 3149.5029,
         "tick": -195770,
-        "amount0Locked": 21841.447464,
-        "amount1Locked": 6.934887300531035
+        "amount0Locked": 22144.976235,
+        "amount1Locked": 7.031260850078204
     },
     {
-        "activeLiquidity": 778788918007556700,
+        "activeLiquidity": 789609213755835100,
         "price0": 3158.9651,
         "tick": -195740,
-        "amount0Locked": 21880.807325,
-        "amount1Locked": 6.92657458429247
+        "amount0Locked": 22184.791707,
+        "amount1Locked": 7.0228036887815595
     },
     {
-        "activeLiquidity": 779512499842383600,
+        "activeLiquidity": 790332795590662100,
         "price0": 3162.1255,
         "tick": -195730,
-        "amount0Locked": 21930.842042,
-        "amount1Locked": 6.935474946047428
+        "amount0Locked": 22234.978447,
+        "amount1Locked": 7.031655950544147
     },
     {
-        "activeLiquidity": 854213022209319600,
+        "activeLiquidity": 865033317957598100,
         "price0": 3168.4557,
         "tick": -195710,
-        "amount0Locked": 26135.983353,
-        "amount1Locked": 8.24880808733185
+        "amount0Locked": 26440.424032,
+        "amount1Locked": 8.344892963922488
     },
     {
-        "activeLiquidity": 854212125067066600,
+        "activeLiquidity": 865032420815345200,
         "price0": 3184.3369,
         "tick": -195660,
-        "amount0Locked": 24094.310734,
-        "amount1Locked": 7.566508040341426
+        "amount0Locked": 24399.513428,
+        "amount1Locked": 7.662353016509437
     },
     {
-        "activeLiquidity": 854199307878588700,
+        "activeLiquidity": 865019603626867100,
         "price0": 3190.7116,
         "tick": -195640,
-        "amount0Locked": 24117.717441,
-        "amount1Locked": 7.558726791498387
+        "amount0Locked": 24423.225475,
+        "amount1Locked": 7.654475975361371
     },
     {
-        "activeLiquidity": 855336019040072100,
+        "activeLiquidity": 866156314788350500,
         "price0": 3197.0991,
         "tick": -195620,
-        "amount0Locked": 24206.46193,
-        "amount1Locked": 7.5713830156277835
+        "amount0Locked": 24512.275609,
+        "amount1Locked": 7.6670365027760905
     },
     {
-        "activeLiquidity": 933505933101693800,
+        "activeLiquidity": 944326228849972200,
         "price0": 3200.2977,
         "tick": -195610,
-        "amount0Locked": 28607.262101,
-        "amount1Locked": 8.938937939915162
+        "amount0Locked": 28913.228718,
+        "amount1Locked": 9.034543614844578
     },
     {
-        "activeLiquidity": 932737515492312000,
+        "activeLiquidity": 943557811240590600,
         "price0": 3203.4994,
         "tick": -195600,
-        "amount0Locked": 26366.565473,
-        "amount1Locked": 8.230551113395103
+        "amount0Locked": 26672.685104,
+        "amount1Locked": 8.32610899985321
     },
     {
-        "activeLiquidity": 932906755252669300,
+        "activeLiquidity": 943727051000947800,
         "price0": 3209.9125,
         "tick": -195580,
-        "amount0Locked": 26424.290733,
-        "amount1Locked": 8.232090720017027
+        "amount0Locked": 26730.716622,
+        "amount1Locked": 8.327553101304696
     },
     {
-        "activeLiquidity": 932885567067239200,
+        "activeLiquidity": 943705862815517700,
         "price0": 3219.5562,
         "tick": -195550,
-        "amount0Locked": 26457.953058,
-        "amount1Locked": 8.217888265554677
+        "amount0Locked": 26764.838907,
+        "amount1Locked": 8.313207567536708
     },
     {
-        "activeLiquidity": 932342758624890500,
+        "activeLiquidity": 943163054373168900,
         "price0": 3222.7772,
         "tick": -195540,
-        "amount0Locked": 26440.980195,
-        "amount1Locked": 8.20440836215476
+        "amount0Locked": 26748.019518,
+        "amount1Locked": 8.299680018899464
     },
     {
-        "activeLiquidity": 932426904584576300,
+        "activeLiquidity": 943247200332854800,
         "price0": 3235.6935,
         "tick": -195500,
-        "amount0Locked": 26514.131174,
-        "amount1Locked": 8.194265422738086
+        "amount0Locked": 26821.785159,
+        "amount1Locked": 8.289346735978523
     },
     {
-        "activeLiquidity": 932453323087807200,
+        "activeLiquidity": 943273618836085800,
         "price0": 3238.9306,
         "tick": -195490,
-        "amount0Locked": 26526.500237,
-        "amount1Locked": 8.18989453482858
+        "amount0Locked": 26834.30808,
+        "amount1Locked": 8.284928321745062
     },
     {
-        "activeLiquidity": 932434434645067800,
+        "activeLiquidity": 943254730393346300,
         "price0": 3242.171,
         "tick": -195480,
-        "amount0Locked": 26537.939044,
-        "amount1Locked": 8.185237274839631
+        "amount0Locked": 26845.900821,
+        "amount1Locked": 8.280223558896838
     },
     {
-        "activeLiquidity": 939627837393189500,
+        "activeLiquidity": 950448133141467900,
         "price0": 3248.6615,
         "tick": -195460,
-        "amount0Locked": 26974.906685,
-        "amount1Locked": 8.303390953851421
+        "amount0Locked": 27283.176563,
+        "amount1Locked": 8.398282304031827
     },
     {
-        "activeLiquidity": 939573601297107800,
+        "activeLiquidity": 950393897045386200,
         "price0": 3258.4217,
         "tick": -195430,
-        "amount0Locked": 26807.054935,
-        "amount1Locked": 8.227006143290417
+        "amount0Locked": 27115.787542,
+        "amount1Locked": 8.32175527036095
     },
     {
-        "activeLiquidity": 939573065267548700,
+        "activeLiquidity": 950393361015827100,
         "price0": 3271.4808,
         "tick": -195390,
-        "amount0Locked": 26862.239961,
-        "amount1Locked": 8.211034001834213
+        "amount0Locked": 27171.590619,
+        "amount1Locked": 8.305593829123955
     },
     {
-        "activeLiquidity": 939601152372878700,
+        "activeLiquidity": 950421448121157100,
         "price0": 3281.3095,
         "tick": -195360,
-        "amount0Locked": 26904.185309,
-        "amount1Locked": 8.199222152906765
+        "amount0Locked": 27214.000319,
+        "amount1Locked": 8.29364025418431
     },
     {
-        "activeLiquidity": 939589511836122100,
+        "activeLiquidity": 950409807584400600,
         "price0": 3294.4603,
         "tick": -195320,
-        "amount0Locked": 26956.571071,
-        "amount1Locked": 8.182393570290454
+        "amount0Locked": 27267.0063,
+        "amount1Locked": 8.276623033491504
     },
     {
-        "activeLiquidity": 939590384122824200,
+        "activeLiquidity": 950410679871102700,
         "price0": 3297.7563,
         "tick": -195310,
-        "amount0Locked": 26970.436265,
-        "amount1Locked": 8.178420107834855
+        "amount0Locked": 27281.026742,
+        "amount1Locked": 8.272602470234947
     },
     {
-        "activeLiquidity": 940716240157815300,
+        "activeLiquidity": 951536535906093700,
         "price0": 3301.0555,
         "tick": -195300,
-        "amount0Locked": 27048.565576,
-        "amount1Locked": 8.193914162537363
+        "amount0Locked": 27359.311379,
+        "amount1Locked": 8.288049447789234
     },
     {
-        "activeLiquidity": 940708085904447900,
+        "activeLiquidity": 951528381652726400,
         "price0": 3307.6639,
         "tick": -195280,
-        "amount0Locked": 27042.791916,
-        "amount1Locked": 8.175797988716578
+        "amount0Locked": 27353.848605,
+        "amount1Locked": 8.269839190534885
     },
     {
-        "activeLiquidity": 940801337461062800,
+        "activeLiquidity": 951621633209341200,
         "price0": 3310.9731,
         "tick": -195270,
-        "amount0Locked": 27061.914732,
-        "amount1Locked": 8.173402273536913
+        "amount0Locked": 27373.126981,
+        "amount1Locked": 8.267396469022325
     },
     {
-        "activeLiquidity": 941049652060914000,
+        "activeLiquidity": 951869947809192600,
         "price0": 3327.5685,
         "tick": -195220,
-        "amount0Locked": 27141.281713,
-        "amount1Locked": 8.156490636309544
+        "amount0Locked": 27453.272927,
+        "amount1Locked": 8.250250151520019
     },
     {
-        "activeLiquidity": 948827383603055200,
+        "activeLiquidity": 959647679351333600,
         "price0": 3334.23,
         "tick": -195200,
-        "amount0Locked": 27610.241406,
-        "amount1Locked": 8.280844843618834
+        "amount0Locked": 27922.544751,
+        "amount1Locked": 8.374510650667016
     },
     {
-        "activeLiquidity": 950399532097858600,
+        "activeLiquidity": 961219827846137000,
         "price0": 3354.2945,
         "tick": -195140,
-        "amount0Locked": 27559.056963,
-        "amount1Locked": 8.216051624832721
+        "amount0Locked": 27872.298578,
+        "amount1Locked": 8.309436869594226
     },
     {
-        "activeLiquidity": 950436646593681000,
+        "activeLiquidity": 961256942341959400,
         "price0": 3367.7379,
         "tick": -195100,
-        "amount0Locked": 27570.776714,
-        "amount1Locked": 8.186734702602001
+        "amount0Locked": 27884.645408,
+        "amount1Locked": 8.279933372914593
     },
     {
-        "activeLiquidity": 950436679869283200,
+        "activeLiquidity": 961256975617561600,
         "price0": 3381.2352,
         "tick": -195060,
-        "amount0Locked": 27624.893867,
-        "amount1Locked": 8.17005994439869
+        "amount0Locked": 27939.390895,
+        "amount1Locked": 8.263072412915886
     },
     {
-        "activeLiquidity": 952506725175913300,
+        "activeLiquidity": 963327020924191900,
         "price0": 3384.6179,
         "tick": -195050,
-        "amount0Locked": 27759.101985,
-        "amount1Locked": 8.201546745130456
+        "amount0Locked": 28073.756293,
+        "amount1Locked": 8.294512721371804
     },
     {
-        "activeLiquidity": 952414726951083600,
+        "activeLiquidity": 963235022699362000,
         "price0": 3391.3936,
         "tick": -195030,
-        "amount0Locked": 27721.260448,
-        "amount1Locked": 8.174002753916207
+        "amount0Locked": 28036.229552,
+        "amount1Locked": 8.266875815309788
     },
     {
-        "activeLiquidity": 953534297819656600,
+        "activeLiquidity": 964354593567935000,
         "price0": 3398.1828,
         "tick": -195010,
-        "amount0Locked": 27816.919468,
-        "amount1Locked": 8.185821952383424
+        "amount0Locked": 28132.203683,
+        "amount1Locked": 8.2786021918113
     },
     {
-        "activeLiquidity": 953543939334377600,
+        "activeLiquidity": 964364235082656000,
         "price0": 3401.5825,
         "tick": -195000,
-        "amount0Locked": 27798.754241,
-        "amount1Locked": 8.172300402611128
+        "amount0Locked": 28114.19613,
+        "amount1Locked": 8.265034265939184
     },
     {
-        "activeLiquidity": 941519482936244400,
+        "activeLiquidity": 952339778684522900,
         "price0": 3404.9856,
         "tick": -194990,
-        "amount0Locked": 27110.931485,
-        "amount1Locked": 7.962127996938648
+        "amount0Locked": 27426.531126,
+        "amount1Locked": 8.054815507097427
     },
     {
-        "activeLiquidity": 935410332988661600,
+        "activeLiquidity": 946230628736940000,
         "price0": 3408.3922,
         "tick": -194980,
-        "amount0Locked": 27118.832928,
-        "amount1Locked": 7.956488478135844
+        "amount0Locked": 27434.5904,
+        "amount1Locked": 8.049129658326875
     },
     {
-        "activeLiquidity": 935503764389384000,
+        "activeLiquidity": 946324060137662300,
         "price0": 3418.6322,
         "tick": -194950,
-        "amount0Locked": 27343.545465,
-        "amount1Locked": 7.99838768045508
+        "amount0Locked": 27659.776905,
+        "amount1Locked": 8.090890010012386
     },
     {
-        "activeLiquidity": 936247325763704300,
+        "activeLiquidity": 947067621511982700,
         "price0": 3425.4759,
         "tick": -194930,
-        "amount0Locked": 27411.673767,
-        "amount1Locked": 8.002296400700736
+        "amount0Locked": 27728.221581,
+        "amount1Locked": 8.094706278848031
     },
     {
-        "activeLiquidity": 937750011644160100,
+        "activeLiquidity": 948570307392438500,
         "price0": 3428.903,
         "tick": -194920,
-        "amount0Locked": 27491.584712,
-        "amount1Locked": 8.017603609265892
+        "amount0Locked": 27808.290832,
+        "amount1Locked": 8.10996729645924
     },
     {
-        "activeLiquidity": 937739269282690400,
+        "activeLiquidity": 948559565030969000,
         "price0": 3439.2046,
         "tick": -194890,
-        "amount0Locked": 27488.172084,
-        "amount1Locked": 7.992595768101216
+        "amount0Locked": 27805.353595,
+        "amount1Locked": 8.084821020285743
     },
     {
-        "activeLiquidity": 939614816303790700,
+        "activeLiquidity": 950435112052069100,
         "price0": 3442.6453,
         "tick": -194880,
-        "amount0Locked": 27612.246926,
-        "amount1Locked": 8.020648119480407
+        "amount0Locked": 27929.58706,
+        "amount1Locked": 8.112827273021372
     },
     {
-        "activeLiquidity": 942764537475799400,
+        "activeLiquidity": 953584833224077800,
         "price0": 3456.4428,
         "tick": -194840,
-        "amount0Locked": 27797.528676,
-        "amount1Locked": 8.042235953478363
+        "amount0Locked": 28115.504093,
+        "amount1Locked": 8.134230941979895
     },
     {
-        "activeLiquidity": 942781496018106100,
+        "activeLiquidity": 953601791766384600,
         "price0": 3459.9008,
         "tick": -194830,
-        "amount0Locked": 27719.820471,
-        "amount1Locked": 8.01173847635651
+        "amount0Locked": 28037.954908,
+        "amount1Locked": 8.103687481301668
     },
     {
-        "activeLiquidity": 944791389564443400,
+        "activeLiquidity": 955611685312721900,
         "price0": 3463.3623,
         "tick": -194820,
-        "amount0Locked": 27851.431733,
-        "amount1Locked": 8.041732151905693
+        "amount0Locked": 28169.725269,
+        "amount1Locked": 8.133635196127372
     },
     {
-        "activeLiquidity": 944994666409783600,
+        "activeLiquidity": 955814962158062000,
         "price0": 3473.7674,
         "tick": -194790,
-        "amount0Locked": 27846.002945,
-        "amount1Locked": 8.016081514185002
+        "amount0Locked": 28164.774256,
+        "amount1Locked": 8.107846814160252
     },
     {
-        "activeLiquidity": 945748602797062900,
+        "activeLiquidity": 956568898545341300,
         "price0": 3477.2428,
         "tick": -194780,
-        "amount0Locked": 27898.382,
-        "amount1Locked": 8.02313322717704
+        "amount0Locked": 28217.312728,
+        "amount1Locked": 8.114852658109793
     },
     {
-        "activeLiquidity": 1100540224542701300,
+        "activeLiquidity": 1111360520290979700,
         "price0": 3480.7216,
         "tick": -194770,
-        "amount0Locked": 37019.701797,
-        "amount1Locked": 10.635640046814416
+        "amount0Locked": 37338.792022,
+        "amount1Locked": 10.727313631711635
     },
     {
-        "activeLiquidity": 1100552485111581000,
+        "activeLiquidity": 1111372780859859500,
         "price0": 3484.2039,
         "tick": -194760,
-        "amount0Locked": 32471.855293,
-        "amount1Locked": 9.319734592877792
+        "amount0Locked": 32791.105095,
+        "amount1Locked": 9.4113623547233
     },
     {
-        "activeLiquidity": 1103084314165789300,
+        "activeLiquidity": 1113904609914067800,
         "price0": 3487.6896,
         "tick": -194750,
-        "amount0Locked": 32637.209076,
-        "amount1Locked": 9.357830675179201
+        "amount0Locked": 32956.618535,
+        "amount1Locked": 9.449412636933724
     },
     {
-        "activeLiquidity": 1103225267910055600,
+        "activeLiquidity": 1114045563658334100,
         "price0": 3498.1679,
         "tick": -194720,
-        "amount0Locked": 32619.682973,
-        "amount1Locked": 9.324790570115969
+        "amount0Locked": 32939.571882,
+        "amount1Locked": 9.416235268845778
     },
     {
-        "activeLiquidity": 1667107231469793800,
+        "activeLiquidity": 1677927527218072300,
         "price0": 3501.6676,
         "tick": -194710,
-        "amount0Locked": 65989.472206,
-        "amount1Locked": 18.84515582063377
+        "amount0Locked": 66309.521092,
+        "amount1Locked": 18.936554810885763
     },
     {
-        "activeLiquidity": 1667121109675101700,
+        "activeLiquidity": 1677941405423380200,
         "price0": 3505.1709,
         "tick": -194700,
-        "amount0Locked": 49336.131198,
-        "amount1Locked": 14.075242808283777
+        "amount0Locked": 49656.34014,
+        "amount1Locked": 14.166596112618599
     },
     {
-        "activeLiquidity": 2333165699761974300,
+        "activeLiquidity": 2343985995510253000,
         "price0": 3512.1879,
         "tick": -194680,
-        "amount0Locked": 88845.516089,
-        "amount1Locked": 25.29634490634193
+        "amount0Locked": 89166.045384,
+        "amount1Locked": 25.387606907575442
     },
     {
-        "activeLiquidity": 2334399646019044000,
+        "activeLiquidity": 2345219941767322000,
         "price0": 3519.2189,
         "tick": -194660,
-        "amount0Locked": 69257.623108,
-        "amount1Locked": 19.679827924779833
+        "amount0Locked": 69578.473077,
+        "amount1Locked": 19.77099871430786
     },
     {
-        "activeLiquidity": 2333264535228546000,
+        "activeLiquidity": 2344084830976824300,
         "price0": 3522.7397,
         "tick": -194650,
-        "amount0Locked": 69188.299173,
-        "amount1Locked": 19.64047993356149
+        "amount0Locked": 69509.309599,
+        "amount1Locked": 19.731605151346542
     },
     {
-        "activeLiquidity": 2333382241582815000,
+        "activeLiquidity": 2344202537331094000,
         "price0": 3526.2641,
         "tick": -194640,
-        "amount0Locked": 69263.580494,
-        "amount1Locked": 19.642198999030224
+        "amount0Locked": 69584.751457,
+        "amount1Locked": 19.73327866778201
     },
     {
-        "activeLiquidity": 2333395425034158600,
+        "activeLiquidity": 2344215720782437400,
         "price0": 3533.3233,
         "tick": -194620,
-        "amount0Locked": 69330.161376,
-        "amount1Locked": 19.621799518790557
+        "amount0Locked": 69651.653655,
+        "amount1Locked": 19.712788158080826
     },
     {
-        "activeLiquidity": 2384698151309401000,
+        "activeLiquidity": 2395518447057680000,
         "price0": 3536.8582,
         "tick": -194610,
-        "amount0Locked": 72414.575998,
-        "amount1Locked": 20.474266050890133
+        "amount0Locked": 72736.229055,
+        "amount1Locked": 20.565209209423326
     },
     {
-        "activeLiquidity": 2385519612417267700,
+        "activeLiquidity": 2396339908165546000,
         "price0": 3540.3967,
         "tick": -194600,
-        "amount0Locked": 70973.823876,
-        "amount1Locked": 20.046856515177105
+        "amount0Locked": 71295.637791,
+        "amount1Locked": 20.137754215572446
     },
     {
-        "activeLiquidity": 2385517380980467000,
+        "activeLiquidity": 2396337676728746000,
         "price0": 3543.9387,
         "tick": -194590,
-        "amount0Locked": 70984.741223,
-        "amount1Locked": 20.029901248869525
+        "amount0Locked": 71306.716078,
+        "amount1Locked": 20.120753514288214
     },
     {
-        "activeLiquidity": 2385435434286640000,
+        "activeLiquidity": 2396255730034918400,
         "price0": 3551.0333,
         "tick": -194570,
-        "amount0Locked": 71050.942599,
-        "amount1Locked": 20.00852632706027
+        "amount0Locked": 71373.239573,
+        "amount1Locked": 20.099287789941997
     },
     {
-        "activeLiquidity": 2385422250835297000,
+        "activeLiquidity": 2396242546583575000,
         "price0": 3554.5859,
         "tick": -194560,
-        "amount0Locked": 71088.131522,
-        "amount1Locked": 19.99899103883744
+        "amount0Locked": 71410.589678,
+        "amount1Locked": 20.08970713495889
     },
     {
-        "activeLiquidity": 2385431295761980000,
+        "activeLiquidity": 2396251591510258700,
         "price0": 3558.1421,
         "tick": -194550,
-        "amount0Locked": 71124.615147,
-        "amount1Locked": 19.989256603310103
+        "amount0Locked": 71447.234563,
+        "amount1Locked": 20.079927354614775
     },
     {
-        "activeLiquidity": 2385462737472418300,
+        "activeLiquidity": 2396283033220697000,
         "price0": 3561.7018,
         "tick": -194540,
-        "amount0Locked": 71161.790626,
-        "amount1Locked": 19.9797158970958
+        "amount0Locked": 71484.571385,
+        "amount1Locked": 20.070341326910555
     },
     {
-        "activeLiquidity": 2385828181151163400,
+        "activeLiquidity": 2396648476899442000,
         "price0": 3586.72,
         "tick": -194470,
-        "amount0Locked": 71432.219121,
-        "amount1Locked": 19.915750351499224
+        "amount0Locked": 71756.131535,
+        "amount1Locked": 20.006059162458158
     },
     {
-        "activeLiquidity": 2386037764031259000,
+        "activeLiquidity": 2396858059779538000,
         "price0": 3593.9002,
         "tick": -194450,
-        "amount0Locked": 71505.293307,
-        "amount1Locked": 19.89629347989785
+        "amount0Locked": 71829.529779,
+        "amount1Locked": 19.986512031636416
     },
     {
-        "activeLiquidity": 2393539512720617000,
+        "activeLiquidity": 2404359808468895000,
         "price0": 3601.0948,
         "tick": -194430,
-        "amount0Locked": 72020.582569,
-        "amount1Locked": 19.999635032968477
+        "amount0Locked": 72345.143424,
+        "amount1Locked": 20.089763415917467
     },
     {
-        "activeLiquidity": 2393542002304315000,
+        "activeLiquidity": 2404362298052593700,
         "price0": 3604.6976,
         "tick": -194420,
-        "amount0Locked": 71831.617789,
-        "amount1Locked": 19.92722458070269
+        "amount0Locked": 72156.340956,
+        "amount1Locked": 20.01730791273029
     },
     {
-        "activeLiquidity": 2387960624904485000,
+        "activeLiquidity": 2398780920652763000,
         "price0": 3615.5273,
         "tick": -194390,
-        "amount0Locked": 71603.862437,
-        "amount1Locked": 19.80454179551329
+        "amount0Locked": 71929.07303,
+        "amount1Locked": 19.894490110621
     },
     {
-        "activeLiquidity": 2388025227831414000,
+        "activeLiquidity": 2398845523579692500,
         "price0": 3633.6493,
         "tick": -194340,
-        "amount0Locked": 71955.151737,
-        "amount1Locked": 19.802447877287836
+        "amount0Locked": 72281.176333,
+        "amount1Locked": 19.892171613714677
     },
     {
-        "activeLiquidity": 2388035327482868000,
+        "activeLiquidity": 2398855623231147000,
         "price0": 3644.5661,
         "tick": -194310,
-        "amount0Locked": 72061.820124,
-        "amount1Locked": 19.772400304529185
+        "amount0Locked": 72388.334099,
+        "amount1Locked": 19.861989562857854
     },
     {
-        "activeLiquidity": 2393744049405522000,
+        "activeLiquidity": 2404564345153800000,
         "price0": 3648.2123,
         "tick": -194300,
-        "amount0Locked": 72442.259179,
-        "amount1Locked": 19.85691972702684
+        "amount0Locked": 72768.936444,
+        "amount1Locked": 19.94646420425968
     },
     {
-        "activeLiquidity": 2396229377237616000,
+        "activeLiquidity": 2407049672985895000,
         "price0": 3655.5157,
         "tick": -194280,
-        "amount0Locked": 72492.428677,
-        "amount1Locked": 19.83097188503383
+        "amount0Locked": 72819.432766,
+        "amount1Locked": 19.920426866934683
     },
     {
-        "activeLiquidity": 2400072091746909000,
+        "activeLiquidity": 2410892387495188000,
         "price0": 3670.1663,
         "tick": -194240,
-        "amount0Locked": 72795.020107,
-        "amount1Locked": 19.834256629239153
+        "amount0Locked": 73122.678826,
+        "amount1Locked": 19.923532888932485
     },
     {
-        "activeLiquidity": 2455875721881710600,
+        "activeLiquidity": 2466696017629989000,
         "price0": 3677.5136,
         "tick": -194220,
-        "amount0Locked": 76134.423942,
-        "amount1Locked": 20.702689964043763
+        "amount0Locked": 76462.410468,
+        "amount1Locked": 20.791876996775954
     },
     {
-        "activeLiquidity": 2455912098763143700,
+        "activeLiquidity": 2466732394511422000,
         "price0": 3695.9463,
         "tick": -194170,
-        "amount0Locked": 74631.437013,
-        "amount1Locked": 20.19278179963495
+        "amount0Locked": 74960.24449,
+        "amount1Locked": 20.281746154374535
     },
     {
-        "activeLiquidity": 2439755207236346000,
+        "activeLiquidity": 2450575502984624000,
         "price0": 3699.6439,
         "tick": -194160,
-        "amount0Locked": 73685.210924,
-        "amount1Locked": 19.916838723423893
+        "amount0Locked": 74014.182837,
+        "amount1Locked": 20.00575860915938
     },
     {
-        "activeLiquidity": 2440025544721100000,
+        "activeLiquidity": 2450845840469378600,
         "price0": 3703.3452,
         "tick": -194150,
-        "amount0Locked": 74229.974692,
-        "amount1Locked": 20.04403329024537
+        "amount0Locked": 74559.111124,
+        "amount1Locked": 20.132908729411476
     },
     {
-        "activeLiquidity": 2438857747369653000,
+        "activeLiquidity": 2449678043117931500,
         "price0": 3707.0502,
         "tick": -194140,
-        "amount0Locked": 74187.78909,
-        "amount1Locked": 20.012620446587025
+        "amount0Locked": 74517.090123,
+        "amount1Locked": 20.101451461325897
     },
     {
-        "activeLiquidity": 2438719456350994400,
+        "activeLiquidity": 2449539752099273000,
         "price0": 3710.7589,
         "tick": -194130,
-        "amount0Locked": 74252.026898,
-        "amount1Locked": 20.00993006042733
+        "amount0Locked": 74581.492615,
+        "amount1Locked": 20.09871667312862
     },
     {
-        "activeLiquidity": 2438729820850107000,
+        "activeLiquidity": 2449550116598385000,
         "price0": 3714.4714,
         "tick": -194120,
-        "amount0Locked": 74294.004738,
-        "amount1Locked": 20.001232292698322
+        "amount0Locked": 74623.63522,
+        "amount1Locked": 20.08997452519052
     },
     {
-        "activeLiquidity": 2440920547961271300,
+        "activeLiquidity": 2451740843709549600,
         "price0": 3718.1875,
         "tick": -194110,
-        "amount0Locked": 74464.387043,
-        "amount1Locked": 20.02706607829149
+        "amount0Locked": 74794.182373,
+        "amount1Locked": 20.11576395291991
     },
     {
-        "activeLiquidity": 2441263273272860700,
+        "activeLiquidity": 2452083569021139000,
         "price0": 3736.8241,
         "tick": -194060,
-        "amount0Locked": 74604.776923,
-        "amount1Locked": 19.964754955091465
+        "amount0Locked": 74935.397732,
+        "amount1Locked": 20.053231373183994
     },
     {
-        "activeLiquidity": 2441524582313095700,
+        "activeLiquidity": 2452344878061374000,
         "price0": 3740.5626,
         "tick": -194050,
-        "amount0Locked": 74647.586256,
-        "amount1Locked": 19.956245800557685
+        "amount0Locked": 74978.372409,
+        "amount1Locked": 20.044677993851252
     },
     {
-        "activeLiquidity": 2441671461459065300,
+        "activeLiquidity": 2452491757207343600,
         "price0": 3748.0508,
         "tick": -194030,
-        "amount0Locked": 74723.260438,
-        "amount1Locked": 19.936565462778308
+        "amount0Locked": 75054.377526,
+        "amount1Locked": 20.02490927248444
     },
     {
-        "activeLiquidity": 2442108267788361700,
+        "activeLiquidity": 2452928563536640000,
         "price0": 3751.8006,
         "tick": -194020,
-        "amount0Locked": 74782.879786,
-        "amount1Locked": 19.932530720883378
+        "amount0Locked": 75114.162465,
+        "amount1Locked": 20.020830371757484
     },
     {
-        "activeLiquidity": 2442735687004915700,
+        "activeLiquidity": 2453555982753194500,
         "price0": 3755.554,
         "tick": -194010,
-        "amount0Locked": 74845.336744,
-        "amount1Locked": 19.929239706317382
+        "amount0Locked": 75176.785098,
+        "amount1Locked": 20.017495220748746
     },
     {
-        "activeLiquidity": 2442795264702414300,
+        "activeLiquidity": 2453615560450692600,
         "price0": 3759.3113,
         "tick": -194000,
-        "amount0Locked": 74867.189925,
-        "amount1Locked": 19.915134504305694
+        "amount0Locked": 75198.804036,
+        "amount1Locked": 20.003345904128587
     },
     {
-        "activeLiquidity": 2442821467912586000,
+        "activeLiquidity": 2453641763660864500,
         "price0": 3763.0723,
         "tick": -193990,
-        "amount0Locked": 74904.411116,
-        "amount1Locked": 19.905121489609822
+        "amount0Locked": 75236.191067,
+        "amount1Locked": 19.993288796902906
     },
     {
-        "activeLiquidity": 2444001118802667500,
+        "activeLiquidity": 2454821414550946300,
         "price0": 3766.8371,
         "tick": -193980,
-        "amount0Locked": 75013.445792,
-        "amount1Locked": 19.914173261267745
+        "amount0Locked": 75345.391667,
+        "amount1Locked": 20.002296498353036
     },
     {
-        "activeLiquidity": 2444656025494774300,
+        "activeLiquidity": 2455476321243053000,
         "price0": 3774.3779,
         "tick": -193960,
-        "amount0Locked": 75092.490133,
-        "amount1Locked": 19.89532905336966
+        "amount0Locked": 75424.768103,
+        "amount1Locked": 19.983364215589305
     },
     {
-        "activeLiquidity": 2444671413630213000,
+        "activeLiquidity": 2455491709378492000,
         "price0": 3778.154,
         "tick": -193950,
-        "amount0Locked": 75110.868026,
-        "amount1Locked": 19.88030891437196
+        "amount0Locked": 75443.312168,
+        "amount1Locked": 19.968300072155486
     },
     {
-        "activeLiquidity": 2444931125218800600,
+        "activeLiquidity": 2455751420967079000,
         "price0": 3781.9338,
         "tick": -193940,
-        "amount0Locked": 75163.924753,
-        "amount1Locked": 19.874468529277216
+        "amount0Locked": 75496.53515,
+        "amount1Locked": 19.962415704593166
     },
     {
-        "activeLiquidity": 2446815140454221000,
+        "activeLiquidity": 2457635436202499600,
         "price0": 3785.7175,
         "tick": -193930,
-        "amount0Locked": 75309.412106,
-        "amount1Locked": 19.893035576662733
+        "amount0Locked": 75642.188842,
+        "amount1Locked": 19.980938791721904
     },
     {
-        "activeLiquidity": 2447842106891088400,
+        "activeLiquidity": 2458662402639366700,
         "price0": 3789.5049,
         "tick": -193920,
-        "amount0Locked": 75352.302751,
-        "amount1Locked": 19.884471749355747
+        "amount0Locked": 75685.245909,
+        "amount1Locked": 19.972331026082422
     },
     {
-        "activeLiquidity": 2447847958291346400,
+        "activeLiquidity": 2458668254039625000,
         "price0": 3793.2961,
         "tick": -193910,
-        "amount0Locked": 75358.730904,
-        "amount1Locked": 19.86629281850906
+        "amount0Locked": 75691.840566,
+        "amount1Locked": 19.954108178542086
     },
     {
-        "activeLiquidity": 2463465904456062000,
+        "activeLiquidity": 2474286200204340000,
         "price0": 3800.8899,
         "tick": -193890,
-        "amount0Locked": 76396.522028,
-        "amount1Locked": 20.099640907788455
+        "amount0Locked": 76729.964949,
+        "amount1Locked": 20.187368500582373
     },
     {
-        "activeLiquidity": 2463510121858617000,
+        "activeLiquidity": 2474330417606895600,
         "price0": 3804.6925,
         "tick": -193880,
-        "amount0Locked": 75955.924449,
-        "amount1Locked": 19.963748588198325
+        "amount0Locked": 76289.534125,
+        "amount1Locked": 20.051432330402346
     },
     {
-        "activeLiquidity": 2463651864586595300,
+        "activeLiquidity": 2474472160334874000,
         "price0": 3808.4989,
         "tick": -193870,
-        "amount0Locked": 76001.290772,
-        "amount1Locked": 19.955707679818026
+        "amount0Locked": 76335.067287,
+        "amount1Locked": 20.043347593509893
     },
     {
-        "activeLiquidity": 2463064750340352000,
+        "activeLiquidity": 2473885046088630300,
         "price0": 3812.3091,
         "tick": -193860,
-        "amount0Locked": 75998.684606,
-        "amount1Locked": 19.93507932463635
+        "amount0Locked": 76332.628043,
+        "amount1Locked": 20.022675431609116
     },
     {
-        "activeLiquidity": 2535570596646068700,
+        "activeLiquidity": 2546390892394347000,
         "price0": 3816.1231,
         "tick": -193850,
-        "amount0Locked": 80532.509665,
-        "amount1Locked": 21.103226159230392
+        "amount0Locked": 80866.620107,
+        "amount1Locked": 21.190778481255578
     },
     {
-        "activeLiquidity": 2535568107062370300,
+        "activeLiquidity": 2546388402810649000,
         "price0": 3819.941,
         "tick": -193840,
-        "amount0Locked": 78332.665939,
-        "amount1Locked": 20.506250316757928
+        "amount0Locked": 78666.943469,
+        "amount1Locked": 20.593758875585554
     },
     {
-        "activeLiquidity": 2542597886088109000,
+        "activeLiquidity": 2553418181836387300,
         "price0": 3823.7626,
         "tick": -193830,
-        "amount0Locked": 78806.484172,
-        "amount1Locked": 20.609669473517457
+        "amount0Locked": 79140.928874,
+        "amount1Locked": 20.697134291137605
     },
     {
-        "activeLiquidity": 2543491822279240000,
+        "activeLiquidity": 2554312118027518500,
         "price0": 3827.5881,
         "tick": -193820,
-        "amount0Locked": 78683.792088,
-        "amount1Locked": 20.55701646227688
+        "amount0Locked": 79018.404046,
+        "amount1Locked": 20.64443756065744
     },
     {
-        "activeLiquidity": 2543482269702069000,
+        "activeLiquidity": 2554302565450347500,
         "price0": 3835.2506,
         "tick": -193800,
-        "amount0Locked": 78734.247725,
-        "amount1Locked": 20.52910132767177
+        "amount0Locked": 79069.194446,
+        "amount1Locked": 20.61643505312752
     },
     {
-        "activeLiquidity": 2543910364908857000,
+        "activeLiquidity": 2554730660657135000,
         "price0": 3839.0876,
         "tick": -193790,
-        "amount0Locked": 78800.435557,
-        "amount1Locked": 20.525824024039707
+        "amount0Locked": 79135.549785,
+        "amount1Locked": 20.613114095766587
     },
     {
-        "activeLiquidity": 2544978445707163600,
+        "activeLiquidity": 2555798741455442000,
         "price0": 3842.9284,
         "tick": -193780,
-        "amount0Locked": 78892.770454,
-        "amount1Locked": 20.529336707724948
+        "amount0Locked": 79228.052272,
+        "amount1Locked": 20.6165831473428
     },
     {
-        "activeLiquidity": 2546281033763694000,
+        "activeLiquidity": 2557101329511972400,
         "price0": 3846.773,
         "tick": -193770,
-        "amount0Locked": 78979.877571,
-        "amount1Locked": 20.53146286262683
+        "amount0Locked": 79315.327064,
+        "amount1Locked": 20.61866569225423
     },
     {
-        "activeLiquidity": 2546328308011690000,
+        "activeLiquidity": 2557148603759969000,
         "price0": 3850.6215,
         "tick": -193760,
-        "amount0Locked": 78981.905184,
-        "amount1Locked": 20.511469255273035
+        "amount0Locked": 79317.522435,
+        "amount1Locked": 20.59862849648643
     },
     {
-        "activeLiquidity": 2543178586839681500,
+        "activeLiquidity": 2553998882587960000,
         "price0": 3854.4739,
         "tick": -193750,
-        "amount0Locked": 78824.447051,
-        "amount1Locked": 20.450118317008208
+        "amount0Locked": 79160.232144,
+        "amount1Locked": 20.53723399162239
     },
     {
-        "activeLiquidity": 2544161413182044700,
+        "activeLiquidity": 2554981708930323000,
         "price0": 3858.3301,
         "tick": -193740,
-        "amount0Locked": 79022.691401,
-        "amount1Locked": 20.48106030991779
+        "amount0Locked": 79358.644421,
+        "amount1Locked": 20.568132439984876
     },
     {
-        "activeLiquidity": 2545498361767508000,
+        "activeLiquidity": 2556318657515787000,
         "price0": 3862.1902,
         "tick": -193730,
-        "amount0Locked": 79114.741975,
-        "amount1Locked": 20.48442428537065
+        "amount0Locked": 79450.863004,
+        "amount1Locked": 20.57145289214342
     },
     {
-        "activeLiquidity": 2527874201064240000,
+        "activeLiquidity": 2538694496812519000,
         "price0": 3869.9219,
         "tick": -193710,
-        "amount0Locked": 78056.272663,
-        "amount1Locked": 20.169986619705334
+        "amount0Locked": 78392.729965,
+        "amount1Locked": 20.256928245892656
     },
     {
-        "activeLiquidity": 2527848062290052600,
+        "activeLiquidity": 2538668358038331000,
         "price0": 3873.7935,
         "tick": -193700,
-        "amount0Locked": 78641.9799,
-        "amount1Locked": 20.301025050922224
+        "amount0Locked": 78978.605464,
+        "amount1Locked": 20.387923219257186
     },
     {
-        "activeLiquidity": 2528218109197977000,
+        "activeLiquidity": 2539038404946255400,
         "price0": 3889.319,
         "tick": -193660,
-        "amount0Locked": 78823.299022,
-        "amount1Locked": 20.26660694752157
+        "amount0Locked": 79160.598477,
+        "amount1Locked": 20.35333150184643
     },
     {
-        "activeLiquidity": 2528217052914990000,
+        "activeLiquidity": 2539037348663268400,
         "price0": 3897.105,
         "tick": -193640,
-        "amount0Locked": 78890.544923,
-        "amount1Locked": 20.243371609758604
+        "amount0Locked": 79228.18183,
+        "amount1Locked": 20.330009487393262
     },
     {
-        "activeLiquidity": 2529827612662658600,
+        "activeLiquidity": 2540647908410937000,
         "price0": 3901.0039,
         "tick": -193630,
-        "amount0Locked": 79030.59326,
-        "amount1Locked": 20.25903995665353
+        "amount0Locked": 79368.399018,
+        "amount1Locked": 20.34563452802914
     },
     {
-        "activeLiquidity": 2503774955524745700,
+        "activeLiquidity": 2514595251273024500,
         "price0": 3916.6384,
         "tick": -193590,
-        "amount0Locked": 77508.457174,
-        "amount1Locked": 19.78953638897343
+        "amount0Locked": 77846.939186,
+        "amount1Locked": 19.87595795298998
     },
     {
-        "activeLiquidity": 2500088382665192000,
+        "activeLiquidity": 2510908678413470000,
         "price0": 3920.5568,
         "tick": -193580,
-        "amount0Locked": 78131.846481,
-        "amount1Locked": 19.928763033598585
+        "amount0Locked": 78470.497769,
+        "amount1Locked": 20.01514140008473
     },
     {
-        "activeLiquidity": 2500610028636512000,
+        "activeLiquidity": 2511430324384790500,
         "price0": 3932.3355,
         "tick": -193550,
-        "amount0Locked": 78397.382823,
-        "amount1Locked": 19.936595684614502
+        "amount0Locked": 78736.542442,
+        "amount1Locked": 20.02284458672157
     },
     {
-        "activeLiquidity": 2501273507357158000,
+        "activeLiquidity": 2512093803105436000,
         "price0": 3944.1496,
         "tick": -193520,
-        "amount0Locked": 78540.341438,
-        "amount1Locked": 19.91312424222963
+        "amount0Locked": 78880.010153,
+        "amount1Locked": 19.999243874499538
     },
     {
-        "activeLiquidity": 2506587521677947000,
+        "activeLiquidity": 2517407817426225700,
         "price0": 3948.0955,
         "tick": -193510,
-        "amount0Locked": 78892.581199,
-        "amount1Locked": 19.982439704274125
+        "amount0Locked": 79232.419783,
+        "amount1Locked": 20.068516289813097
     },
     {
-        "activeLiquidity": 2507076968425030000,
+        "activeLiquidity": 2517897264173309000,
         "price0": 3952.0454,
         "tick": -193500,
-        "amount0Locked": 78795.811923,
-        "amount1Locked": 19.937982379090073
+        "amount0Locked": 79135.82046,
+        "amount1Locked": 20.024015939174088
     },
     {
-        "activeLiquidity": 2508298185977199600,
+        "activeLiquidity": 2519118481725478400,
         "price0": 3955.9992,
         "tick": -193490,
-        "amount0Locked": 78896.617583,
-        "amount1Locked": 19.94353707694354
+        "amount0Locked": 79236.796159,
+        "amount1Locked": 20.02952763333337
     },
     {
-        "activeLiquidity": 2508204754576477700,
+        "activeLiquidity": 2519025050324756000,
         "price0": 3959.957,
         "tick": -193480,
-        "amount0Locked": 78891.783097,
-        "amount1Locked": 19.92238366137835
+        "amount0Locked": 79232.131796,
+        "amount1Locked": 20.008331235307466
     },
     {
-        "activeLiquidity": 2508232893353779700,
+        "activeLiquidity": 2519053189102058000,
         "price0": 3971.8541,
         "tick": -193450,
-        "amount0Locked": 79014.919756,
-        "amount1Locked": 19.893711362204556
+        "amount0Locked": 79355.779336,
+        "amount1Locked": 19.979530117959825
     },
     {
-        "activeLiquidity": 2508305898217060400,
+        "activeLiquidity": 2519126193965339000,
         "price0": 3975.8278,
         "tick": -193440,
-        "amount0Locked": 79058.150131,
-        "amount1Locked": 19.884701889724063
+        "amount0Locked": 79399.180174,
+        "amount1Locked": 19.970477748750085
     },
     {
-        "activeLiquidity": 2509269476154182000,
+        "activeLiquidity": 2520089771902461000,
         "price0": 3979.8054,
         "tick": -193430,
-        "amount0Locked": 79156.154777,
-        "amount1Locked": 19.88945360704035
+        "amount0Locked": 79497.35537,
+        "amount1Locked": 19.975186591219362
     },
     {
-        "activeLiquidity": 2513173727638179300,
+        "activeLiquidity": 2523994023386457600,
         "price0": 3983.787,
         "tick": -193420,
-        "amount0Locked": 79411.692397,
-        "amount1Locked": 19.93371948666658
+        "amount0Locked": 79753.063623,
+        "amount1Locked": 20.019409616854016
     },
     {
-        "activeLiquidity": 2513274327816321000,
+        "activeLiquidity": 2524094623564600000,
         "price0": 3987.7726,
         "tick": -193410,
-        "amount0Locked": 79334.519612,
-        "amount1Locked": 19.894444372715768
+        "amount0Locked": 79676.061558,
+        "amount1Locked": 19.980091670750433
     },
     {
-        "activeLiquidity": 2513274309013678000,
+        "activeLiquidity": 2524094604761956400,
         "price0": 3991.7621,
         "tick": -193400,
-        "amount0Locked": 79371.016592,
-        "amount1Locked": 19.883703940754923
+        "amount0Locked": 79712.729343,
+        "amount1Locked": 19.96930842795195
     },
     {
-        "activeLiquidity": 2531109334039810000,
+        "activeLiquidity": 2541929629788088300,
         "price0": 3999.7533,
         "tick": -193380,
-        "amount0Locked": 80578.036856,
-        "amount1Locked": 20.145751939478767
+        "amount0Locked": 80920.091474,
+        "amount1Locked": 20.231270869361555
     },
     {
-        "activeLiquidity": 2527952548024670000,
+        "activeLiquidity": 2538772843772948500,
         "price0": 4003.7548,
         "tick": -193370,
-        "amount0Locked": 79854.559057,
-        "amount1Locked": 19.944917436752885
+        "amount0Locked": 80196.784736,
+        "amount1Locked": 20.03039361986623
     },
     {
-        "activeLiquidity": 2527705354866053600,
+        "activeLiquidity": 2538525650614332000,
         "price0": 4007.7604,
         "tick": -193360,
-        "amount0Locked": 79978.743148,
-        "amount1Locked": 19.955969391906798
+        "amount0Locked": 80321.139975,
+        "amount1Locked": 20.0414028499802
     },
     {
-        "activeLiquidity": 2528084501039254000,
+        "activeLiquidity": 2538904796787533000,
         "price0": 4011.7699,
         "tick": -193350,
-        "amount0Locked": 80050.573957,
-        "amount1Locked": 19.95392941096862
+        "amount0Locked": 80393.142016,
+        "amount1Locked": 20.039320164961346
     },
     {
-        "activeLiquidity": 2527416998093509600,
+        "activeLiquidity": 2538237293841788400,
         "price0": 4015.7835,
         "tick": -193340,
-        "amount0Locked": 80036.310451,
-        "amount1Locked": 19.9304345905344
+        "amount0Locked": 80379.049829,
+        "amount1Locked": 20.015782662132622
     },
     {
-        "activeLiquidity": 2534873065331588000,
+        "activeLiquidity": 2545693361079866400,
         "price0": 4019.8011,
         "tick": -193330,
-        "amount0Locked": 80570.077796,
-        "amount1Locked": 20.0432996298487
+        "amount0Locked": 80912.988578,
+        "amount1Locked": 20.128605040218716
     },
     {
-        "activeLiquidity": 2533751842909557000,
+        "activeLiquidity": 2544572138657835500,
         "price0": 4023.8227,
         "tick": -193320,
-        "amount0Locked": 80302.857343,
-        "amount1Locked": 19.956857750453334
+        "amount0Locked": 80645.939615,
+        "amount1Locked": 20.042120520989148
     },
     {
-        "activeLiquidity": 2593847777430768000,
+        "activeLiquidity": 2604668073179046400,
         "price0": 4027.8483,
         "tick": -193310,
-        "amount0Locked": 84191.449996,
-        "amount1Locked": 20.90233864471861
+        "amount0Locked": 84534.703843,
+        "amount1Locked": 20.987558796544448
     },
     {
-        "activeLiquidity": 2594258146490254000,
+        "activeLiquidity": 2605078442238532000,
         "price0": 4039.9494,
         "tick": -193280,
-        "amount0Locked": 82434.607195,
-        "amount1Locked": 20.4048611973461
+        "amount0Locked": 82778.376283,
+        "amount1Locked": 20.48995362106549
     },
     {
-        "activeLiquidity": 2595048370072987600,
+        "activeLiquidity": 2605868665821266400,
         "price0": 4048.037,
         "tick": -193260,
-        "amount0Locked": 82554.290377,
-        "amount1Locked": 20.393660026964813
+        "amount0Locked": 82898.403389,
+        "amount1Locked": 20.478667405085744
     },
     {
-        "activeLiquidity": 2595329265304644600,
+        "activeLiquidity": 2606149561052923000,
         "price0": 4056.1408,
         "tick": -193240,
-        "amount0Locked": 82629.609802,
-        "amount1Locked": 20.37148473568771
+        "amount0Locked": 82974.067082,
+        "amount1Locked": 20.45640715318951
     },
     {
-        "activeLiquidity": 2640960261324401000,
+        "activeLiquidity": 2651780557072679400,
         "price0": 4060.1987,
         "tick": -193230,
-        "amount0Locked": 85568.707067,
-        "amount1Locked": 21.07500459927647
+        "amount0Locked": 85913.33661,
+        "amount1Locked": 21.159884568282948
     },
     {
-        "activeLiquidity": 2640868157851641300,
+        "activeLiquidity": 2651688453599919600,
         "price0": 4076.4712,
         "tick": -193190,
-        "amount0Locked": 84277.858491,
-        "amount1Locked": 20.67421882419567
+        "amount0Locked": 84623.177948,
+        "amount1Locked": 20.75892921131393
     },
     {
-        "activeLiquidity": 2654264397916902000,
+        "activeLiquidity": 2665084693665180000,
         "price0": 4092.809,
         "tick": -193150,
-        "amount0Locked": 85306.287995,
-        "amount1Locked": 20.842968422672502
+        "amount0Locked": 85652.298747,
+        "amount1Locked": 20.927509566676612
     },
     {
-        "activeLiquidity": 2650418921145777000,
+        "activeLiquidity": 2661239216894055400,
         "price0": 4096.9036,
         "tick": -193140,
-        "amount0Locked": 84674.287458,
-        "amount1Locked": 20.667873939020875
+        "amount0Locked": 85020.471251,
+        "amount1Locked": 20.752372825380032
     },
     {
-        "activeLiquidity": 2658669922969593000,
+        "activeLiquidity": 2669490218717871600,
         "price0": 4101.0024,
         "tick": -193130,
-        "amount0Locked": 85367.954513,
-        "amount1Locked": 20.816363161915756
+        "amount0Locked": 85714.311432,
+        "amount1Locked": 20.900819811377218
     },
     {
-        "activeLiquidity": 2668104587145332000,
+        "activeLiquidity": 2678924882893610500,
         "price0": 4109.2122,
         "tick": -193110,
-        "amount0Locked": 85793.592836,
-        "amount1Locked": 20.878355608964718
+        "amount0Locked": 86140.296268,
+        "amount1Locked": 20.962727848252815
     },
     {
-        "activeLiquidity": 2668115455356373000,
+        "activeLiquidity": 2678935751104652000,
         "price0": 4117.4384,
         "tick": -193090,
-        "amount0Locked": 85577.514692,
-        "amount1Locked": 20.784163930157604
+        "amount0Locked": 85924.564984,
+        "amount1Locked": 20.86845184371641
     },
     {
-        "activeLiquidity": 2668162743043482000,
+        "activeLiquidity": 2678983038791761000,
         "price0": 4121.5577,
         "tick": -193080,
-        "amount0Locked": 85622.998175,
-        "amount1Locked": 20.774426700973954
+        "amount0Locked": 85970.222027,
+        "amount1Locked": 20.858672483251524
     },
     {
-        "activeLiquidity": 2669572780187315700,
+        "activeLiquidity": 2680393075935594000,
         "price0": 4129.8086,
         "tick": -193060,
-        "amount0Locked": 85797.727599,
-        "amount1Locked": 20.775230768810612
+        "amount0Locked": 86145.29883,
+        "amount1Locked": 20.85939235134545
     },
     {
-        "activeLiquidity": 2670191048955324400,
+        "activeLiquidity": 2681011344703602700,
         "price0": 4138.0761,
         "tick": -193040,
-        "amount0Locked": 85877.985189,
-        "amount1Locked": 20.753118807538577
+        "amount0Locked": 86225.904148,
+        "amount1Locked": 20.837196274838625
     },
     {
-        "activeLiquidity": 2856062369664740400,
+        "activeLiquidity": 2866882665413019000,
         "price0": 4142.2161,
         "tick": -193030,
-        "amount0Locked": 97860.14238,
-        "amount1Locked": 23.625069571187463
+        "amount0Locked": 98208.235333,
+        "amount1Locked": 23.709105012296178
     },
     {
-        "activeLiquidity": 2856615061602024400,
+        "activeLiquidity": 2867435357350303000,
         "price0": 4146.3601,
         "tick": -193020,
-        "amount0Locked": 91962.120487,
-        "amount1Locked": 22.178999790899162
+        "amount0Locked": 92310.387522,
+        "amount1Locked": 22.26299322706111
     },
     {
-        "activeLiquidity": 2858275532960176000,
+        "activeLiquidity": 2869095828708454400,
         "price0": 4150.5084,
         "tick": -193010,
-        "amount0Locked": 92097.255501,
-        "amount1Locked": 22.18939165035405
+        "amount0Locked": 92445.696704,
+        "amount1Locked": 22.27334310231022
     },
     {
-        "activeLiquidity": 2859450376031382000,
+        "activeLiquidity": 2870270671779661000,
         "price0": 4154.6607,
         "tick": -193000,
-        "amount0Locked": 92165.518918,
-        "amount1Locked": 22.183645021484562
+        "amount0Locked": 92514.134377,
+        "amount1Locked": 22.267554510437133
     },
     {
-        "activeLiquidity": 4247840153795974700,
+        "activeLiquidity": 4258660449544253000,
         "price0": 4158.8173,
         "tick": -192990,
-        "amount0Locked": 181682.604871,
-        "amount1Locked": 43.68612354941616
+        "amount0Locked": 182031.394672,
+        "amount1Locked": 43.769991096064786
     },
     {
-        "activeLiquidity": 4248447761261943300,
+        "activeLiquidity": 4259268057010222000,
         "price0": 4162.978,
         "tick": -192980,
-        "amount0Locked": 137035.842033,
-        "amount1Locked": 32.91774386747996
+        "amount0Locked": 137384.806264,
+        "amount1Locked": 33.00156949298459
     },
     {
-        "activeLiquidity": 4248696578950597600,
+        "activeLiquidity": 4259516874698876000,
         "price0": 4171.3118,
         "tick": -192960,
-        "amount0Locked": 137169.389311,
-        "amount1Locked": 32.883993110795984
+        "amount0Locked": 137518.702663,
+        "amount1Locked": 32.967734956687224
     },
     {
-        "activeLiquidity": 4257271560281871400,
+        "activeLiquidity": 4268091856030149600,
         "price0": 4175.485,
         "tick": -192950,
-        "amount0Locked": 137783.882978,
-        "amount1Locked": 32.99829421195459
+        "amount0Locked": 138133.371021,
+        "amount1Locked": 33.081994199334936
     },
     {
-        "activeLiquidity": 4257460274844587000,
+        "activeLiquidity": 4268280570592866000,
         "price0": 4179.6624,
         "tick": -192940,
-        "amount0Locked": 137587.881037,
-        "amount1Locked": 32.91841985536528
+        "amount0Locked": 137937.54386,
+        "amount1Locked": 33.002078005549535
     },
     {
-        "activeLiquidity": 4257623390561082000,
+        "activeLiquidity": 4268443686309360000,
         "price0": 4183.8439,
         "tick": -192930,
-        "amount0Locked": 137661.134881,
-        "amount1Locked": 32.903028275447326
+        "amount0Locked": 138010.97257,
+        "amount1Locked": 32.98664460901115
     },
     {
-        "activeLiquidity": 4240251347743407600,
+        "activeLiquidity": 4251071643491686000,
         "price0": 4200.612,
         "tick": -192890,
-        "amount0Locked": 136805.85314,
-        "amount1Locked": 32.56807674752747
+        "amount0Locked": 137156.39117,
+        "amount1Locked": 32.651526024016285
     },
     {
-        "activeLiquidity": 4240219842385806300,
+        "activeLiquidity": 4251040138134084600,
         "price0": 4204.8145,
         "tick": -192880,
-        "amount0Locked": 137435.299548,
-        "amount1Locked": 32.68522317065427
+        "amount0Locked": 137786.012882,
+        "amount1Locked": 32.76863073500211
     },
     {
-        "activeLiquidity": 4240263037961725000,
+        "activeLiquidity": 4251083333710003700,
         "price0": 4217.4472,
         "tick": -192850,
-        "amount0Locked": 137645.423929,
-        "amount1Locked": 32.63714197162272
+        "amount0Locked": 137996.663701,
+        "amount1Locked": 32.72042452455929
     },
     {
-        "activeLiquidity": 4240172977002798600,
+        "activeLiquidity": 4250993272751077000,
         "price0": 4221.6666,
         "tick": -192840,
-        "amount0Locked": 137707.007628,
-        "amount1Locked": 32.619110305557136
+        "amount0Locked": 138058.423055,
+        "amount1Locked": 32.70235122970352
     },
     {
-        "activeLiquidity": 4188950337752645600,
+        "activeLiquidity": 4199770633500924400,
         "price0": 4230.1179,
         "tick": -192820,
-        "amount0Locked": 134517.216198,
-        "amount1Locked": 31.799873749750734
+        "amount0Locked": 134868.983199,
+        "amount1Locked": 31.883031478830283
     },
     {
-        "activeLiquidity": 4189013110383100400,
+        "activeLiquidity": 4199833406131379000,
         "price0": 4234.35,
         "tick": -192810,
-        "amount0Locked": 136254.648705,
-        "amount1Locked": 32.17840994991375
+        "amount0Locked": 136606.591624,
+        "amount1Locked": 32.261526112438744
     },
     {
-        "activeLiquidity": 4187123740788901000,
+        "activeLiquidity": 4197944036537179000,
         "price0": 4238.5862,
         "tick": -192800,
-        "amount0Locked": 136197.777452,
-        "amount1Locked": 32.132831725698644
+        "amount0Locked": 136549.896378,
+        "amount1Locked": 32.215906342687745
     },
     {
-        "activeLiquidity": 4204423836122958000,
+        "activeLiquidity": 4215244131871236600,
         "price0": 4251.3204,
         "tick": -192770,
-        "amount0Locked": 137591.459291,
-        "amount1Locked": 32.36440577676436
+        "amount0Locked": 137944.106765,
+        "amount1Locked": 32.44735588139656
     },
     {
-        "activeLiquidity": 4206560566221488600,
+        "activeLiquidity": 4217380861969767400,
         "price0": 4255.5737,
         "tick": -192760,
-        "amount0Locked": 137235.501524,
-        "amount1Locked": 32.24841409183029
+        "amount0Locked": 137588.325357,
+        "amount1Locked": 32.33132273384856
     },
     {
-        "activeLiquidity": 4206758601700475000,
+        "activeLiquidity": 4217578897448753000,
         "price0": 4264.0929,
         "tick": -192740,
-        "amount0Locked": 137315.983303,
-        "amount1Locked": 32.20285923813433
+        "amount0Locked": 137669.160119,
+        "amount1Locked": 32.2856850171751
     },
     {
-        "activeLiquidity": 4207649929364140000,
+        "activeLiquidity": 4218470225112419000,
         "price0": 4272.6292,
         "tick": -192720,
-        "amount0Locked": 137505.135179,
-        "amount1Locked": 32.18279170037176
+        "amount0Locked": 137858.665331,
+        "amount1Locked": 32.26553469921908
     },
     {
-        "activeLiquidity": 4207642819182394400,
+        "activeLiquidity": 4218463114930673000,
         "price0": 4276.9037,
         "tick": -192710,
-        "amount0Locked": 137544.299846,
-        "amount1Locked": 32.15978384984242
+        "amount0Locked": 137898.006798,
+        "amount1Locked": 32.24248548949774
     },
     {
-        "activeLiquidity": 4220841140986514400,
+        "activeLiquidity": 4231661436734792700,
         "price0": 4281.1826,
         "tick": -192700,
-        "amount0Locked": 138476.635328,
-        "amount1Locked": 32.34541696821724
+        "amount0Locked": 138830.519169,
+        "amount1Locked": 32.42807726949007
     },
     {
-        "activeLiquidity": 4229051450881061400,
+        "activeLiquidity": 4239871746629339600,
         "price0": 4289.7531,
         "tick": -192680,
-        "amount0Locked": 138720.666792,
-        "amount1Locked": 32.337681075352826
+        "amount0Locked": 139074.904676,
+        "amount1Locked": 32.42025876173878
     },
     {
-        "activeLiquidity": 4229308509403854300,
+        "activeLiquidity": 4240128805152132600,
         "price0": 4294.0448,
         "tick": -192670,
-        "amount0Locked": 138537.954868,
-        "amount1Locked": 32.26281109847137
+        "amount0Locked": 138892.369907,
+        "amount1Locked": 32.34534750854476
     },
     {
-        "activeLiquidity": 4229209285059290600,
+        "activeLiquidity": 4240029580807569000,
         "price0": 4298.3407,
         "tick": -192660,
-        "amount0Locked": 138592.310259,
-        "amount1Locked": 32.24321169308169
+        "amount0Locked": 138946.90254,
+        "amount1Locked": 32.32570684710322
     },
     {
-        "activeLiquidity": 4231307997060720600,
+        "activeLiquidity": 4242128292808999000,
         "price0": 4302.641,
         "tick": -192650,
-        "amount0Locked": 138802.496301,
-        "amount1Locked": 32.259836679546254
+        "amount0Locked": 139157.265914,
+        "amount1Locked": 32.34229059845437
     },
     {
-        "activeLiquidity": 4232002597327738000,
+        "activeLiquidity": 4242822893076016000,
         "price0": 4306.9456,
         "tick": -192640,
-        "amount0Locked": 138848.636744,
-        "amount1Locked": 32.238307610005755
+        "amount0Locked": 139203.583778,
+        "amount1Locked": 32.32072031448516
     },
     {
-        "activeLiquidity": 4231803267765152300,
+        "activeLiquidity": 4242623563513431000,
         "price0": 4311.2545,
         "tick": -192630,
-        "amount0Locked": 138882.19393,
-        "amount1Locked": 32.21387065088867
+        "amount0Locked": 139237.318472,
+        "amount1Locked": 32.29624216113937
     },
     {
-        "activeLiquidity": 4220296397294092000,
+        "activeLiquidity": 4231116693042370000,
         "price0": 4315.5677,
         "tick": -192620,
-        "amount0Locked": 138202.500336,
-        "amount1Locked": 32.02417641722322
+        "amount0Locked": 138557.802477,
+        "amount1Locked": 32.1065067543527
     },
     {
-        "activeLiquidity": 4220302164707314700,
+        "activeLiquidity": 4231122460455593500,
         "price0": 4319.8852,
         "tick": -192610,
-        "amount0Locked": 138650.03027,
-        "amount1Locked": 32.09576749272749
+        "amount0Locked": 139005.510097,
+        "amount1Locked": 32.1780566768952
     },
     {
-        "activeLiquidity": 4220524732943558700,
+        "activeLiquidity": 4231345028691837000,
         "price0": 4324.207,
         "tick": -192600,
-        "amount0Locked": 138733.810989,
-        "amount1Locked": 32.08306418774538
+        "amount0Locked": 139089.468591,
+        "amount1Locked": 32.16531223955396
     },
     {
-        "activeLiquidity": 4220404718001646000,
+        "activeLiquidity": 4231225013749925000,
         "price0": 4328.5332,
         "tick": -192590,
-        "amount0Locked": 138787.9788,
-        "amount1Locked": 32.06351288856275
+        "amount0Locked": 139143.814267,
+        "amount1Locked": 32.14571982882523
     },
     {
-        "activeLiquidity": 4220373006375536000,
+        "activeLiquidity": 4231193302123814400,
         "price0": 4332.8636,
         "tick": -192580,
-        "amount0Locked": 138859.248671,
-        "amount1Locked": 32.047915679736946
+        "amount0Locked": 139215.262091,
+        "amount1Locked": 32.130081528783464
     },
     {
-        "activeLiquidity": 4174742010355779600,
+        "activeLiquidity": 4185562306104058000,
         "price0": 4337.1985,
         "tick": -192570,
-        "amount0Locked": 135925.498208,
-        "amount1Locked": 31.339469376033204
+        "amount0Locked": 136281.689671,
+        "amount1Locked": 31.421594154635162
     },
     {
-        "activeLiquidity": 4173281603891187000,
+        "activeLiquidity": 4184101899639465500,
         "price0": 4341.5376,
         "tick": -192560,
-        "amount0Locked": 137400.146878,
-        "amount1Locked": 31.647807598590997
+        "amount0Locked": 137756.516472,
+        "amount1Locked": 31.72989132703791
     },
     {
-        "activeLiquidity": 4161649392679225000,
+        "activeLiquidity": 4172469688427503000,
         "price0": 4350.2289,
         "tick": -192540,
-        "amount0Locked": 136818.768807,
-        "amount1Locked": 31.4509352973258
+        "amount0Locked": 137175.494931,
+        "amount1Locked": 31.532936987171556
     },
     {
-        "activeLiquidity": 2771492175921988600,
+        "activeLiquidity": 2782312471670267400,
         "price0": 4358.9377,
         "tick": -192520,
-        "amount0Locked": 45585.745255,
-        "amount1Locked": 10.457994300900442
+        "amount0Locked": 45942.828266,
+        "amount1Locked": 10.539914034209547
     },
     {
-        "activeLiquidity": 2771525403571467300,
+        "activeLiquidity": 2782345699319746000,
         "price0": 4372.0335,
         "tick": -192490,
-        "amount0Locked": 91602.122245,
-        "amount1Locked": 20.951834690041206
+        "amount0Locked": 91959.741255,
+        "amount1Locked": 21.03363164185741
     },
     {
-        "activeLiquidity": 2771424979854483500,
+        "activeLiquidity": 2782245275602762000,
         "price0": 4385.1686,
         "tick": -192460,
-        "amount0Locked": 91731.87368,
-        "amount1Locked": 20.91866520749328
+        "amount0Locked": 92090.029494,
+        "amount1Locked": 21.000339561941978
     },
     {
-        "activeLiquidity": 2771406693980695600,
+        "activeLiquidity": 2782226989728974000,
         "price0": 4389.5557,
         "tick": -192450,
-        "amount0Locked": 91779.863371,
-        "amount1Locked": 20.908690741813952
+        "amount0Locked": 92138.198299,
+        "amount1Locked": 20.9903242713961
     },
     {
-        "activeLiquidity": 2771311129847929300,
+        "activeLiquidity": 2782131425596208000,
         "price0": 4393.9473,
         "tick": -192440,
-        "amount0Locked": 91820.035611,
-        "amount1Locked": 20.896936177595524
+        "amount0Locked": 92178.549742,
+        "amount1Locked": 20.978528902586536
     },
     {
-        "activeLiquidity": 2764319045871213600,
+        "activeLiquidity": 2775139341619492000,
         "price0": 4398.3432,
         "tick": -192430,
-        "amount0Locked": 91405.546799,
-        "amount1Locked": 20.781813242547198
+        "amount0Locked": 91764.240223,
+        "amount1Locked": 20.863365183429842
     },
     {
-        "activeLiquidity": 2764246149333988000,
+        "activeLiquidity": 2775066445082266000,
         "price0": 4402.7435,
         "tick": -192420,
-        "amount0Locked": 91678.32715,
-        "amount1Locked": 20.822999757297662
+        "amount0Locked": 92037.199957,
+        "amount1Locked": 20.904510934534077
     },
     {
-        "activeLiquidity": 2761215720691764700,
+        "activeLiquidity": 2772036016440043500,
         "price0": 4407.1482,
         "tick": -192410,
-        "amount0Locked": 91525.47565,
-        "amount1Locked": 20.767505573746014
+        "amount0Locked": 91884.527929,
+        "amount1Locked": 20.848976007550842
     },
     {
-        "activeLiquidity": 2095171130604892200,
+        "activeLiquidity": 2105991426353170700,
         "price0": 4411.5574,
         "tick": -192400,
-        "amount0Locked": 47446.739922,
-        "amount1Locked": 10.755099824236307
+        "amount0Locked": 47805.971763,
+        "amount1Locked": 10.836529535030994
     },
     {
-        "activeLiquidity": 2094183221669684000,
+        "activeLiquidity": 2105003517417962500,
         "price0": 4415.9709,
         "tick": -192390,
-        "amount0Locked": 69528.455579,
-        "amount1Locked": 15.744772080071144
+        "amount0Locked": 69887.867072,
+        "amount1Locked": 15.826161088256624
     },
     {
-        "activeLiquidity": 2096875665366304300,
+        "activeLiquidity": 2107695961114582500,
         "price0": 4420.3889,
         "tick": -192380,
-        "amount0Locked": 69775.014104,
-        "amount1Locked": 15.78481352852859
+        "amount0Locked": 70134.605339,
+        "amount1Locked": 15.866161854485329
     },
     {
-        "activeLiquidity": 2095638049664643000,
+        "activeLiquidity": 2106458345412921600,
         "price0": 4442.5451,
         "tick": -192330,
-        "amount0Locked": 69777.493754,
-        "amount1Locked": 15.706648528662388
+        "amount0Locked": 70137.985046,
+        "amount1Locked": 15.78779374779349
     },
     {
-        "activeLiquidity": 2095523981348138000,
+        "activeLiquidity": 2106344277096416500,
         "price0": 4446.9896,
         "tick": -192320,
-        "amount0Locked": 69846.03832,
-        "amount1Locked": 15.706364215876727
+        "amount0Locked": 70206.709894,
+        "amount1Locked": 15.787468874634952
     },
     {
-        "activeLiquidity": 2095517091915792400,
+        "activeLiquidity": 2106337387664071000,
         "price0": 4451.4386,
         "tick": -192310,
-        "amount0Locked": 69884.312932,
-        "amount1Locked": 15.699264743476283
+        "amount0Locked": 70245.164878,
+        "amount1Locked": 15.780328862099942
     },
     {
-        "activeLiquidity": 2094967264453908500,
+        "activeLiquidity": 2105787560202187000,
         "price0": 4455.892,
         "tick": -192300,
-        "amount0Locked": 69882.80062,
-        "amount1Locked": 15.683234713860568
+        "amount0Locked": 70243.833027,
+        "amount1Locked": 15.764258312343404
     },
     {
-        "activeLiquidity": 2094243214128717600,
+        "activeLiquidity": 2105063509876995800,
         "price0": 4460.3499,
         "tick": -192290,
-        "amount0Locked": 69887.762036,
-        "amount1Locked": 15.6686724393148
+        "amount0Locked": 70248.974996,
+        "amount1Locked": 15.749655538303719
     },
     {
-        "activeLiquidity": 2094440909058906000,
+        "activeLiquidity": 2105261204807184600,
         "price0": 4469.2791,
         "tick": -192270,
-        "amount0Locked": 69995.088814,
-        "amount1Locked": 15.661382312267852
+        "amount0Locked": 70356.663149,
+        "amount1Locked": 15.742284472557795
     },
     {
-        "activeLiquidity": 2094289360307561700,
+        "activeLiquidity": 2105109656055840300,
         "price0": 4478.2262,
         "tick": -192250,
-        "amount0Locked": 70048.364032,
-        "amount1Locked": 15.641988912535187
+        "amount0Locked": 70410.300105,
+        "amount1Locked": 15.722810215347144
     },
     {
-        "activeLiquidity": 2094158149276188400,
+        "activeLiquidity": 2104978445024467000,
         "price0": 4487.1911,
         "tick": -192230,
-        "amount0Locked": 70114.731533,
-        "amount1Locked": 15.625528192081024
+        "amount0Locked": 70477.029705,
+        "amount1Locked": 15.706268718026859
     },
     {
-        "activeLiquidity": 2087729673911991300,
+        "activeLiquidity": 2098549969660269800,
         "price0": 4500.6722,
         "tick": -192200,
-        "amount0Locked": 69793.239146,
-        "amount1Locked": 15.507292107148823
+        "amount0Locked": 70156.081146,
+        "amount1Locked": 15.587911619175935
     },
     {
-        "activeLiquidity": 2125562874016233200,
+        "activeLiquidity": 2136383169764511500,
         "price0": 4505.1749,
         "tick": -192190,
-        "amount0Locked": 72582.445052,
-        "amount1Locked": 16.11090490515684
+        "amount0Locked": 72945.468509,
+        "amount1Locked": 16.191484119454156
     },
     {
-        "activeLiquidity": 2116128209840494000,
+        "activeLiquidity": 2126948505588772600,
         "price0": 4509.6821,
         "tick": -192180,
-        "amount0Locked": 70715.40904,
-        "amount1Locked": 15.680796736531107
+        "amount0Locked": 71078.614045,
+        "amount1Locked": 15.761335673297692
     },
     {
-        "activeLiquidity": 2116125934271227600,
+        "activeLiquidity": 2126946230019506000,
         "price0": 4532.2859,
         "tick": -192130,
-        "amount0Locked": 71209.742898,
-        "amount1Locked": 15.711661771282486
+        "amount0Locked": 71573.857005,
+        "amount1Locked": 15.791999622010735
     },
     {
-        "activeLiquidity": 2115216399538515700,
+        "activeLiquidity": 2126036695286794000,
         "price0": 4536.8202,
         "tick": -192120,
-        "amount0Locked": 71184.187328,
-        "amount1Locked": 15.69032582202774
+        "amount0Locked": 71548.48353,
+        "amount1Locked": 15.770623516216052
     },
     {
-        "activeLiquidity": 2115143533872844800,
+        "activeLiquidity": 2125963829621123000,
         "price0": 4541.3591,
         "tick": -192110,
-        "amount0Locked": 71245.515027,
-        "amount1Locked": 15.688148383601654
+        "amount0Locked": 71609.993413,
+        "amount1Locked": 15.768405940867071
     },
     {
-        "activeLiquidity": 2099773058050333000,
+        "activeLiquidity": 2110593353798611500,
         "price0": 4545.9025,
         "tick": -192100,
-        "amount0Locked": 70247.583094,
-        "amount1Locked": 15.452945467953557
+        "amount0Locked": 70612.243756,
+        "amount1Locked": 15.533162908554372
     },
     {
-        "activeLiquidity": 2099482922501255000,
+        "activeLiquidity": 2110303218249533400,
         "price0": 4550.4504,
         "tick": -192090,
-        "amount0Locked": 70781.415907,
-        "amount1Locked": 15.55481529766366
+        "amount0Locked": 71146.258935,
+        "amount1Locked": 15.634992641398021
     },
     {
-        "activeLiquidity": 2097928201095757000,
+        "activeLiquidity": 2108748496844035600,
         "price0": 4555.0029,
         "tick": -192080,
-        "amount0Locked": 70721.703631,
-        "amount1Locked": 15.526159871052402
+        "amount0Locked": 71086.729117,
+        "amount1Locked": 15.606297138138263
     },
     {
-        "activeLiquidity": 2097877504124674600,
+        "activeLiquidity": 2108697799872953000,
         "price0": 4559.56,
         "tick": -192070,
-        "amount0Locked": 70806.124454,
-        "amount1Locked": 15.529157372166262
+        "amount0Locked": 71171.33249,
+        "amount1Locked": 15.609254582801032
     },
     {
-        "activeLiquidity": 1972057768374647300,
+        "activeLiquidity": 1982878064122925800,
         "price0": 4564.1216,
         "tick": -192060,
-        "amount0Locked": 62345.630734,
-        "amount1Locked": 13.659940799836537
+        "amount0Locked": 62711.021411,
+        "amount1Locked": 13.739997973978015
     },
     {
-        "activeLiquidity": 1971794025075757000,
+        "activeLiquidity": 1982614320824035600,
         "price0": 4577.8338,
         "tick": -192030,
-        "amount0Locked": 66676.560834,
-        "amount1Locked": 14.565089808434946
+        "amount0Locked": 67042.49998,
+        "amount1Locked": 14.645026992645475
     },
     {
-        "activeLiquidity": 1971714355647508500,
+        "activeLiquidity": 1982534651395787000,
         "price0": 4582.4137,
         "tick": -192020,
-        "amount0Locked": 66713.438475,
-        "amount1Locked": 14.55858037168491
+        "amount0Locked": 67079.560627,
+        "amount1Locked": 14.63847759925389
     },
     {
-        "activeLiquidity": 1971672314094344700,
+        "activeLiquidity": 1982492609842623200,
         "price0": 4586.9982,
         "tick": -192010,
-        "amount0Locked": 66746.652448,
-        "amount1Locked": 14.551270690478182
+        "amount0Locked": 67112.957698,
+        "amount1Locked": 14.631127981482338
     },
     {
-        "activeLiquidity": 1785749195174613000,
+        "activeLiquidity": 1796569490922891500,
         "price0": 4591.5873,
         "tick": -192000,
-        "amount0Locked": 54186.851751,
-        "amount1Locked": 11.801333321612326
+        "amount0Locked": 54553.34019,
+        "amount1Locked": 11.881150695890332
     },
     {
-        "activeLiquidity": 1785619536178839600,
+        "activeLiquidity": 1796439831927118000,
         "price0": 4596.1809,
         "tick": -191990,
-        "amount0Locked": 60505.614596,
-        "amount1Locked": 13.16432396916909
+        "amount0Locked": 60872.286316,
+        "amount1Locked": 13.244101446757616
     },
     {
-        "activeLiquidity": 1892114737372536000,
+        "activeLiquidity": 1902935033120814600,
         "price0": 4600.7792,
         "tick": -191980,
-        "amount0Locked": 67761.570577,
-        "amount1Locked": 14.728281480008883
+        "amount0Locked": 68128.425669,
+        "amount1Locked": 14.808019080707066
     },
     {
-        "activeLiquidity": 1892108366876482300,
+        "activeLiquidity": 1902928662624760800,
         "price0": 4609.9895,
         "tick": -191960,
-        "amount0Locked": 64214.667406,
-        "amount1Locked": 13.929460753859914
+        "amount0Locked": 64581.889519,
+        "amount1Locked": 14.009118660964562
     },
     {
-        "activeLiquidity": 1943779660377689600,
+        "activeLiquidity": 1954599956125968100,
         "price0": 4614.6015,
         "tick": -191950,
-        "amount0Locked": 67756.020024,
-        "amount1Locked": 14.682962225189023
+        "amount0Locked": 68123.425784,
+        "amount1Locked": 14.762580315116471
     },
     {
-        "activeLiquidity": 1943489614492303000,
+        "activeLiquidity": 1954309910240581600,
         "price0": 4619.2182,
         "tick": -191940,
-        "amount0Locked": 66014.809097,
-        "amount1Locked": 14.29133806680197
+        "amount0Locked": 66382.398597,
+        "amount1Locked": 14.370916359705728
     },
     {
-        "activeLiquidity": 1943486954146967000,
+        "activeLiquidity": 1954307249895245300,
         "price0": 4628.4654,
         "tick": -191920,
-        "amount0Locked": 66090.536045,
-        "amount1Locked": 14.279146515530885
+        "amount0Locked": 66458.493301,
+        "amount1Locked": 14.358645274117126
     },
     {
-        "activeLiquidity": 1943417784433532000,
+        "activeLiquidity": 1954238080181810400,
         "price0": 4637.7312,
         "tick": -191900,
-        "amount0Locked": 66152.037783,
-        "amount1Locked": 14.26387935600662
+        "amount0Locked": 66520.363161,
+        "amount1Locked": 14.343298659351161
     },
     {
-        "activeLiquidity": 1943480512926278400,
+        "activeLiquidity": 1954300808674557000,
         "price0": 4642.371,
         "tick": -191890,
-        "amount0Locked": 66191.748869,
-        "amount1Locked": 14.258177371342182
+        "amount0Locked": 66560.258446,
+        "amount1Locked": 14.33755697683203
     },
     {
-        "activeLiquidity": 1934339682238524700,
+        "activeLiquidity": 1945159977986803200,
         "price0": 4651.6645,
         "tick": -191870,
-        "amount0Locked": 65632.585797,
-        "amount1Locked": 14.109483844042767
+        "amount0Locked": 66001.46405,
+        "amount1Locked": 14.188784113686571
     },
     {
-        "activeLiquidity": 1934139000923465000,
+        "activeLiquidity": 1944959296671743500,
         "price0": 4660.9767,
         "tick": -191850,
-        "amount0Locked": 65996.486073,
-        "amount1Locked": 14.159368308511775
+        "amount0Locked": 66365.73337,
+        "amount1Locked": 14.238589321420891
     },
     {
-        "activeLiquidity": 1929102967008603400,
+        "activeLiquidity": 1939923262756881700,
         "price0": 4665.6398,
         "tick": -191840,
-        "amount0Locked": 65692.457093,
-        "amount1Locked": 14.08005331880006
+        "amount0Locked": 66061.889051,
+        "amount1Locked": 14.159234733173781
     },
     {
-        "activeLiquidity": 1953289170890980000,
+        "activeLiquidity": 1964109466639258400,
         "price0": 4684.3388,
         "tick": -191800,
-        "amount0Locked": 67651.115131,
-        "amount1Locked": 14.441977430964206
+        "amount0Locked": 68021.286655,
+        "amount1Locked": 14.521000648613192
     },
     {
-        "activeLiquidity": 1864896749485605400,
+        "activeLiquidity": 1875717045233884000,
         "price0": 4698.4122,
         "tick": -191770,
-        "amount0Locked": 60866.952054,
-        "amount1Locked": 12.954791829970612
+        "amount0Locked": 61237.679224,
+        "amount1Locked": 13.03369660753863
     },
     {
-        "activeLiquidity": 1864043499822628000,
+        "activeLiquidity": 1874863795570906400,
         "price0": 4703.1127,
         "tick": -191760,
-        "amount0Locked": 63868.927606,
-        "amount1Locked": 13.580139630404355
+        "amount0Locked": 64239.840176,
+        "amount1Locked": 13.65900496727591
     },
     {
-        "activeLiquidity": 1864033858307907000,
+        "activeLiquidity": 1874854154056185300,
         "price0": 4707.818,
         "tick": -191750,
-        "amount0Locked": 63929.470577,
-        "amount1Locked": 13.579427048627423
+        "amount0Locked": 64300.568642,
+        "amount1Locked": 13.658252965001697
     },
     {
-        "activeLiquidity": 1863785040619253000,
+        "activeLiquidity": 1874605336367531300,
         "price0": 4717.2425,
         "tick": -191730,
-        "amount0Locked": 63976.675608,
-        "amount1Locked": 13.562303602412939
+        "amount0Locked": 64348.144937,
+        "amount1Locked": 13.641050735973794
     },
     {
-        "activeLiquidity": 1862973416667270700,
+        "activeLiquidity": 1873793712415549000,
         "price0": 4721.9619,
         "tick": -191720,
-        "amount0Locked": 63961.461468,
-        "amount1Locked": 13.54552675960304
+        "amount0Locked": 64333.116569,
+        "amount1Locked": 13.624234531445577
     },
     {
-        "activeLiquidity": 1861412851383093000,
+        "activeLiquidity": 1872233147131371500,
         "price0": 4726.686,
         "tick": -191710,
-        "amount0Locked": 63914.08208,
-        "amount1Locked": 13.52196487295283
+        "amount0Locked": 64285.923046,
+        "amount1Locked": 13.600633302772152
     },
     {
-        "activeLiquidity": 1861406999982834700,
+        "activeLiquidity": 1872227295731113200,
         "price0": 4731.4148,
         "tick": -191700,
-        "amount0Locked": 63999.299006,
-        "amount1Locked": 13.526461218283512
+        "amount0Locked": 64371.32593,
+        "amount1Locked": 13.60509032575501
     },
     {
-        "activeLiquidity": 1859880646299483100,
+        "activeLiquidity": 1870700942047761700,
         "price0": 4736.1484,
         "tick": -191690,
-        "amount0Locked": 63926.494675,
-        "amount1Locked": 13.497570139082045
+        "amount0Locked": 64298.707649,
+        "amount1Locked": 13.57615994365029
     },
     {
-        "activeLiquidity": 1858355730348360200,
+        "activeLiquidity": 1869176026096638700,
         "price0": 4745.6297,
         "tick": -191670,
-        "amount0Locked": 63937.990595,
-        "amount1Locked": 13.473025745412864
+        "amount0Locked": 64310.57595,
+        "amount1Locked": 13.551537003485953
     },
     {
-        "activeLiquidity": 1857823208070084000,
+        "activeLiquidity": 1868643503818362600,
         "price0": 4750.3774,
         "tick": -191660,
-        "amount0Locked": 63985.809085,
-        "amount1Locked": 13.46962637754892
+        "amount0Locked": 64358.58077,
+        "amount1Locked": 13.548098391779595
     },
     {
-        "activeLiquidity": 1857170358345294300,
+        "activeLiquidity": 1867990654093572900,
         "price0": 4755.1299,
         "tick": -191650,
-        "amount0Locked": 63991.158222,
-        "amount1Locked": 13.457289075709781
+        "amount0Locked": 64364.11633,
+        "amount1Locked": 13.535721865675447
     },
     {
-        "activeLiquidity": 1855850241784471600,
+        "activeLiquidity": 1866670537532750000,
         "price0": 4764.6492,
         "tick": -191630,
-        "amount0Locked": 63986.607757,
-        "amount1Locked": 13.429447689935813
+        "amount0Locked": 64359.938991,
+        "amount1Locked": 13.507802090235673
     },
     {
-        "activeLiquidity": 1855365443552933000,
+        "activeLiquidity": 1866185739301211600,
         "price0": 4788.5309,
         "tick": -191580,
-        "amount0Locked": 64158.890603,
-        "amount1Locked": 13.398449605986395
+        "amount0Locked": 64533.156286,
+        "amount1Locked": 13.476608374721263
     },
     {
-        "activeLiquidity": 1815763142605331000,
+        "activeLiquidity": 1826583438353609500,
         "price0": 4798.1171,
         "tick": -191560,
-        "amount0Locked": 61497.497009,
-        "amount1Locked": 12.817006243137099
+        "amount0Locked": 61872.137125,
+        "amount1Locked": 12.895086895834213
     },
     {
-        "activeLiquidity": 1815043543378636500,
+        "activeLiquidity": 1825863839126915000,
         "price0": 4802.9174,
         "tick": -191550,
-        "amount0Locked": 62850.265617,
-        "amount1Locked": 13.085851889352783
+        "amount0Locked": 63225.093092,
+        "amount1Locked": 13.163893513739863
     },
     {
-        "activeLiquidity": 1814983965681138200,
+        "activeLiquidity": 1825804261429416400,
         "price0": 4807.7225,
         "tick": -191540,
-        "amount0Locked": 62902.507502,
-        "amount1Locked": 13.083639475710905
+        "amount0Locked": 63277.522428,
+        "amount1Locked": 13.161642090942713
     },
     {
-        "activeLiquidity": 1813839067414790100,
+        "activeLiquidity": 1824659363163068700,
         "price0": 4817.3471,
         "tick": -191520,
-        "amount0Locked": 62888.065014,
-        "amount1Locked": 13.0545016353414
+        "amount0Locked": 63263.455123,
+        "amount1Locked": 13.132426290691194
     },
     {
-        "activeLiquidity": 1805400175340412400,
+        "activeLiquidity": 1816220471088691000,
         "price0": 4822.1666,
         "tick": -191510,
-        "amount0Locked": 62373.419049,
-        "amount1Locked": 12.93472926151424
+        "amount0Locked": 62748.996891,
+        "amount1Locked": 13.01261496630585
     },
     {
-        "activeLiquidity": 1732894329034696000,
+        "activeLiquidity": 1743714624782974200,
         "price0": 4826.9909,
         "tick": -191500,
-        "amount0Locked": 57661.731498,
-        "amount1Locked": 11.945688855906686
+        "amount0Locked": 58037.497167,
+        "amount1Locked": 12.023535629633232
     },
     {
-        "activeLiquidity": 1732871466970204400,
+        "activeLiquidity": 1743691762718483000,
         "price0": 4841.4929,
         "tick": -191470,
-        "amount0Locked": 60268.446548,
-        "amount1Locked": 12.448318694279733
+        "amount0Locked": 60644.776259,
+        "amount1Locked": 12.526048790955166
     },
     {
-        "activeLiquidity": 1732838740109800400,
+        "activeLiquidity": 1743659035858078700,
         "price0": 4846.3366,
         "tick": -191460,
-        "amount0Locked": 60297.104721,
-        "amount1Locked": 12.441790587713932
+        "amount0Locked": 60673.622635,
+        "amount1Locked": 12.519481831102594
     },
     {
-        "activeLiquidity": 1731681652092565800,
+        "activeLiquidity": 1742501947840844300,
         "price0": 4851.1851,
         "tick": -191450,
-        "amount0Locked": 60247.831153,
-        "amount1Locked": 12.419198620665092
+        "amount0Locked": 60624.537364,
+        "amount1Locked": 12.496851030162894
     },
     {
-        "activeLiquidity": 1731619687901419800,
+        "activeLiquidity": 1742439983649698300,
         "price0": 4865.7598,
         "tick": -191420,
-        "amount0Locked": 60374.289404,
-        "amount1Locked": 12.40798812776701
+        "amount0Locked": 60751.56107,
+        "amount1Locked": 12.485524151774621
     },
     {
-        "activeLiquidity": 1668478704755802000,
+        "activeLiquidity": 1679299000504080600,
         "price0": 4875.5005,
         "tick": -191400,
-        "amount0Locked": 56029.370328,
-        "amount1Locked": 11.492024238071348
+        "amount0Locked": 56407.019435,
+        "amount1Locked": 11.569482768583535
     },
     {
-        "activeLiquidity": 1668068482002449700,
+        "activeLiquidity": 1678888777750728200,
         "price0": 4880.3782,
         "tick": -191390,
-        "amount0Locked": 58233.584868,
-        "amount1Locked": 11.932186833710652
+        "amount0Locked": 58611.422838,
+        "amount1Locked": 12.009606646712538
     },
     {
-        "activeLiquidity": 1667725467524392000,
+        "activeLiquidity": 1678545763272670200,
         "price0": 4890.1483,
         "tick": -191370,
-        "amount0Locked": 58282.20405,
-        "amount1Locked": 11.918289770825703
+        "amount0Locked": 58660.420027,
+        "amount1Locked": 11.995632206365286
     },
     {
-        "activeLiquidity": 1667680214981156000,
+        "activeLiquidity": 1678500510729434600,
         "price0": 4895.0406,
         "tick": -191360,
-        "amount0Locked": 58320.181686,
-        "amount1Locked": 11.914136423869781
+        "amount0Locked": 58698.58681,
+        "amount1Locked": 11.991440200032564
     },
     {
-        "activeLiquidity": 1651346369871549400,
+        "activeLiquidity": 1662166665619828000,
         "price0": 4899.9379,
         "tick": -191350,
-        "amount0Locked": 57207.911985,
-        "amount1Locked": 11.675232142327879
+        "amount0Locked": 57586.506349,
+        "amount1Locked": 11.752497278112521
     },
     {
-        "activeLiquidity": 1646272814610792400,
+        "activeLiquidity": 1657093110359071000,
         "price0": 4904.84,
         "tick": -191340,
-        "amount0Locked": 57453.099311,
-        "amount1Locked": 11.713552182023706
+        "amount0Locked": 57831.88301,
+        "amount1Locked": 11.790778696818306
     },
     {
-        "activeLiquidity": 1644848845868617500,
+        "activeLiquidity": 1655669141616896000,
         "price0": 4909.7471,
         "tick": -191330,
-        "amount0Locked": 57559.782279,
-        "amount1Locked": 11.72357388118607
+        "amount0Locked": 57938.755408,
+        "amount1Locked": 11.8007617943592
     },
     {
-        "activeLiquidity": 1642964830633197000,
+        "activeLiquidity": 1653785126381475600,
         "price0": 4914.659,
         "tick": -191320,
-        "amount0Locked": 57506.427781,
-        "amount1Locked": 11.701000557394924
+        "amount0Locked": 57885.590435,
+        "amount1Locked": 11.778149888295689
     },
     {
-        "activeLiquidity": 1560889828781411000,
+        "activeLiquidity": 1571710124529689300,
         "price0": 4919.5759,
         "tick": -191310,
-        "amount0Locked": 51846.250613,
-        "amount1Locked": 10.538764295148908
+        "amount0Locked": 52225.602885,
+        "amount1Locked": 10.615875062700434
     },
     {
-        "activeLiquidity": 1560422010099439400,
+        "activeLiquidity": 1571242305847718000,
         "price0": 4924.4977,
         "tick": -191300,
-        "amount0Locked": 54718.292957,
-        "amount1Locked": 11.111446616510106
+        "amount0Locked": 55097.834943,
+        "amount1Locked": 11.18851884022654
     },
     {
-        "activeLiquidity": 1560067307069672700,
+        "activeLiquidity": 1570887602817951000,
         "price0": 4929.4244,
         "tick": -191290,
-        "amount0Locked": 54737.179212,
-        "amount1Locked": 11.104172609451352
+        "amount0Locked": 55116.911007,
+        "amount1Locked": 11.181206308624006
     },
     {
-        "activeLiquidity": 1560054647393558000,
+        "activeLiquidity": 1570874943141836500,
         "price0": 4949.1806,
         "tick": -191250,
-        "amount0Locked": 54858.340297,
-        "amount1Locked": 11.08432788534199
+        "amount0Locked": 55238.832278,
+        "amount1Locked": 11.161207678866804
     },
     {
-        "activeLiquidity": 1557535478015464200,
+        "activeLiquidity": 1568355773763742700,
         "price0": 4954.132,
         "tick": -191240,
-        "amount0Locked": 54708.960295,
-        "amount1Locked": 11.043097042951409
+        "amount0Locked": 55089.64256,
+        "amount1Locked": 11.119938408099957
     },
     {
-        "activeLiquidity": 1556809438184663000,
+        "activeLiquidity": 1567629733932941300,
         "price0": 4959.0883,
         "tick": -191230,
-        "amount0Locked": 54773.881631,
-        "amount1Locked": 11.045151402420323
+        "amount0Locked": 55154.754275,
+        "amount1Locked": 11.121954358368571
     },
     {
-        "activeLiquidity": 1554997235479280000,
+        "activeLiquidity": 1565817531227558700,
         "price0": 4964.0497,
         "tick": -191220,
-        "amount0Locked": 54699.201033,
-        "amount1Locked": 11.0190680343891
+        "amount0Locked": 55080.264151,
+        "amount1Locked": 11.095832600293916
     },
     {
-        "activeLiquidity": 1554052003759399200,
+        "activeLiquidity": 1564872299507677700,
         "price0": 4969.016,
         "tick": -191210,
-        "amount0Locked": 54723.798583,
-        "amount1Locked": 11.013005209773397
+        "amount0Locked": 55105.052271,
+        "amount1Locked": 11.089731404973845
     },
     {
-        "activeLiquidity": 1553923959039082800,
+        "activeLiquidity": 1564744254787361300,
         "price0": 4978.9634,
         "tick": -191190,
-        "amount0Locked": 54802.853271,
-        "amount1Locked": 11.006880049946373
+        "amount0Locked": 55184.488384,
+        "amount1Locked": 11.08352956107432
     },
     {
-        "activeLiquidity": 1550154110195460600,
+        "activeLiquidity": 1560974405943739100,
         "price0": 4988.9308,
         "tick": -191170,
-        "amount0Locked": 54596.008014,
-        "amount1Locked": 10.943428548495437
+        "amount0Locked": 54978.024935,
+        "amount1Locked": 11.0200014524742
     },
     {
-        "activeLiquidity": 1543952981106677500,
+        "activeLiquidity": 1554773276854955800,
         "price0": 4993.922,
         "tick": -191160,
-        "amount0Locked": 54318.386761,
-        "amount1Locked": 10.876899308412957
+        "amount0Locked": 54700.594728,
+        "amount1Locked": 10.95343393728962
     },
     {
-        "activeLiquidity": 1439742627032098000,
+        "activeLiquidity": 1450562922780376600,
         "price0": 4998.9182,
         "tick": -191150,
-        "amount0Locked": 47198.927235,
-        "amount1Locked": 9.441828335638608
+        "amount0Locked": 47581.326344,
+        "amount1Locked": 9.518324708636715
     },
     {
-        "activeLiquidity": 1417663908116597800,
+        "activeLiquidity": 1428484203864876000,
         "price0": 5003.9193,
         "tick": -191140,
-        "amount0Locked": 49345.917564,
-        "amount1Locked": 9.86145343632227
+        "amount0Locked": 49728.507911,
+        "amount1Locked": 9.93791157264598
     },
     {
-        "activeLiquidity": 1417610911482729000,
+        "activeLiquidity": 1428431207231007500,
         "price0": 5008.9255,
         "tick": -191130,
-        "amount0Locked": 50147.908485,
-        "amount1Locked": 10.011709771776129
+        "amount0Locked": 50530.690166,
+        "amount1Locked": 10.088129690610248
     },
     {
-        "activeLiquidity": 1392731623398094000,
+        "activeLiquidity": 1403551919146372600,
         "price0": 5013.9367,
         "tick": -191120,
-        "amount0Locked": 48413.710185,
-        "amount1Locked": 9.655827978492871
+        "amount0Locked": 48796.683295,
+        "amount1Locked": 9.732209698803457
     },
     {
-        "activeLiquidity": 1391501756905572400,
+        "activeLiquidity": 1402322052653851000,
         "price0": 5018.9529,
         "tick": -191110,
-        "amount0Locked": 49231.835545,
-        "amount1Locked": 9.80918463983466
+        "amount0Locked": 49615.00018,
+        "amount1Locked": 9.88552818076834
     },
     {
-        "activeLiquidity": 1391042508471771600,
+        "activeLiquidity": 1401862804220050000,
         "price0": 5023.9741,
         "tick": -191100,
-        "amount0Locked": 49267.488016,
-        "amount1Locked": 9.806477316007365
+        "amount0Locked": 49650.844271,
+        "amount1Locked": 9.882782696492486
     },
     {
-        "activeLiquidity": 1390359541935977200,
+        "activeLiquidity": 1401179837684255700,
         "price0": 5049.1556,
         "tick": -191050,
-        "amount0Locked": 49358.600982,
-        "amount1Locked": 9.775614934326487
+        "amount0Locked": 49742.916779,
+        "amount1Locked": 9.85172979921135
     },
     {
-        "activeLiquidity": 1389688600378340000,
+        "activeLiquidity": 1400508896126618600,
         "price0": 5054.207,
         "tick": -191040,
-        "amount0Locked": 49359.870084,
-        "amount1Locked": 9.766095791973134
+        "amount0Locked": 49744.378077,
+        "amount1Locked": 9.842172610774053
     },
     {
-        "activeLiquidity": 1388154522111494100,
+        "activeLiquidity": 1398974817859772700,
         "price0": 5059.2635,
         "tick": -191030,
-        "amount0Locked": 49299.325373,
-        "amount1Locked": 9.744367965676306
+        "amount0Locked": 49684.025659,
+        "amount1Locked": 9.82040675758517
     },
     {
-        "activeLiquidity": 1388061270554879200,
+        "activeLiquidity": 1398881566303157800,
         "price0": 5064.3251,
         "tick": -191020,
-        "amount0Locked": 49371.915052,
-        "amount1Locked": 9.748962489672074
+        "amount0Locked": 49756.807726,
+        "amount1Locked": 9.824963273466333
     },
     {
-        "activeLiquidity": 1388044621197282800,
+        "activeLiquidity": 1398864916945561300,
         "price0": 5079.5401,
         "tick": -190990,
-        "amount0Locked": 49448.160593,
-        "amount1Locked": 9.734771210275136
+        "amount0Locked": 49833.631011,
+        "amount1Locked": 9.810658084176172
     },
     {
-        "activeLiquidity": 1386755194194842600,
+        "activeLiquidity": 1397575489943121200,
         "price0": 5089.7088,
         "tick": -190970,
-        "amount0Locked": 49406.261772,
-        "amount1Locked": 9.707090029489303
+        "amount0Locked": 49792.117833,
+        "amount1Locked": 9.7829010580556
     },
     {
-        "activeLiquidity": 1384730953860532500,
+        "activeLiquidity": 1395551249608810800,
         "price0": 5094.8008,
         "tick": -190960,
-        "amount0Locked": 49332.531685,
-        "amount1Locked": 9.682916643365893
+        "amount0Locked": 49718.580713,
+        "amount1Locked": 9.758689777861502
     },
     {
-        "activeLiquidity": 1383267969363202000,
+        "activeLiquidity": 1394088265111480600,
         "price0": 5099.8979,
         "tick": -190950,
-        "amount0Locked": 49325.014711,
-        "amount1Locked": 9.671765104223702
+        "amount0Locked": 49711.256802,
+        "amount1Locked": 9.74750036349131
     },
     {
-        "activeLiquidity": 1382828777583856000,
+        "activeLiquidity": 1393649073332134700,
         "price0": 5115.2198,
         "tick": -190920,
-        "amount0Locked": 49419.95333,
-        "amount1Locked": 9.661354761901263
+        "amount0Locked": 49806.77519,
+        "amount1Locked": 9.736976509136905
     },
     {
-        "activeLiquidity": 1382050325853033000,
+        "activeLiquidity": 1392870621601311500,
         "price0": 5120.3373,
         "tick": -190910,
-        "amount0Locked": 49404.690457,
-        "amount1Locked": 9.648717885273348
+        "amount0Locked": 49791.705766,
+        "amount1Locked": 9.724301832855673
     },
     {
-        "activeLiquidity": 1380640288709199600,
+        "activeLiquidity": 1391460584457478100,
         "price0": 5125.46,
         "tick": -190900,
-        "amount0Locked": 49356.337417,
-        "amount1Locked": 9.629640579262462
+        "amount0Locked": 49743.546273,
+        "amount1Locked": 9.70518674633083
     },
     {
-        "activeLiquidity": 1329820124955772400,
+        "activeLiquidity": 1340640420704050700,
         "price0": 5140.8587,
         "tick": -190870,
-        "amount0Locked": 45838.256529,
-        "amount1Locked": 8.916459176877419
+        "amount0Locked": 46226.046605,
+        "amount1Locked": 8.991892115293492
     },
     {
-        "activeLiquidity": 1329792083519982300,
+        "activeLiquidity": 1340612379268260900,
         "price0": 5151.1502,
         "tick": -190850,
-        "amount0Locked": 47705.276495,
-        "amount1Locked": 9.261092171466027
+        "amount0Locked": 48093.454535,
+        "amount1Locked": 9.336449718293279
     },
     {
-        "activeLiquidity": 1329765880309810700,
+        "activeLiquidity": 1340586176058089000,
         "price0": 5156.3036,
         "tick": -190840,
-        "amount0Locked": 47728.259373,
-        "amount1Locked": 9.25629340992328
+        "amount0Locked": 48116.631542,
+        "amount1Locked": 9.331613289502757
     },
     {
-        "activeLiquidity": 1329628573899072500,
+        "activeLiquidity": 1340448869647350800,
         "price0": 5161.4623,
         "tick": -190830,
-        "amount0Locked": 47743.207667,
-        "amount1Locked": 9.249938340922123
+        "amount0Locked": 48131.774061,
+        "amount1Locked": 9.325220571871569
     },
     {
-        "activeLiquidity": 1301433313161204200,
+        "activeLiquidity": 1312253608909482800,
         "price0": 5197.7174,
         "tick": -190760,
-        "amount0Locked": 45883.408164,
-        "amount1Locked": 8.827607269114349
+        "amount0Locked": 46273.336854,
+        "amount1Locked": 8.902626485777093
     },
     {
-        "activeLiquidity": 1300055652394727200,
+        "activeLiquidity": 1310875948143005700,
         "price0": 5202.9175,
         "tick": -190750,
-        "amount0Locked": 46823.586599,
-        "amount1Locked": 8.999486676408551
+        "amount0Locked": 47213.710293,
+        "amount1Locked": 9.074468394839734
     },
     {
-        "activeLiquidity": 1299935053965175300,
+        "activeLiquidity": 1310755349713453600,
         "price0": 5208.1227,
         "tick": -190740,
-        "amount0Locked": 46887.998556,
-        "amount1Locked": 9.002859733270675
+        "amount0Locked": 47278.31735,
+        "amount1Locked": 9.07780397192152
     },
     {
-        "activeLiquidity": 1299514853763433000,
+        "activeLiquidity": 1310335149511711500,
         "price0": 5213.3332,
         "tick": -190730,
-        "amount0Locked": 46885.468958,
-        "amount1Locked": 8.993376606111402
+        "amount0Locked": 47275.982951,
+        "amount1Locked": 9.068283383990737
     },
     {
-        "activeLiquidity": 1299149410084688000,
+        "activeLiquidity": 1309969705832966400,
         "price0": 5218.5489,
         "tick": -190720,
-        "amount0Locked": 46897.697801,
-        "amount1Locked": 8.986731515539653
+        "amount0Locked": 47288.40709,
+        "amount1Locked": 9.061600851253516
     },
     {
-        "activeLiquidity": 1243345779949886700,
+        "activeLiquidity": 1254166075698165200,
         "price0": 5228.9959,
         "tick": -190700,
-        "amount0Locked": 42923.77514,
-        "amount1Locked": 8.208798756692026
+        "amount0Locked": 43314.875314,
+        "amount1Locked": 8.283593264202189
     },
     {
-        "activeLiquidity": 1233567959081644300,
+        "activeLiquidity": 1244388254829922800,
         "price0": 5249.9527,
         "tick": -190660,
-        "amount0Locked": 44322.512654,
-        "amount1Locked": 8.442459371522743
+        "amount0Locked": 44714.395773,
+        "amount1Locked": 8.517104447183735
     },
     {
-        "activeLiquidity": 1216871688825142000,
+        "activeLiquidity": 1227691984573420500,
         "price0": 5255.205,
         "tick": -190650,
-        "amount0Locked": 43488.986576,
-        "amount1Locked": 8.275411933243666
+        "amount0Locked": 43881.065674,
+        "amount1Locked": 8.350019697227644
     },
     {
-        "activeLiquidity": 1216262825080681200,
+        "activeLiquidity": 1227083120828959700,
         "price0": 5260.4626,
         "tick": -190640,
-        "amount0Locked": 44071.889037,
-        "amount1Locked": 8.37794928369182
+        "amount0Locked": 44464.164214,
+        "amount1Locked": 8.452519755027826
     },
     {
-        "activeLiquidity": 1215786034752760300,
+        "activeLiquidity": 1226606330501038600,
         "price0": 5265.7255,
         "tick": -190630,
-        "amount0Locked": 44081.425894,
-        "amount1Locked": 8.371387059739323
+        "amount0Locked": 44473.897248,
+        "amount1Locked": 8.445920257056816
     },
     {
-        "activeLiquidity": 1215780262558866200,
+        "activeLiquidity": 1226600558307144700,
         "price0": 5270.9935,
         "tick": -190620,
-        "amount0Locked": 44120.354752,
-        "amount1Locked": 8.370405762801404
+        "amount0Locked": 44513.022381,
+        "amount1Locked": 8.444901704711258
     },
     {
-        "activeLiquidity": 1215455868958678300,
+        "activeLiquidity": 1226276164706956800,
         "price0": 5281.5456,
         "tick": -190600,
-        "amount0Locked": 44141.13666,
-        "amount1Locked": 8.357617331875668
+        "amount0Locked": 44534.197133,
+        "amount1Locked": 8.4320388187287
     },
     {
-        "activeLiquidity": 1210867233182088000,
+        "activeLiquidity": 1221687528930366500,
         "price0": 5297.4132,
         "tick": -190570,
-        "amount0Locked": 43885.320391,
-        "amount1Locked": 8.28429251114357
+        "amount0Locked": 44278.970868,
+        "amount1Locked": 8.358602455096674
     },
     {
-        "activeLiquidity": 1210783087222402300,
+        "activeLiquidity": 1221603382970680600,
         "price0": 5302.713,
         "tick": -190560,
-        "amount0Locked": 44068.16329,
-        "amount1Locked": 8.31049378308824
+        "amount0Locked": 44462.010632,
+        "amount1Locked": 8.38476658328728
     },
     {
-        "activeLiquidity": 1209357167660240000,
+        "activeLiquidity": 1220177463408518100,
         "price0": 5329.2916,
         "tick": -190510,
-        "amount0Locked": 44077.47274,
-        "amount1Locked": 8.270793935224244
+        "amount0Locked": 44472.305882,
+        "amount1Locked": 8.344881294441544
     },
     {
-        "activeLiquidity": 1209236703505097500,
+        "activeLiquidity": 1220056999253376000,
         "price0": 5361.3619,
         "tick": -190450,
-        "amount0Locked": 44253.267375,
-        "amount1Locked": 8.254109390267095
+        "amount0Locked": 44649.286736,
+        "amount1Locked": 8.32797483162893
     },
     {
-        "activeLiquidity": 1208955832251522600,
+        "activeLiquidity": 1219776127999801000,
         "price0": 5399.0212,
         "tick": -190380,
-        "amount0Locked": 44392.210137,
-        "amount1Locked": 8.222270053671494
+        "amount0Locked": 44789.617925,
+        "amount1Locked": 8.295877430828071
     },
     {
-        "activeLiquidity": 1180856578720900900,
+        "activeLiquidity": 1191676874469179100,
         "price0": 5420.6594,
         "tick": -190340,
-        "amount0Locked": 42423.224813,
-        "amount1Locked": 7.8262110701112695
+        "amount0Locked": 42821.428172,
+        "amount1Locked": 7.899671386956544
     },
     {
-        "activeLiquidity": 1180759814183143400,
+        "activeLiquidity": 1191580109931422000,
         "price0": 5436.945,
         "tick": -190310,
-        "amount0Locked": 43515.418903,
-        "amount1Locked": 8.003652574660016
+        "amount0Locked": 43914.219985,
+        "amount1Locked": 8.077002789071177
     },
     {
-        "activeLiquidity": 1179866998767486700,
+        "activeLiquidity": 1190687294515765000,
         "price0": 5442.3844,
         "tick": -190300,
-        "amount0Locked": 43474.903689,
-        "amount1Locked": 7.988208935640986
+        "amount0Locked": 43873.904212,
+        "amount1Locked": 8.06152248605054
     },
     {
-        "activeLiquidity": 1179829534600248600,
+        "activeLiquidity": 1190649830348527000,
         "price0": 5447.8292,
         "tick": -190290,
-        "amount0Locked": 43526.820318,
-        "amount1Locked": 7.989754901203727
+        "amount0Locked": 43926.020381,
+        "amount1Locked": 8.063031805802158
     },
     {
-        "activeLiquidity": 1179826488953133300,
+        "activeLiquidity": 1190646784701411800,
         "price0": 5458.7352,
         "tick": -190270,
-        "amount0Locked": 43571.525348,
-        "amount1Locked": 7.981981789062988
+        "amount0Locked": 43971.124791,
+        "amount1Locked": 8.055185457088626
     },
     {
-        "activeLiquidity": 1171998225321063700,
+        "activeLiquidity": 1182818521069342000,
         "price0": 5502.5781,
         "tick": -190190,
-        "amount0Locked": 43165.743215,
-        "amount1Locked": 7.844639842752103
+        "amount0Locked": 43566.944176,
+        "amount1Locked": 7.9175512954273195
     },
     {
-        "activeLiquidity": 1171970138215733500,
+        "activeLiquidity": 1182790433964012000,
         "price0": 5513.5937,
         "tick": -190170,
-        "amount0Locked": 43497.394562,
-        "amount1Locked": 7.8891186001753475
+        "amount0Locked": 43898.996905,
+        "amount1Locked": 7.961957181564844
     },
     {
-        "activeLiquidity": 1171699800730979300,
+        "activeLiquidity": 1182520096479257900,
         "price0": 5535.6911,
         "tick": -190130,
-        "amount0Locked": 43565.408927,
-        "amount1Locked": 7.8699132434093215
+        "amount0Locked": 43967.815238,
+        "amount1Locked": 7.942606300450906
     },
     {
-        "activeLiquidity": 1171655583328424200,
+        "activeLiquidity": 1182475879076702700,
         "price0": 5546.773,
         "tick": -190110,
-        "amount0Locked": 43615.765666,
-        "amount1Locked": 7.863268496530013
+        "amount0Locked": 44018.574564,
+        "amount1Locked": 7.93588890040004
     },
     {
-        "activeLiquidity": 1171072778368139300,
+        "activeLiquidity": 1181893074116417800,
         "price0": 5563.4375,
         "tick": -190080,
-        "amount0Locked": 43639.426207,
-        "amount1Locked": 7.843968079894858
+        "amount0Locked": 44042.839742,
+        "amount1Locked": 7.91647964034773
     },
     {
-        "activeLiquidity": 1163607666203378000,
+        "activeLiquidity": 1174427961951656200,
         "price0": 5569.0034,
         "tick": -190070,
-        "amount0Locked": 43126.067342,
-        "amount1Locked": 7.743946964901195
+        "amount0Locked": 43529.682624,
+        "amount1Locked": 7.816422280427767
     },
     {
-        "activeLiquidity": 1163607103082781700,
+        "activeLiquidity": 1174427398831060200,
         "price0": 5580.152,
         "tick": -190050,
-        "amount0Locked": 43447.91063,
-        "amount1Locked": 7.786151758400061
+        "amount0Locked": 43851.929709,
+        "amount1Locked": 7.8585546384642395
     },
     {
-        "activeLiquidity": 1163054411145497600,
+        "activeLiquidity": 1173874706893776100,
         "price0": 5585.7347,
         "tick": -190040,
-        "amount0Locked": 43428.365392,
-        "amount1Locked": 7.7748707526364
+        "amount0Locked": 43832.586521,
+        "amount1Locked": 7.847237442128211
     },
     {
-        "activeLiquidity": 1162367610923945500,
+        "activeLiquidity": 1173187906672223700,
         "price0": 5596.9168,
         "tick": -190020,
-        "amount0Locked": 43441.115389,
-        "amount1Locked": 7.761615365797731
+        "amount0Locked": 43845.740921,
+        "amount1Locked": 7.833909728372052
     },
     {
-        "activeLiquidity": 1161902762046530800,
+        "activeLiquidity": 1172723057794809300,
         "price0": 5602.5162,
         "tick": -190010,
-        "amount0Locked": 43453.752582,
-        "amount1Locked": 7.756113645706395
+        "amount0Locked": 43858.580468,
+        "amount1Locked": 7.828371872078028
     },
     {
-        "activeLiquidity": 1161559008253495300,
+        "activeLiquidity": 1172379304001773800,
         "price0": 5608.1213,
         "tick": -190000,
-        "amount0Locked": 43467.14914,
-        "amount1Locked": 7.750750574448055
+        "amount0Locked": 43872.17948,
+        "amount1Locked": 7.822972682466062
     },
     {
-        "activeLiquidity": 1161557573698702600,
+        "activeLiquidity": 1172377869446980900,
         "price0": 5630.5976,
         "tick": -189960,
-        "amount0Locked": 43566.951774,
-        "amount1Locked": 7.7375360913510285
+        "amount0Locked": 43972.792945,
+        "amount1Locked": 7.809613906761624
     },
     {
-        "activeLiquidity": 1154555836108754200,
+        "activeLiquidity": 1165376131857032400,
         "price0": 5670.148,
         "tick": -189890,
-        "amount0Locked": 43192.674204,
-        "amount1Locked": 7.617556725651517
+        "amount0Locked": 43599.938236,
+        "amount1Locked": 7.689382722148633
     },
     {
-        "activeLiquidity": 1154386596348396800,
+        "activeLiquidity": 1165206892096675300,
         "price0": 5675.8207,
         "tick": -189880,
-        "amount0Locked": 43465.197991,
-        "amount1Locked": 7.657958225647791
+        "amount0Locked": 43872.665695,
+        "amount1Locked": 7.729748319786525
     },
     {
-        "activeLiquidity": 1148882874161078000,
+        "activeLiquidity": 1159703169909356500,
         "price0": 5698.5683,
         "tick": -189840,
-        "amount0Locked": 43143.251848,
-        "amount1Locked": 7.570893130638772
+        "amount0Locked": 43551.535263,
+        "amount1Locked": 7.64253979540265
     },
     {
-        "activeLiquidity": 1147814793362771200,
+        "activeLiquidity": 1158635089111049700,
         "price0": 5704.2695,
         "tick": -189830,
-        "amount0Locked": 43291.959871,
-        "amount1Locked": 7.589395999784383
+        "amount0Locked": 43700.447469,
+        "amount1Locked": 7.661006852041027
     },
     {
-        "activeLiquidity": 1147325346615688000,
+        "activeLiquidity": 1158145642363966200,
         "price0": 5709.9763,
         "tick": -189820,
-        "amount0Locked": 43316.978862,
-        "amount1Locked": 7.586192404099172
+        "amount0Locked": 43725.670744,
+        "amount1Locked": 7.657767461554651
     },
     {
-        "activeLiquidity": 1147031460478716900,
+        "activeLiquidity": 1157851756226995500,
         "price0": 5750.0843,
         "tick": -189750,
-        "amount0Locked": 43465.119448,
-        "amount1Locked": 7.559040324789201
+        "amount0Locked": 43875.244186,
+        "amount1Locked": 7.630365319914189
     },
     {
-        "activeLiquidity": 1110834213307552300,
+        "activeLiquidity": 1121654509055830700,
         "price0": 5802.0661,
         "tick": -189660,
-        "amount0Locked": 40915.968692,
-        "amount1Locked": 7.051965312356913
+        "amount0Locked": 41327.943057,
+        "amount1Locked": 7.122970081996604
     },
     {
-        "activeLiquidity": 1110577154784759300,
+        "activeLiquidity": 1121397450533037700,
         "price0": 5948.9386,
         "tick": -189410,
-        "amount0Locked": 42806.298141,
-        "amount1Locked": 7.195619375388416
+        "amount0Locked": 43223.454245,
+        "amount1Locked": 7.265742153457583
     },
     {
-        "activeLiquidity": 1102939357755510100,
+        "activeLiquidity": 1113759653503788500,
         "price0": 5996.7186,
         "tick": -189330,
-        "amount0Locked": 42396.525754,
-        "amount1Locked": 7.069954153792559
+        "amount0Locked": 42815.35374,
+        "amount1Locked": 7.139797014892231
     },
     {
-        "activeLiquidity": 1042094299493736000,
+        "activeLiquidity": 1052914595242014300,
         "price0": 6002.718,
         "tick": -189320,
-        "amount0Locked": 38000.825671,
-        "amount1Locked": 6.330603136408559
+        "amount0Locked": 38419.863114,
+        "amount1Locked": 6.40041108673825
     },
     {
-        "activeLiquidity": 1041502972106560000,
+        "activeLiquidity": 1052323267854838400,
         "price0": 6081.2589,
         "tick": -189190,
-        "amount0Locked": 40574.234889,
-        "amount1Locked": 6.672012460430772
+        "amount0Locked": 40996.004809,
+        "amount1Locked": 6.741368153011873
     },
     {
-        "activeLiquidity": 1013566223409310700,
+        "activeLiquidity": 1024386519157589200,
         "price0": 6197.9015,
         "tick": -189000,
-        "amount0Locked": 38786.067209,
-        "amount1Locked": 6.257935357638779
+        "amount0Locked": 39211.862834,
+        "amount1Locked": 6.3266353235945205
     },
     {
-        "activeLiquidity": 1013338455577334400,
+        "activeLiquidity": 1024158751325612900,
         "price0": 6204.1022,
         "tick": -188990,
-        "amount0Locked": 39887.433821,
-        "amount1Locked": 6.429203181132511
+        "amount0Locked": 40313.442386,
+        "amount1Locked": 6.497868807343985
     },
     {
-        "activeLiquidity": 1013273197137940700,
+        "activeLiquidity": 1024093492886219100,
         "price0": 6502.6408,
         "tick": -188520,
-        "amount0Locked": 40839.761171,
-        "amount1Locked": 6.280488545033905
+        "amount0Locked": 41275.898984,
+        "amount1Locked": 6.347559420574375
     },
     {
-        "activeLiquidity": 1013131013644698500,
+        "activeLiquidity": 1023951309392977000,
         "price0": 6600.9107,
         "tick": -188370,
-        "amount0Locked": 41138.29727,
-        "amount1Locked": 6.23221539389359
+        "amount0Locked": 41577.718249,
+        "amount1Locked": 6.298785144502123
     },
     {
-        "activeLiquidity": 1013041419723007600,
+        "activeLiquidity": 1023861715471286100,
         "price0": 6614.1251,
         "tick": -188350,
-        "amount0Locked": 41177.949805,
-        "amount1Locked": 6.225759170466486
+        "amount0Locked": 41617.810402,
+        "amount1Locked": 6.292262387806537
     },
     {
-        "activeLiquidity": 1013038803278775400,
+        "activeLiquidity": 1023859099027053800,
         "price0": 6740.9885,
         "tick": -188160,
-        "amount0Locked": 41574.446766,
-        "amount1Locked": 6.167411031042378
+        "amount0Locked": 42018.50574,
+        "amount1Locked": 6.233285490661662
     },
     {
-        "activeLiquidity": 1012293437530506500,
+        "activeLiquidity": 1023113733278784900,
         "price0": 6754.4833,
         "tick": -188140,
-        "amount0Locked": 41554.907406,
-        "amount1Locked": 6.152196352418535
+        "amount0Locked": 41999.410639,
+        "amount1Locked": 6.2180049738163055
     },
     {
-        "activeLiquidity": 1011958212315204900,
+        "activeLiquidity": 1022778508063483400,
         "price0": 6801.9282,
         "tick": -188070,
-        "amount0Locked": 41703.685455,
-        "amount1Locked": 6.131156416518602
+        "amount0Locked": 42149.747097,
+        "amount1Locked": 6.19673512182181
     },
     {
-        "activeLiquidity": 989521402355352600,
+        "activeLiquidity": 1000341698103631000,
         "price0": 6884.0389,
         "tick": -187950,
-        "amount0Locked": 40107.52361,
-        "amount1Locked": 5.8261617032965525
+        "amount0Locked": 40556.269533,
+        "amount1Locked": 5.891348134064898
     },
     {
-        "activeLiquidity": 968141578797474700,
+        "activeLiquidity": 978961874545753100,
         "price0": 6897.82,
         "tick": -187930,
-        "amount0Locked": 39303.964836,
-        "amount1Locked": 5.698027007531272
+        "amount0Locked": 39753.159706,
+        "amount1Locked": 5.763148287574759
     },
     {
-        "activeLiquidity": 955549828113795800,
+        "activeLiquidity": 966370123862074200,
         "price0": 7002.062,
         "tick": -187780,
-        "amount0Locked": 39440.742955,
-        "amount1Locked": 5.632732624104388
+        "amount0Locked": 39893.319282,
+        "amount1Locked": 5.697367345739798
     },
     {
-        "activeLiquidity": 953618157049489900,
+        "activeLiquidity": 964438452797768300,
         "price0": 7302.3964,
         "tick": -187360,
-        "amount0Locked": 40650.54127,
-        "amount1Locked": 5.566739846703341
+        "amount0Locked": 41112.721711,
+        "amount1Locked": 5.63003145849746
     },
     {
-        "activeLiquidity": 953490748359015200,
+        "activeLiquidity": 964311044107293600,
         "price0": 7405.3438,
         "tick": -187220,
-        "amount0Locked": 41008.2076,
-        "amount1Locked": 5.53765074454165
+        "amount0Locked": 41473.63449,
+        "amount1Locked": 5.600500883935165
     },
     {
-        "activeLiquidity": 953107474128579200,
+        "activeLiquidity": 963927769876857700,
         "price0": 7502.2369,
         "tick": -187090,
-        "amount0Locked": 41247.944325,
-        "amount1Locked": 5.4980861139936055
+        "amount0Locked": 41716.406192,
+        "amount1Locked": 5.560529072740695
     },
     {
-        "activeLiquidity": 953104736782897200,
+        "activeLiquidity": 963925032531175700,
         "price0": 7692.1473,
         "tick": -186840,
-        "amount0Locked": 41783.315956,
-        "amount1Locked": 5.431944350081291
+        "amount0Locked": 42257.67005,
+        "amount1Locked": 5.493611668289223
     },
     {
-        "activeLiquidity": 952350800395617800,
+        "activeLiquidity": 963171096143896300,
         "price0": 7777.2237,
         "tick": -186730,
-        "amount0Locked": 41947.397809,
-        "amount1Locked": 5.393621089066259
+        "amount0Locked": 42424.367908,
+        "amount1Locked": 5.4549501850100475
     },
     {
-        "activeLiquidity": 948761635006666400,
+        "activeLiquidity": 959581930754944800,
         "price0": 7998.0521,
         "tick": -186450,
-        "amount0Locked": 42251.57519,
-        "amount1Locked": 5.282733176822995
+        "amount0Locked": 42735.269493,
+        "amount1Locked": 5.343209689956715
     },
     {
-        "activeLiquidity": 641183901395047300,
+        "activeLiquidity": 652004197143325700,
         "price0": 8006.0538,
         "tick": -186440,
-        "amount0Locked": 14920.488734,
-        "amount1Locked": 1.8636508312119926
+        "amount0Locked": 15404.424933,
+        "amount1Locked": 1.9240971152177402
     },
     {
-        "activeLiquidity": 78411489303361570,
+        "activeLiquidity": 89231785051640030,
         "price0": 8999.7079,
         "tick": -185270,
-        "amount0Locked": -22967.992231,
-        "amount1Locked": -2.5520819559595718
+        "amount0Locked": -22454.902804,
+        "amount1Locked": -2.4950701695016777
     },
     {
-        "activeLiquidity": 78220230436264100,
+        "activeLiquidity": 89040526184542540,
         "price0": 9008.7117,
         "tick": -185260,
-        "amount0Locked": 3701.919358,
-        "amount1Locked": 0.41092661010820214
+        "amount0Locked": 4215.265382,
+        "amount1Locked": 0.46790989933058286
     },
     {
-        "activeLiquidity": 78069234660860510,
+        "activeLiquidity": 88889530409138960,
         "price0": 9739.4844,
         "tick": -184480,
-        "amount0Locked": 3843.676575,
-        "amount1Locked": 0.3946488781384254
+        "amount0Locked": 4377.437578,
+        "amount1Locked": 0.44945270382919406
     },
     {
-        "activeLiquidity": 78006506168114060,
+        "activeLiquidity": 88826801916392510,
         "price0": 9896.5615,
         "tick": -184320,
-        "amount0Locked": 3875.817702,
-        "amount1Locked": 0.391632759974884
+        "amount0Locked": 4413.865703,
+        "amount1Locked": 0.44599992577885483
     },
     {
-        "activeLiquidity": 77898541560100930,
+        "activeLiquidity": 88718837308379400,
         "price0": 9986.0281,
         "tick": -184230,
-        "amount0Locked": 3885.64492,
-        "amount1Locked": 0.38910815020015255
+        "amount0Locked": 4426.119472,
+        "amount1Locked": 0.44323122564549616
     },
     {
-        "activeLiquidity": 75483803060474670,
+        "activeLiquidity": 86304098808753120,
         "price0": 9996.0186,
         "tick": -184220,
-        "amount0Locked": 3651.630303,
-        "amount1Locked": 0.3653084735477469
+        "amount0Locked": 4192.375147,
+        "amount1Locked": 0.419404495639076
     },
     {
-        "activeLiquidity": 75125459184193060,
+        "activeLiquidity": 85945754932471520,
         "price0": 10006.019,
         "tick": -184210,
-        "amount0Locked": 3738.359097,
-        "amount1Locked": 0.3736110281294813
+        "amount0Locked": 4279.374366,
+        "amount1Locked": 0.42768001017217616
     },
     {
-        "activeLiquidity": 75029098602083230,
+        "activeLiquidity": 85849394350361700,
         "price0": 10331.373,
         "tick": -183890,
-        "amount0Locked": 3807.065576,
-        "amount1Locked": 0.36849559426320305
+        "amount0Locked": 4356.806271,
+        "amount1Locked": 0.4217063992915563
     },
     {
-        "activeLiquidity": 37195898497841480,
+        "activeLiquidity": 48016194246119930,
         "price0": 11895.714,
         "tick": -182480,
-        "amount0Locked": -34.744014,
-        "amount1Locked": -0.002920716964869533
+        "amount0Locked": 555.150173,
+        "amount1Locked": 0.04666808297772838
     },
     {
-        "activeLiquidity": 37060456763585600,
+        "activeLiquidity": 47880752511864056,
         "price0": 14001.578,
         "tick": -180850,
-        "amount0Locked": 2183.981208,
-        "amount1Locked": 0.15598107811599538
+        "amount0Locked": 2823.962602,
+        "amount1Locked": 0.20168888340508628
     },
     {
-        "activeLiquidity": 36973303238576670,
+        "activeLiquidity": 47793598986855120,
         "price0": 15001.746,
         "tick": -180160,
-        "amount0Locked": 2258.26005,
-        "amount1Locked": 0.1505331505654739
+        "amount0Locked": 2920.704946,
+        "amount1Locked": 0.19469100442774173
     },
     {
-        "activeLiquidity": 33873602016147790,
+        "activeLiquidity": 44693897764426250,
         "price0": 20008.4,
         "tick": -177280,
-        "amount0Locked": 2175.847508,
-        "amount1Locked": 0.1087467026031526
-    },
-    {
-        "activeLiquidity": 33336520592381300,
-        "price0": 50004.169,
-        "tick": -168120,
-        "amount0Locked": 3666.14174,
-        "amount1Locked": 0.07331672172811635
-    },
-    {
-        "activeLiquidity": 33332570624341452,
-        "price0": 97569959000000000000,
-        "tick": 183970,
-        "amount0Locked": 164556533215.53104,
-        "amount1Locked": 1.68654916e-9
-    },
-    {
-        "activeLiquidity": 33332532940712144,
-        "price0": 457827450000000000000,
-        "tick": 199430,
-        "amount0Locked": 356499122495.5104,
-        "amount1Locked": 7.78675733e-10
+        "amount0Locked": 2940.889084,
+        "amount1Locked": 0.14698272256247008
     }
 ]
 

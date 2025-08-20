@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import * as d3 from 'd3';
-import { findClosestElementBinarySearch } from './utils/dataUtils';
+import { findClosestElementBinarySearch, formatPrice } from './utils/dataUtils';
 import { useResponsiveDimensions } from './hooks/useResponsiveDimensions';
 import { useChartState } from './hooks/useChartState';
 import { useInitialView } from './hooks/useInitialView';
@@ -83,6 +83,9 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
     if (!current || !liquidityData) return null;
     return findClosestElementBinarySearch(liquidityData, current)?.tick;
   }, [current, liquidityData]);
+
+  console.log('current', current);
+  console.log('currentTick', currentTick);
   
 
   // Calculate yScale outside useEffect so it's available for Brush component
@@ -1299,27 +1302,111 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
                 textAlign: 'center'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
-                <div style={{ 
-                  width: '16px', 
-                  height: '16px', 
-                  borderRadius: '50%', 
-                  background: `linear-gradient(135deg, ${CHART_COLORS.GRADIENT_START} 0%, ${CHART_COLORS.GRADIENT_END} 100%)`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '8px',
-                  color: 'white',
-                  fontWeight: 'bold'
-                }}>
-                  Ξ
-                </div>
-                <span>ETH</span>
-                <span style={{ color: CHART_COLORS.TEXT_GREY }}>
-                  ${(tooltip.data.amount0Locked || 0).toFixed(1)}K
-                </span>
-                <span style={{ color: CHART_COLORS.TEXT_GREY }}>100%</span>
-              </div>
+              {(() => {
+                const tooltipTick = tooltip.data.tick;
+                
+                // If below currentTick, show amount1Locked as USDC
+                if (currentTick !== null && currentTick !== undefined && tooltipTick < currentTick) {
+                  return (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+                      <div style={{ 
+                        width: '16px', 
+                        height: '16px', 
+                        borderRadius: '50%', 
+                        background: '#2775CA',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '8px',
+                        color: 'white',
+                        fontWeight: 'bold'
+                      }}>
+                        $
+                      </div>
+                      <span>USDC</span>
+                      <span style={{ color: CHART_COLORS.TEXT_GREY }}>
+                        {formatPrice(tooltip.data.amount1Locked || 0)}
+                      </span>
+                      <span style={{ color: CHART_COLORS.TEXT_GREY }}>100%</span>
+                    </div>
+                  );
+                }
+                
+                // If equal to currentTick, show 50/50 split
+                if (currentTick !== null && currentTick !== undefined && tooltipTick === currentTick) {
+                  return (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+                        <div style={{ 
+                          width: '16px', 
+                          height: '16px', 
+                          borderRadius: '50%', 
+                          background: `linear-gradient(135deg, ${CHART_COLORS.GRADIENT_START} 0%, ${CHART_COLORS.GRADIENT_END} 100%)`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '8px',
+                          color: 'white',
+                          fontWeight: 'bold'
+                        }}>
+                          Ξ
+                        </div>
+                        <span>ETH</span>
+                        <span style={{ color: CHART_COLORS.TEXT_GREY }}>
+                          {formatPrice(tooltip.data.amount0Locked || 0)}
+                        </span>
+                        <span style={{ color: CHART_COLORS.TEXT_GREY }}>50%</span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+                        <div style={{ 
+                          width: '16px', 
+                          height: '16px', 
+                          borderRadius: '50%', 
+                          background: '#2775CA',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '8px',
+                          color: 'white',
+                          fontWeight: 'bold'
+                        }}>
+                          $
+                        </div>
+                        <span>USDC</span>
+                        <span style={{ color: CHART_COLORS.TEXT_GREY }}>
+                          {formatPrice(tooltip.data.amount1Locked || 0)}
+                        </span>
+                        <span style={{ color: CHART_COLORS.TEXT_GREY }}>50%</span>
+                      </div>
+                    </div>
+                  );
+                }
+                
+                // Default: above currentTick, show amount0Locked as ETH
+                return (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+                    <div style={{ 
+                      width: '16px', 
+                      height: '16px', 
+                      borderRadius: '50%', 
+                      background: `linear-gradient(135deg, ${CHART_COLORS.GRADIENT_START} 0%, ${CHART_COLORS.GRADIENT_END} 100%)`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '8px',
+                      color: 'white',
+                      fontWeight: 'bold'
+                    }}>
+                      Ξ
+                    </div>
+                    <span>ETH</span>
+                    <span style={{ color: CHART_COLORS.TEXT_GREY }}>
+                      {formatPrice(tooltip.data.amount0Locked || 0)}
+                    </span>
+                    <span style={{ color: CHART_COLORS.TEXT_GREY }}>100%</span>
+                  </div>
+                );
+              })()}
             </div>
             
             {/* Connecting line from tooltip's right edge to liquidity bars */}

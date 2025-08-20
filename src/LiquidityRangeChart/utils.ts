@@ -29,7 +29,7 @@ export const getColorForPrice = (value: number, minPrice: number | null, maxPric
 export const getOpacityForPrice = (value: number, minPrice: number | null, maxPrice: number | null): number => {
   if (minPrice !== null && maxPrice !== null) {
     const isInRange = value >= minPrice && value <= maxPrice;
-    return isInRange ? 0.5 : 0.08;
+    return isInRange ? 0.5 : 0.2;
   }
   return 0.2;
 };

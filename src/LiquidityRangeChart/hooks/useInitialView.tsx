@@ -14,6 +14,8 @@ export function useInitialView(data: PriceDataPoint[], liquidityData: LiquidityD
       ];
       const priceExtent = d3.extent(allPrices);
       const priceRange = priceExtent?.[1] && priceExtent?.[0] ? priceExtent[1] - priceExtent[0] : 0;
+      console.log('priceExtent', priceExtent);
+      console.log('priceRange', priceRange);
       
       // Filter out extreme outliers for initial view - focus on middle 20% of liquidity
       const liquidityPrices = liquidityData.map(d => d.price0).sort((a, b) => a - b);

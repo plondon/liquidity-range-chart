@@ -39,3 +39,14 @@ export function findClosestElementBinarySearch(data: LiquidityDataPoint[], targe
   priceDataCache.set(target.toString(), closestElement);
   return closestElement;
 }
+
+export function formatPrice(price: number) {
+  if (price >= 1000000000) {
+    return (price / 1000000000).toFixed(1) + 'B';
+  } else if (price >= 1000000) {
+    return (price / 1000000).toFixed(1) + 'M';
+  } else if (price >= 1000) {
+    return (price / 1000).toFixed(1) + 'K';
+  }
+  return price.toFixed(1);
+}
