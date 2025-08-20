@@ -13,7 +13,6 @@ import {
   getOpacityForPrice, 
   isPriceExtentValid 
 } from './utils';
-import { useDragBehavior } from '../hooks/chart/useDragBehavior';
 import { 
   chartUpdateManager, 
   initializeUpdateSlices,
@@ -48,9 +47,6 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
     handleResetZoom,
     handleCenterRange
   } = useChartState();
-  
-  // Drag behavior hook
-  const dragBehavior = useDragBehavior();
   
   // Initialize hooks
   useInitialView(data, liquidityData, setChartState, defaultState);
