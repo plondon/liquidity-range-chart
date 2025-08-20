@@ -59,7 +59,7 @@ export function updateRangeVisuals(
       .attr('y2', yScale(constrainedMinPrice))
       .attr('stroke', CHART_COLORS.BOUNDARY_LINE)
       .attr('stroke-width', 2)
-      .attr('opacity', 0.08);
+      .attr('opacity', 0);
       
     g.append('line')
       .attr('class', 'price-range-element max-line')
@@ -69,7 +69,7 @@ export function updateRangeVisuals(
       .attr('y2', yScale(constrainedMaxPrice))
       .attr('stroke', CHART_COLORS.BOUNDARY_LINE)
       .attr('stroke-width', 2)
-      .attr('opacity', 0.08);
+      .attr('opacity', 0);
     
     // Labels
     g.append('text')
@@ -89,6 +89,29 @@ export function updateRangeVisuals(
       .attr('fill', CHART_COLORS.BOUNDARY_LINE)
       .attr('font-weight', 'bold')
       .text(`Max: ${constrainedMaxPrice.toFixed(0)}`);
+    
+    // Floating indicators
+    g.append('rect')
+      .attr('class', 'price-range-element min-floating-indicator')
+      .attr('x', (width - margin.left) / 2 - 15)
+      .attr('y', yScale(constrainedMinPrice) - 3)
+      .attr('width', 30)
+      .attr('height', 6)
+      .attr('rx', 4)
+      .attr('ry', 4)
+      .attr('fill', '#444444')
+      .style('pointer-events', 'none');
+      
+    g.append('rect')
+      .attr('class', 'price-range-element max-floating-indicator')
+      .attr('x', (width - margin.left) / 2 - 15)
+      .attr('y', yScale(constrainedMaxPrice) - 3)
+      .attr('width', 30)
+      .attr('height', 6)
+      .attr('rx', 4)
+      .attr('ry', 4)
+      .attr('fill', '#444444')
+      .style('pointer-events', 'none');
   } else {
     // Update existing range elements
     g.select('.price-range-bg')
@@ -119,6 +142,12 @@ export function updateRangeVisuals(
     g.select('.max-label')
       .attr('y', yScale(constrainedMaxPrice) + 15)
       .text(`Max: ${constrainedMaxPrice.toFixed(0)}`);
+      
+    // Update floating indicators
+    g.select('.min-floating-indicator')
+      .attr('y', yScale(constrainedMinPrice) - 3);
+    g.select('.max-floating-indicator')
+      .attr('y', yScale(constrainedMaxPrice) - 3);
   }
   
   // Update drag indicators if they exist (for above/below range areas)

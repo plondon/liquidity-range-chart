@@ -207,6 +207,12 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
     g.selectAll('.center-drag-line')
       .attr('y', (yScale(draggedMaxPrice) + yScale(draggedMinPrice)) / 2 - 1.5);
     
+    // Update floating indicators
+    g.select('.min-floating-indicator')
+      .attr('y', yScale(draggedMinPrice) - 3);
+    g.select('.max-floating-indicator')
+      .attr('y', yScale(draggedMaxPrice) - 3);
+    
     // Update labels
     g.select('.min-label')
       .attr('x', -68)
@@ -609,6 +615,10 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
               .attr('y1', yScale(draggedMaxPrice))
               .attr('y2', yScale(draggedMaxPrice));
               
+            // Update floating indicators
+            g.select('.max-floating-indicator')
+              .attr('y', yScale(draggedMaxPrice) - 3);
+              
             g.select('.max-label')
               .attr('y', yScale(draggedMaxPrice) + 15)
               .text(`Max: ${draggedMaxPrice.toFixed(0)}`);
@@ -690,6 +700,10 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
             g.select('.min-line')
               .attr('y1', yScale(draggedMinPrice))
               .attr('y2', yScale(draggedMinPrice));
+              
+            // Update floating indicators
+            g.select('.min-floating-indicator')
+              .attr('y', yScale(draggedMinPrice) - 3);
               
             g.select('.min-label')
               .attr('y', yScale(draggedMinPrice) - 5)
@@ -804,6 +818,12 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
               g.select('.max-line')
                 .attr('y1', newMaxY)
                 .attr('y2', newMaxY);
+                
+              // Update floating indicators
+              g.select('.min-floating-indicator')
+                .attr('y', newMinY - 3);
+              g.select('.max-floating-indicator')
+                .attr('y', newMaxY - 3);
                 
               // Update labels
               g.select('.min-label')
@@ -965,6 +985,12 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
                 .attr('y1', newMaxY)
                 .attr('y2', newMaxY);
                 
+              // Update floating indicators
+              g.select('.min-floating-indicator')
+                .attr('y', newMinY - 3);
+              g.select('.max-floating-indicator')
+                .attr('y', newMaxY - 3);
+                
               // Update labels
               g.select('.min-label')
                 .attr('x', -68)
@@ -1059,11 +1085,11 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         .attr('class', 'price-range-element min-line')
         .attr('x1', -margin.left) // Start from left margin
         .attr('x2', dimensions.width - margin.left) // Extend to right edge
-        .attr('y1', yScale(minPrice) + CHART_DIMENSIONS.MIN_MAX_LINE_HEIGHT / 2)
-        .attr('y2', yScale(minPrice) + CHART_DIMENSIONS.MIN_MAX_LINE_HEIGHT / 2)
+        .attr('y1', yScale(minPrice))
+        .attr('y2', yScale(minPrice))
         .attr('stroke', CHART_COLORS.BOUNDARY_LINE)
         .attr('stroke-width', CHART_DIMENSIONS.MIN_MAX_LINE_HEIGHT)
-        .attr('opacity', 0.08)
+        .attr('opacity', 0)
         .attr('cursor', 'ns-resize')
         .call(createPriceLineDrag(
           'min',
@@ -1082,11 +1108,11 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         .attr('class', 'price-range-element max-line')
         .attr('x1', -margin.left) // Start from left margin
         .attr('x2', dimensions.width - margin.left) // Extend to right edge
-        .attr('y1', yScale(maxPrice) - CHART_DIMENSIONS.MIN_MAX_LINE_HEIGHT / 2)
-        .attr('y2', yScale(maxPrice) - CHART_DIMENSIONS.MIN_MAX_LINE_HEIGHT / 2)
+        .attr('y1', yScale(maxPrice))
+        .attr('y2', yScale(maxPrice))
         .attr('stroke', CHART_COLORS.BOUNDARY_LINE)
         .attr('stroke-width', CHART_DIMENSIONS.MIN_MAX_LINE_HEIGHT)
-        .attr('opacity', 0.08)
+        .attr('opacity', 0)
         .attr('cursor', 'ns-resize')
         .call(createPriceLineDrag(
           'max',
@@ -1099,6 +1125,32 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
           setMaxPrice,
           setMinPrice
         ));
+        
+      // Draw floating indicator for max price line
+      g.append('rect')
+        .attr('class', 'price-range-element max-floating-indicator')
+        .attr('x', (width - margin.left) / 2 - 15) // Center horizontally (30px width / 2 = 15)
+        .attr('y', yScale(maxPrice) - 3) // Center vertically (6px height / 2 = 3)
+        .attr('width', 30)
+        .attr('height', 6)
+        .attr('rx', 4)
+        .attr('ry', 4)
+        .attr('fill', '#444444')
+        .attr('cursor', 'ns-resize')
+        .style('pointer-events', 'none'); // Let the line handle the drag
+        
+      // Draw floating indicator for min price line
+      g.append('rect')
+        .attr('class', 'price-range-element min-floating-indicator')
+        .attr('x', (width - margin.left) / 2 - 15) // Center horizontally (30px width / 2 = 15)
+        .attr('y', yScale(minPrice) - 3) // Center vertically (6px height / 2 = 3)
+        .attr('width', 30)
+        .attr('height', 6)
+        .attr('rx', 4)
+        .attr('ry', 4)
+        .attr('fill', '#444444')
+        .attr('cursor', 'ns-resize')
+        .style('pointer-events', 'none'); // Let the line handle the drag
         
       // Add min price label
       g.append('text')
