@@ -42,7 +42,7 @@ export function useChartState() {
   };
 
   const handleZoomOut = () => {
-    const targetZoom = Math.max(zoomLevel / 1.3, 0.1);
+    const targetZoom = Math.max(zoomLevel / 1.3, 1.0);
     animateToState(zoomLevel, panY, minPrice, maxPrice, targetZoom, panY, null, null, 300);
   };
 
@@ -88,7 +88,7 @@ export function useChartState() {
     if (visibleRangeNeeded > currentVisibleRange) {
       // Need to zoom out to fit the range
       targetZoomLevel = totalPriceRange / visibleRangeNeeded;
-      targetZoomLevel = Math.max(targetZoomLevel, 0.1); // Don't zoom out too far
+      targetZoomLevel = Math.max(targetZoomLevel, 1.0); // Don't zoom out too far
     }
     
     // Animate the transition with faster, smoother timing
