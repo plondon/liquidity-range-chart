@@ -9,18 +9,29 @@ import { PriceDataPoint, LiquidityDataPoint } from './types';
 import { CHART_COLORS, CHART_DIMENSIONS, BREAKPOINTS, CHART_BEHAVIOR, ANIMATION, TYPOGRAPHY } from './constants';
 import { 
   calculateAllPrices, 
-  getPriceExtent, 
   getColorForPrice, 
-  validateChartData, 
-  getResponsiveDimensions,
   isPriceExtentValid 
 } from './utils';
-import { updateRangeVisuals } from './utils/rangeVisualUtils';
 import { useDragBehavior } from '../hooks/chart/useDragBehavior';
+import { 
+  chartUpdateManager, 
+  initializeUpdateSlices,
+  BACKGROUND_CLASSES,
+  FLOATING_INDICATOR_CLASSES,
+  PRICE_LINE_CLASSES,
+  DRAG_HANDLE_CLASSES,
+  LABEL_CLASSES,
+  DATA_ELEMENT_CLASSES
+} from './utils/updateSlices';
 
 const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityData: LiquidityDataPoint[] }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  
+  // Initialize update slices on first render
+  React.useLayoutEffect(() => {
+    initializeUpdateSlices();
+  }, []);
   
   // Use custom hooks
   const dimensions = useResponsiveDimensions();
@@ -151,7 +162,17 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         }
         
         // Update all related elements
-        updatePriceRangeVisuals(g, draggedMinPrice, draggedMaxPrice, yScale, current);
+        chartUpdateManager.updateAll({
+          g,
+          minPrice: draggedMinPrice,
+          maxPrice: draggedMaxPrice,
+          yScale,
+          width: dimensions.width - margin.left - margin.right,
+          margin,
+          dimensions,
+          current,
+          getColorForPrice
+        });
       })
       .on('end', function(event) {
         const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
@@ -172,84 +193,6 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
           setThisPrice(newPrice);
         }
       });
-  };
-
-  // Helper function to update all price range visuals during drag
-  const updatePriceRangeVisuals = (
-    g: d3.Selection<SVGGElement, unknown, null, undefined>,
-    draggedMinPrice: number,
-    draggedMaxPrice: number,
-    yScale: d3.ScaleLinear<number, number>,
-    current: number | null
-  ) => {
-    // Update background
-    g.select('.price-range-bg')
-      .attr('y', yScale(draggedMaxPrice))
-      .attr('height', yScale(draggedMinPrice) - yScale(draggedMaxPrice));
-    
-    // Update visual background
-    g.select('.price-range-visual-bg')
-      .attr('y', yScale(draggedMaxPrice))
-      .attr('height', yScale(draggedMinPrice) - yScale(draggedMaxPrice));
-    
-    // Update range indicator line
-    g.select('.range-indicator-line')
-      .attr('y', yScale(draggedMaxPrice))
-      .attr('height', yScale(draggedMinPrice) - yScale(draggedMaxPrice));
-    
-    // Update drag indicators - positioned inside the range indicator
-    g.select('.max-drag-indicator')
-      .attr('cy', yScale(draggedMaxPrice) + 8);
-    g.select('.min-drag-indicator')
-      .attr('cy', yScale(draggedMinPrice) - 8);
-    g.select('.center-drag-indicator')
-      .attr('y', (yScale(draggedMaxPrice) + yScale(draggedMinPrice)) / 2 - 3);
-    g.selectAll('.center-drag-line')
-      .attr('y', (yScale(draggedMaxPrice) + yScale(draggedMinPrice)) / 2 - 1.5);
-    
-    // Update floating indicators
-    g.select('.min-floating-indicator')
-      .attr('y', yScale(draggedMinPrice) - 3);
-    g.select('.max-floating-indicator')
-      .attr('y', yScale(draggedMaxPrice) - 3);
-    
-    // Update labels
-    g.select('.min-label')
-      .attr('x', -68)
-      .attr('y', yScale(draggedMinPrice) - 5)
-      .text(`Min: ${draggedMinPrice.toFixed(0)}`);
-    g.select('.max-label')
-      .attr('x', -68)
-      .attr('y', yScale(draggedMaxPrice) + 15)
-      .text(`Max: ${draggedMaxPrice.toFixed(0)}`);
-    
-    // Update liquidity bar colors
-    g.selectAll('.liquidity-bar')
-      .attr('fill', d => {
-        const price = (d as LiquidityDataPoint).price0;
-        if (price >= draggedMinPrice && price <= draggedMaxPrice) {
-          return CHART_COLORS.IN_RANGE_PINK;
-        }
-        return "#888888";
-      });
-    
-    // Update price line segment colors
-    g.selectAll('.price-segment')
-      .attr('stroke', function() {
-        const datum = d3.select(this).datum() as Array<{date: Date, value: number}>;
-        if (datum && datum.length > 0) {
-          const value = datum[0].value;
-          return getColorForPrice(value, draggedMinPrice, draggedMaxPrice);
-        }
-        return "#888888";
-      });
-      
-    // Update current price dot color
-    if (current !== null) {
-      const isCurrentInRange = current >= draggedMinPrice && current <= draggedMaxPrice;
-      const currentDotColor = isCurrentInRange ? "#d63384" : "#888888";
-      g.select('.current-price-dot').attr('fill', currentDotColor);
-    }
   };
 
   useEffect(() => {
@@ -314,7 +257,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
           .attr("stroke", color)
           .attr("stroke-width", 2)
           .attr("d", line)
-          .attr("class", "price-segment");
+          .attr("class", DATA_ELEMENT_CLASSES.PRICE_SEGMENT);
       }
     } else {
       // Draw single blue line when no range is selected
@@ -357,7 +300,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       .range([0, liquidityWidth]); // Back to liquidity section width
 
     // Draw very thin grey horizontal liquidity bars using data join for better performance
-    const bars = g.selectAll<SVGRectElement, LiquidityDataPoint>(".liquidity-bar")
+    const bars = g.selectAll<SVGRectElement, LiquidityDataPoint>(`.${DATA_ELEMENT_CLASSES.LIQUIDITY_BAR}`)
       .data(liquidityData, d => d.price0); // Use price as key for consistent updates
     
     // Remove bars that are no longer needed
@@ -370,7 +313,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
     // Add new bars
     const enterBars = bars.enter()
       .append("rect")
-      .attr("class", "liquidity-bar")
+      .attr("class", DATA_ELEMENT_CLASSES.LIQUIDITY_BAR)
       .attr("height", 1)
       .attr("opacity", 0.7)
       .attr("x", d => width + margin.right - liquidityXScale(d.activeLiquidity) - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET)
@@ -432,7 +375,17 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         
         // Only update if we have a valid range
         if (constrainedMaxPrice > constrainedMinPrice) {
-          updateRangeVisuals(g, constrainedMinPrice, constrainedMaxPrice, yScale, margin, dimensions, width, getColorForPrice, current);
+          chartUpdateManager.updateAll({
+            g,
+            minPrice: constrainedMinPrice,
+            maxPrice: constrainedMaxPrice,
+            yScale,
+            width,
+            margin,
+            dimensions,
+            current,
+            getColorForPrice
+          });
         }
       })
       .on('end', function(event) {
@@ -561,7 +514,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       
       // Draw dynamic range indicator line inside the border grey line
       g.append('rect')
-        .attr('class', 'price-range-element range-indicator-line')
+        .attr('class', `price-range-element ${BACKGROUND_CLASSES.RANGE_INDICATOR}`)
         .attr('x', width + margin.right - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET)
         .attr('y', yScale(maxPrice))
         .attr('width', CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET)
@@ -572,7 +525,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       
       // Add max price drag indicator (top circle) - positioned inside the range indicator
       g.append('circle')
-        .attr('class', 'price-range-element max-drag-indicator')
+        .attr('class', `price-range-element ${DRAG_HANDLE_CLASSES.MAX_HANDLE}`)
         .attr('cx', width + margin.right - (CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET / 2))
         .attr('cy', yScale(maxPrice) + 8)
         .attr('r', 6)
@@ -589,64 +542,18 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
             // Ensure max stays above min
             const constrainedMaxPrice = Math.max(newMaxPrice, minPrice || 0);
             
-            // Update visual position
-            d3.select(this).attr('cy', yScale(constrainedMaxPrice) + 8);
-            
-            // Update all related elements with the same logic as existing max line drag
-            const draggedMinPrice = minPrice;
-            const draggedMaxPrice = constrainedMaxPrice;
-            
-            // Update range bar
-            g.select('.price-range-bg')
-              .attr('y', yScale(draggedMaxPrice))
-              .attr('height', yScale(draggedMinPrice || 0) - yScale(draggedMaxPrice));
-            
-            // Update visual background
-            g.select('.price-range-visual-bg')
-              .attr('y', yScale(draggedMaxPrice))
-              .attr('height', yScale(draggedMinPrice || 0) - yScale(draggedMaxPrice));
-            
-            // Update range indicator line
-            g.select('.range-indicator-line')
-              .attr('y', yScale(draggedMaxPrice))
-              .attr('height', yScale(draggedMinPrice || 0) - yScale(draggedMaxPrice));
-              
-            g.select('.max-line')
-              .attr('y1', yScale(draggedMaxPrice))
-              .attr('y2', yScale(draggedMaxPrice));
-              
-            // Update floating indicators
-            g.select('.max-floating-indicator')
-              .attr('y', yScale(draggedMaxPrice) - 3);
-              
-            g.select('.max-label')
-              .attr('y', yScale(draggedMaxPrice) + 15)
-              .text(`Max: ${draggedMaxPrice.toFixed(0)}`);
-              
-            // Update liquidity bar colors and price line colors
-            g.selectAll('.liquidity-bar')
-              .attr('fill', d => {
-                const price = (d as any).price0;
-                if (price >= (draggedMinPrice || 0) && price <= draggedMaxPrice) {
-                  return CHART_COLORS.IN_RANGE_PINK;
-                }
-                return CHART_COLORS.OUT_RANGE_GREY;
-              });
-              
-            g.selectAll('.price-segment')
-              .attr('stroke', function() {
-                const datum = d3.select(this).datum() as Array<{date: Date, value: number}>;
-                if (datum && datum.length > 0) {
-                  const value = datum[0].value;
-                  return getColorForPrice(value, draggedMinPrice || 0, draggedMaxPrice);
-                }
-                return CHART_COLORS.OUT_RANGE_GREY;
-              });
-              
-            if (current !== null) {
-              const currentDotColor = getColorForPrice(current, draggedMinPrice || 0, draggedMaxPrice);
-              g.select('.current-price-dot').attr('fill', currentDotColor);
-            }
+            // Update all chart elements using centralized system
+            chartUpdateManager.updateAll({
+              g,
+              minPrice: minPrice || 0,
+              maxPrice: constrainedMaxPrice,
+              yScale,
+              width: dimensions.width - margin.left - margin.right,
+              margin,
+              dimensions,
+              current,
+              getColorForPrice
+            });
           })
           .on('end', function(event) {
             const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
@@ -658,7 +565,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       
       // Add min price drag indicator (bottom circle) - positioned inside the range indicator
       g.append('circle')
-        .attr('class', 'price-range-element min-drag-indicator')
+        .attr('class', `price-range-element ${DRAG_HANDLE_CLASSES.MIN_HANDLE}`)
         .attr('cx', width + margin.right - (CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET / 2))
         .attr('cy', yScale(minPrice) - 8)
         .attr('r', 6)
@@ -675,68 +582,18 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
             // Ensure min stays below max
             const constrainedMinPrice = Math.min(newMinPrice, maxPrice || 0);
             
-            // Update visual position
-            d3.select(this).attr('cy', yScale(constrainedMinPrice) - 8);
-            
-            // Update all related elements with the same logic as existing min line drag
-            const draggedMinPrice = constrainedMinPrice;
-            const draggedMaxPrice = maxPrice;
-            
-            // Update range bar
-            g.select('.price-range-bg')
-              .attr('y', yScale(draggedMaxPrice || 0))
-              .attr('height', yScale(draggedMinPrice) - yScale(draggedMaxPrice || 0));
-            
-            // Update visual background
-            g.select('.price-range-visual-bg')
-              .attr('y', yScale(draggedMaxPrice || 0))
-              .attr('height', yScale(draggedMinPrice) - yScale(draggedMaxPrice || 0));
-            
-            // Update range indicator line
-            g.select('.range-indicator-line')
-              .attr('y', yScale(draggedMaxPrice || 0))
-              .attr('height', yScale(draggedMinPrice) - yScale(draggedMaxPrice || 0));
-              
-            g.select('.min-line')
-              .attr('y1', yScale(draggedMinPrice))
-              .attr('y2', yScale(draggedMinPrice));
-              
-            // Update floating indicators
-            g.select('.min-floating-indicator')
-              .attr('y', yScale(draggedMinPrice) - 3);
-              
-            g.select('.min-label')
-              .attr('y', yScale(draggedMinPrice) - 5)
-              .text(`Min: ${draggedMinPrice.toFixed(0)}`);
-              
-            // Update liquidity bar colors and price line colors
-            g.selectAll('.liquidity-bar')
-              .attr('fill', d => {
-                const price = (d as any).price0;
-                if (price >= draggedMinPrice && price <= (draggedMaxPrice || 0)) {
-                  return CHART_COLORS.IN_RANGE_PINK;
-                }
-                return CHART_COLORS.OUT_RANGE_GREY;
-              });
-              
-            g.selectAll('.price-segment')
-              .attr('stroke', function() {
-                const datum = d3.select(this).datum() as Array<{date: Date, value: number}>;
-                if (datum && datum.length > 0) {
-                  const value = datum[0].value;
-                  return getColorForPrice(value, draggedMinPrice, draggedMaxPrice || 0);
-                }
-                return CHART_COLORS.OUT_RANGE_GREY;
-              });
-              
-            if (current !== null) {
-              const currentDotColor = getColorForPrice(current, draggedMinPrice, draggedMaxPrice || 0);
-              g.select('.current-price-dot').attr('fill', currentDotColor);
-            }
-            
-            // Update the max drag indicator to stay in sync
-            g.select('.max-drag-indicator')
-              .attr('cy', yScale(draggedMaxPrice || 0) + 8);
+            // Use centralized update system
+            chartUpdateManager.updateAll({
+              g,
+              minPrice: constrainedMinPrice,
+              maxPrice: maxPrice || 0,
+              yScale,
+              width,
+              margin,
+              dimensions,
+              current,
+              getColorForPrice
+            });
           })
           .on('end', function(event) {
             const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
@@ -749,7 +606,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       // Add center drag indicator for moving entire range
       const centerY = (yScale(maxPrice) + yScale(minPrice)) / 2;
       g.append('rect')
-        .attr('class', 'price-range-element center-drag-indicator')
+        .attr('class', `price-range-element ${DRAG_HANDLE_CLASSES.CENTER_HANDLE}`)
         .attr('x', width + margin.right - (CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET / 2) - 6) // Center the 12px width
         .attr('y', centerY - 3) // Center the 6px height
         .attr('width', 12)
@@ -788,91 +645,18 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
             
             // Only update if range stays within data bounds
             if (newMinPrice >= dataMin && newMaxPrice <= dataMax) {
-              // Update center indicator position
-              d3.select(this).attr('y', newCenterY - 3); // Center the 6px height
-              
-              // Update range background position
-              const newMaxY = yScale(newMaxPrice);
-              const newMinY = yScale(newMinPrice);
-              
-              g.select('.price-range-bg')
-                .attr('y', newMaxY)
-                .attr('height', newMinY - newMaxY);
-              
-              // Update visual background
-              g.select('.price-range-visual-bg')
-                .attr('y', newMaxY)
-                .attr('height', newMinY - newMaxY);
-              
-              // Update range indicator line
-              g.select('.range-indicator-line')
-                .attr('y', newMaxY)
-                .attr('height', newMinY - newMaxY);
-              
-              // Update min line
-              g.select('.min-line')
-                .attr('y1', newMinY)
-                .attr('y2', newMinY);
-                
-              // Update max line
-              g.select('.max-line')
-                .attr('y1', newMaxY)
-                .attr('y2', newMaxY);
-                
-              // Update floating indicators
-              g.select('.min-floating-indicator')
-                .attr('y', newMinY - 3);
-              g.select('.max-floating-indicator')
-                .attr('y', newMaxY - 3);
-                
-              // Update labels
-              g.select('.min-label')
-                .attr('x', -68)
-                .attr('y', newMinY - 5)
-                .text(`Min: ${newMinPrice.toFixed(0)}`);
-                
-              g.select('.max-label')
-                .attr('x', -68)
-                .attr('y', newMaxY + 15)
-                .text(`Max: ${newMaxPrice.toFixed(0)}`);
-                
-              // Update liquidity bar colors
-              g.selectAll('.liquidity-bar')
-                .attr('fill', d => {
-                  const price = (d as LiquidityDataPoint).price0;
-                  if (price >= newMinPrice && price <= newMaxPrice) {
-                    return CHART_COLORS.IN_RANGE_PINK;
-                  }
-                  return CHART_COLORS.OUT_RANGE_GREY;
-                });
-                
-              // Update price line segment colors
-              g.selectAll('.price-segment')
-                .attr('stroke', function() {
-                  const datum = d3.select(this).datum() as Array<{date: Date, value: number}>;
-                  if (datum && datum.length > 0) {
-                    const value = datum[0].value;
-                    return getColorForPrice(value, newMinPrice, newMaxPrice);
-                  }
-                  return CHART_COLORS.OUT_RANGE_GREY;
-                });
-                
-              // Update current price dot color
-              if (current !== null) {
-                const isCurrentInRange = current >= newMinPrice && current <= newMaxPrice;
-                const currentDotColor = getColorForPrice(current, newMinPrice, newMaxPrice);
-                g.select('.current-price-dot').attr('fill', currentDotColor);
-              }
-              
-              // Update drag indicators - positioned inside the range indicator
-              g.select('.max-drag-indicator')
-                .attr('cy', yScale(newMaxPrice) + 8);
-              g.select('.min-drag-indicator')
-                .attr('cy', yScale(newMinPrice) - 8);
-              g.select('.center-drag-indicator')
-                .attr('y', (yScale(newMaxPrice) + yScale(newMinPrice)) / 2 - 3);
-              g.selectAll('.center-drag-line')
-                .attr('y', (yScale(newMaxPrice) + yScale(newMinPrice)) / 2 - 1.5);
+              // Use centralized update system
+              chartUpdateManager.updateAll({
+                g,
+                minPrice: newMinPrice,
+                maxPrice: newMaxPrice,
+                yScale,
+                width,
+                margin,
+                dimensions,
+                current,
+                getColorForPrice
+              });
             }
           })
           .on('end', function(event) {
@@ -906,7 +690,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       const centerIndicatorX = width + margin.right - (CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET / 2);
       for (let i = 0; i < 3; i++) {
         g.append('rect')
-          .attr('class', 'price-range-element center-drag-line')
+          .attr('class', `price-range-element ${DRAG_HANDLE_CLASSES.CENTER_LINES}`)
           .attr('x', centerIndicatorX - 1.75 + (i * 1.25)) // Space the 3 lines evenly within 12px width
           .attr('y', centerY - 1.5) // Center the 3px height within 6px indicator
           .attr('width', 0.5)
@@ -918,7 +702,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       
       // Draw visual pink background that extends over liquidity area (no interactions)
       g.append('rect')
-        .attr('class', 'price-range-element price-range-visual-bg')
+        .attr('class', `price-range-element ${BACKGROUND_CLASSES.VISUAL_BG}`)
         .attr('x', -margin.left) // Extend left to cover the margin area
         .attr('y', yScale(maxPrice))
         .attr('width', dimensions.width) // Cover the entire SVG width
@@ -930,7 +714,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       
       // Draw interactive pink background only over main chart area (for dragging)
       g.append('rect')
-        .attr('class', 'price-range-element price-range-bg')
+        .attr('class', `price-range-element ${BACKGROUND_CLASSES.INTERACTIVE_BG}`)
         .attr('x', -margin.left) // Extend left to cover the margin area
         .attr('y', yScale(maxPrice))
         .attr('width', width + margin.left + 10) // Stop before liquidity area
@@ -966,89 +750,19 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
             const dataMax = Math.max(...allPrices);
             
             // Only update if range stays within data bounds
-            if (newMinPrice >= dataMin && newMaxPrice <= dataMax) {
-              // Update background position
-              const newMaxY = yScale(newMaxPrice);
-              const newMinY = yScale(newMinPrice);
-              
-              d3.select(this)
-                .attr('y', newMaxY)
-                .attr('height', newMinY - newMaxY);
-              
-              // Update min line
-              g.select('.min-line')
-                .attr('y1', newMinY)
-                .attr('y2', newMinY);
-                
-              // Update max line
-              g.select('.max-line')
-                .attr('y1', newMaxY)
-                .attr('y2', newMaxY);
-                
-              // Update floating indicators
-              g.select('.min-floating-indicator')
-                .attr('y', newMinY - 3);
-              g.select('.max-floating-indicator')
-                .attr('y', newMaxY - 3);
-                
-              // Update labels
-              g.select('.min-label')
-                .attr('x', -68)
-                .attr('y', newMinY - 5)
-                .text(`Min: ${newMinPrice.toFixed(0)}`);
-                
-              g.select('.max-label')
-                .attr('x', -68)
-                .attr('y', newMaxY + 15)
-                .text(`Max: ${newMaxPrice.toFixed(0)}`);
-                
-              // Update liquidity bar colors
-              g.selectAll('.liquidity-bar')
-                .attr('fill', d => {
-                  const price = (d as LiquidityDataPoint).price0;
-                  if (price >= newMinPrice && price <= newMaxPrice) {
-                    return CHART_COLORS.IN_RANGE_PINK;
-                  }
-                  return CHART_COLORS.OUT_RANGE_GREY;
-                });
-                
-              // Update price line segment colors
-              g.selectAll('.price-segment')
-                .attr('stroke', function() {
-                  const datum = d3.select(this).datum() as Array<{date: Date, value: number}>;
-                  if (datum && datum.length > 0) {
-                    const value = datum[0].value;
-                    return getColorForPrice(value, newMinPrice, newMaxPrice);
-                  }
-                  return CHART_COLORS.OUT_RANGE_GREY;
-                });
-                
-              // Update current price dot color
-              if (current !== null) {
-                const isCurrentInRange = current >= newMinPrice && current <= newMaxPrice;
-                const currentDotColor = getColorForPrice(current, newMinPrice, newMaxPrice);
-                g.select('.current-price-dot').attr('fill', currentDotColor);
-              }
-                
-              // Update visual background position
-              g.select('.price-range-visual-bg')
-                .attr('y', yScale(newMaxPrice))
-                .attr('height', yScale(newMinPrice) - yScale(newMaxPrice));
-                
-              // Update range indicator line
-              g.select('.range-indicator-line')
-                .attr('y', yScale(newMaxPrice))
-                .attr('height', yScale(newMinPrice) - yScale(newMaxPrice));
-                
-              // Update drag indicators - positioned inside the range indicator
-              g.select('.max-drag-indicator')
-                .attr('cy', yScale(newMaxPrice) + 8);
-              g.select('.min-drag-indicator')
-                .attr('cy', yScale(newMinPrice) - 8);
-              g.select('.center-drag-indicator')
-                .attr('y', (yScale(newMaxPrice) + yScale(newMinPrice)) / 2 - 3);
-              g.selectAll('.center-drag-line')
-                .attr('y', (yScale(newMaxPrice) + yScale(newMinPrice)) / 2 - 1.5);
+            if (newMinPrice >= dataMin && newMaxPrice <= dataMax) {              
+              // Use centralized update system
+              chartUpdateManager.updateAll({
+                g,
+                minPrice: newMinPrice,
+                maxPrice: newMaxPrice,
+                yScale,
+                width,
+                margin,
+                dimensions,
+                current,
+                getColorForPrice
+              });
             }
           })
           .on('end', function(event) {
@@ -1082,7 +796,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
 
       // Draw min price line (solid) with drag behavior
       g.append('line')
-        .attr('class', 'price-range-element min-line')
+        .attr('class', `price-range-element ${PRICE_LINE_CLASSES.MIN_LINE}`)
         .attr('x1', -margin.left) // Start from left margin
         .attr('x2', dimensions.width - margin.left) // Extend to right edge
         .attr('y1', yScale(minPrice))
@@ -1105,7 +819,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
 
       // Draw max price line (solid) with drag behavior
       g.append('line')
-        .attr('class', 'price-range-element max-line')
+        .attr('class', `price-range-element ${PRICE_LINE_CLASSES.MAX_LINE}`)
         .attr('x1', -margin.left) // Start from left margin
         .attr('x2', dimensions.width - margin.left) // Extend to right edge
         .attr('y1', yScale(maxPrice))
@@ -1128,7 +842,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         
       // Draw floating indicator for max price line
       g.append('rect')
-        .attr('class', 'price-range-element max-floating-indicator')
+        .attr('class', `price-range-element ${FLOATING_INDICATOR_CLASSES.MAX_INDICATOR}`)
         .attr('x', (width - margin.left) / 2 - 15) // Center horizontally (30px width / 2 = 15)
         .attr('y', yScale(maxPrice) - 3) // Center vertically (6px height / 2 = 3)
         .attr('width', 30)
@@ -1141,7 +855,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         
       // Draw floating indicator for min price line
       g.append('rect')
-        .attr('class', 'price-range-element min-floating-indicator')
+        .attr('class', `price-range-element ${FLOATING_INDICATOR_CLASSES.MIN_INDICATOR}`)
         .attr('x', (width - margin.left) / 2 - 15) // Center horizontally (30px width / 2 = 15)
         .attr('y', yScale(minPrice) - 3) // Center vertically (6px height / 2 = 3)
         .attr('width', 30)
@@ -1154,7 +868,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         
       // Add min price label
       g.append('text')
-        .attr('class', 'price-range-element min-label')
+        .attr('class', `price-range-element ${LABEL_CLASSES.MIN_LABEL}`)
         .attr('x', -margin.left + 12) // 12px from left border
         .attr('y', yScale(minPrice) - 5)
         .attr('font-size', '10px')
@@ -1164,7 +878,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         
       // Add max price label
       g.append('text')
-        .attr('class', 'price-range-element max-label')
+        .attr('class', `price-range-element ${LABEL_CLASSES.MAX_LABEL}`)
         .attr('x', -margin.left + 12) // 12px from left border
         .attr('y', yScale(maxPrice) + 15)
         .attr('font-size', '10px')
@@ -1216,10 +930,10 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         }
         
         // Check if dot already exists and update it, otherwise create new one
-        let currentDot: d3.Selection<any, unknown, null, undefined> = g.select('.current-price-dot');
+        let currentDot: d3.Selection<any, unknown, null, undefined> = g.select(`.${DATA_ELEMENT_CLASSES.CURRENT_PRICE_DOT}`);
         if (currentDot.empty()) {
           currentDot = g.append('circle')
-            .attr('class', 'current-price-dot')
+            .attr('class', DATA_ELEMENT_CLASSES.CURRENT_PRICE_DOT)
             .attr('cx', xScale(lastDataPoint.date))
             .attr('cy', yScale(lastDataPoint.value))
             .attr('r', 4)
@@ -1274,7 +988,17 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
             
             // Only update if we have a valid range
             if (constrainedMaxPrice > constrainedMinPrice) {
-              updateRangeVisuals(g, constrainedMinPrice, constrainedMaxPrice, yScale, margin, dimensions, width, getColorForPrice, current);
+              chartUpdateManager.updateAll({
+                g,
+                minPrice: constrainedMinPrice,
+                maxPrice: constrainedMaxPrice,
+                yScale,
+                width,
+                margin,
+                dimensions,
+                current,
+                getColorForPrice
+              });
             }
           })
           .on('end', function(event) {
@@ -1351,7 +1075,17 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
             
             // Only update if we have a valid range
             if (constrainedMaxPrice > constrainedMinPrice) {
-              updateRangeVisuals(g, constrainedMinPrice, constrainedMaxPrice, yScale, margin, dimensions, width, getColorForPrice, current);
+              chartUpdateManager.updateAll({
+                g,
+                minPrice: constrainedMinPrice,
+                maxPrice: constrainedMaxPrice,
+                yScale,
+                width,
+                margin,
+                dimensions,
+                current,
+                getColorForPrice
+              });
             }
           })
           .on('end', function(event) {
