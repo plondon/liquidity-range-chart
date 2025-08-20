@@ -71,7 +71,7 @@ export const ANIMATION = {
 // Chart Behavior Constants
 export const CHART_BEHAVIOR = {
   // Zoom constraints
-  MIN_ZOOM: 0.1,
+  MIN_ZOOM: 1.0,
   MAX_ZOOM: 10,
   ZOOM_STEP: 0.2,
   
