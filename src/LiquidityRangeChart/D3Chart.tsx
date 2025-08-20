@@ -66,6 +66,27 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
     data: null,
     lineEndX: 0
   });
+
+  // Drag tooltips for showing min/max during range creation
+  const [dragTooltips, setDragTooltips] = useState<{
+    visible: boolean;
+    minTooltip: {
+      x: number;
+      y: number;
+      data: LiquidityDataPoint | null;
+      lineEndX: number;
+    } | null;
+    maxTooltip: {
+      x: number;
+      y: number;
+      data: LiquidityDataPoint | null;
+      lineEndX: number;
+    } | null;
+  }>({
+    visible: false,
+    minTooltip: null,
+    maxTooltip: null
+  });
   
   // Calculate current price from the last entry
   const current = useMemo(() => {
@@ -77,6 +98,25 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
     if (!current || !liquidityData) return null;
     return findClosestElementBinarySearch(liquidityData, current)?.tick;
   }, [current, liquidityData]);
+
+  // Helper function to find closest liquidity data point
+  const findClosestLiquidityData = (price: number): LiquidityDataPoint | null => {
+    if (!liquidityData || liquidityData.length === 0) return null;
+    
+    let closestData = liquidityData[0];
+    let minDistance = Math.abs(closestData.price0 - price);
+    
+    liquidityData.forEach(d => {
+      const distance = Math.abs(d.price0 - price);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestData = d;
+      }
+    });
+    
+    return closestData;
+  };
+
 
   // Calculate yScale outside useEffect so it's available for Brush component
   const yScale = useMemo(() => {
@@ -345,7 +385,9 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         document.body.classList.add('dragging-range');
         document.body.style.setProperty('cursor', 'move', 'important');
         
-        // Keep tooltip visible during drag for better UX
+        // Hide hover tooltip during drag and remember its previous state
+        (this as any)._dragStartTooltip = tooltip.visible;
+        setTooltip(prev => ({ ...prev, visible: false }));
       })
       .on('drag', function(event) {
         const startY = (this as any)._startY;
@@ -383,6 +425,28 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
             getColorForPrice,
             getOpacityForPrice
           });
+          
+          // Show dual tooltips for min and max during drag
+          const minData = findClosestLiquidityData(constrainedMinPrice);
+          const maxData = findClosestLiquidityData(constrainedMaxPrice);
+          const liquidityBarsEndX = width + CHART_DIMENSIONS.LIQUIDITY_BARS_SPACING + liquidityWidth - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET;
+          const fixedTooltipX = dimensions.width - CHART_DIMENSIONS.TOOLTIP_RIGHT_MARGIN;
+          
+          setDragTooltips({
+            visible: true,
+            minTooltip: minData ? {
+              x: fixedTooltipX,
+              y: liquidityYScale(constrainedMinPrice) + margin.top,
+              data: minData,
+              lineEndX: liquidityBarsEndX
+            } : null,
+            maxTooltip: maxData ? {
+              x: fixedTooltipX,
+              y: liquidityYScale(constrainedMaxPrice) + margin.top,
+              data: maxData,
+              lineEndX: liquidityBarsEndX
+            } : null
+          });
         }
       })
       .on('end', function(event) {
@@ -390,6 +454,30 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         d3.select(this).attr('cursor', 'crosshair');
         document.body.classList.remove('dragging-range');
         document.body.style.removeProperty('cursor');
+        
+        // Hide drag tooltips
+        setDragTooltips({ visible: false, minTooltip: null, maxTooltip: null });
+        
+        // If tooltip was visible before drag, keep it visible
+        if ((this as any)._dragStartTooltip) {
+          // Restore tooltip at current mouse position
+          const mouseY = event.y + margin.top;
+          const hoveredPrice = liquidityYScale.invert(event.y);
+          const closestData = findClosestLiquidityData(hoveredPrice);
+          
+          if (closestData) {
+            const liquidityBarsEndX = width + CHART_DIMENSIONS.LIQUIDITY_BARS_SPACING + liquidityWidth - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET;
+            const fixedTooltipX = dimensions.width - CHART_DIMENSIONS.TOOLTIP_RIGHT_MARGIN;
+            
+            setTooltip({
+              visible: true,
+              x: fixedTooltipX,
+              y: mouseY,
+              data: closestData,
+              lineEndX: liquidityBarsEndX
+            });
+          }
+        }
         
         const startY = (this as any)._startY;
         const endY = event.y;
@@ -486,8 +574,10 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         });
       })
       .on("mouseleave", function() {
-        // Hide tooltip
-        setTooltip(prev => ({ ...prev, visible: false }));
+        // Only hide tooltip if not currently dragging
+        if (!(this as any)._isDragging) {
+          setTooltip(prev => ({ ...prev, visible: false }));
+        }
       });
 
     // No price labels needed
@@ -993,11 +1083,19 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         .call(d3.drag<SVGRectElement, unknown>()
           .on('start', function(event) {
             (this as any)._startY = event.y;
+            (this as any)._isDragging = true;
             d3.select(this).attr('cursor', 'move');
             document.body.classList.add('dragging-range');
             document.body.style.setProperty('cursor', 'move', 'important');
+            
+            // Hide hover tooltip during drag and remember its previous state
+            (this as any)._dragStartTooltip = tooltip.visible;
+            setTooltip(prev => ({ ...prev, visible: false }));
           })
           .on('drag', function(event) {
+            // Hide drag tooltips
+            setDragTooltips({ visible: false, minTooltip: null, maxTooltip: null });
+            
             const startY = (this as any)._startY;
             const currentY = event.y;
             const startPrice = yScale.invert(startY);
@@ -1033,12 +1131,39 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
                 getColorForPrice,
                 getOpacityForPrice
               });
+              
+              // Show dual tooltips for min and max during drag
+              const minData = findClosestLiquidityData(constrainedMinPrice);
+              const maxData = findClosestLiquidityData(constrainedMaxPrice);
+              const liquidityBarsEndX = width + CHART_DIMENSIONS.LIQUIDITY_BARS_SPACING + liquidityWidth - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET;
+              const fixedTooltipX = dimensions.width - CHART_DIMENSIONS.TOOLTIP_RIGHT_MARGIN;
+              
+              setDragTooltips({
+                visible: true,
+                minTooltip: minData ? {
+                  x: fixedTooltipX,
+                  y: yScale(constrainedMinPrice) + margin.top,
+                  data: minData,
+                  lineEndX: liquidityBarsEndX
+                } : null,
+                maxTooltip: maxData ? {
+                  x: fixedTooltipX,
+                  y: yScale(constrainedMaxPrice) + margin.top,
+                  data: maxData,
+                  lineEndX: liquidityBarsEndX
+                } : null
+              });
             }
           })
           .on('end', function(event) {
+            (this as any)._isDragging = false;
             d3.select(this).attr('cursor', 'crosshair');
             document.body.classList.remove('dragging-range');
             document.body.style.removeProperty('cursor');
+            
+            // Hide drag tooltips
+            setDragTooltips({ visible: false, minTooltip: null, maxTooltip: null });
+            
             const startY = (this as any)._startY;
             const endY = event.y;
             const startPrice = yScale.invert(startY);
@@ -1080,11 +1205,19 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         .call(d3.drag<SVGRectElement, unknown>()
           .on('start', function(event) {
             (this as any)._startY = event.y;
+            (this as any)._isDragging = true;
             d3.select(this).attr('cursor', 'move');
             document.body.classList.add('dragging-range');
             document.body.style.setProperty('cursor', 'move', 'important');
+            
+            // Hide hover tooltip during drag and remember its previous state
+            (this as any)._dragStartTooltip = tooltip.visible;
+            setTooltip(prev => ({ ...prev, visible: false }));
           })
           .on('drag', function(event) {
+            // Hide drag tooltips
+            setDragTooltips({ visible: false, minTooltip: null, maxTooltip: null });
+            
             const startY = (this as any)._startY;
             const currentY = event.y;
             const startPrice = yScale.invert(startY);
@@ -1120,12 +1253,39 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
                 getColorForPrice,
                 getOpacityForPrice
               });
+              
+              // Show dual tooltips for min and max during drag
+              const minData = findClosestLiquidityData(constrainedMinPrice);
+              const maxData = findClosestLiquidityData(constrainedMaxPrice);
+              const liquidityBarsEndX = width + CHART_DIMENSIONS.LIQUIDITY_BARS_SPACING + liquidityWidth - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET;
+              const fixedTooltipX = dimensions.width - CHART_DIMENSIONS.TOOLTIP_RIGHT_MARGIN;
+              
+              setDragTooltips({
+                visible: true,
+                minTooltip: minData ? {
+                  x: fixedTooltipX,
+                  y: yScale(constrainedMinPrice) + margin.top,
+                  data: minData,
+                  lineEndX: liquidityBarsEndX
+                } : null,
+                maxTooltip: maxData ? {
+                  x: fixedTooltipX,
+                  y: yScale(constrainedMaxPrice) + margin.top,
+                  data: maxData,
+                  lineEndX: liquidityBarsEndX
+                } : null
+              });
             }
           })
           .on('end', function(event) {
+            (this as any)._isDragging = false;
             d3.select(this).attr('cursor', 'crosshair');
             document.body.classList.remove('dragging-range');
             document.body.style.removeProperty('cursor');
+            
+            // Hide drag tooltips
+            setDragTooltips({ visible: false, minTooltip: null, maxTooltip: null });
+            
             const startY = (this as any)._startY;
             const endY = event.y;
             const startPrice = yScale.invert(startY);
@@ -1306,8 +1466,8 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         >
         </svg>
         
-        {/* Liquidity Tooltip */}
-        {tooltip.visible && tooltip.data && (
+        {/* Liquidity Tooltip - Hide when drag tooltips are active */}
+        {tooltip.visible && tooltip.data && !dragTooltips.visible && (
           <>            
             {/* Tooltip */}
             <div
@@ -1450,6 +1610,302 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
             />
           </>
         )}
+
+        {/* Drag Tooltips for Min/Max during range creation */}
+        {dragTooltips.visible && (
+          <>
+            {/* Min Tooltip */}
+            {dragTooltips.minTooltip && dragTooltips.minTooltip.data && (
+              <>
+                <div
+                  style={{
+                    position: 'absolute',
+                    right: 130,
+                    top: dragTooltips.minTooltip.y - 18,
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    border: `1px solid ${CHART_COLORS.BORDER_GREY}`,
+                    borderRadius: '8px',
+                    padding: '8px 12px',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    pointerEvents: 'none',
+                    zIndex: 1001,
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                    minWidth: '120px',
+                    textAlign: 'center'
+                  }}
+                >
+                  <div style={{ fontSize: '10px', color: CHART_COLORS.TEXT_GREY, marginBottom: '4px', fontWeight: 'bold' }}>MIN</div>
+                  {(() => {
+                    const tooltipTick = dragTooltips.minTooltip.data.tick;
+                    
+                    // If below currentTick, show amount1Locked as USDC
+                    if (currentTick !== null && currentTick !== undefined && tooltipTick < currentTick) {
+                      return (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+                          <div style={{ 
+                            width: '16px', 
+                            height: '16px', 
+                            borderRadius: '50%', 
+                            background: '#2775CA',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '8px',
+                            color: 'white',
+                            fontWeight: 'bold'
+                          }}>
+                            $
+                          </div>
+                          <span>USDC</span>
+                          <span style={{ color: CHART_COLORS.TEXT_GREY }}>
+                            {formatPrice(dragTooltips.minTooltip.data.amount0Locked || 0)}
+                          </span>
+                          <span style={{ color: CHART_COLORS.TEXT_GREY }}>100%</span>
+                        </div>
+                      );
+                    }
+                    
+                    // If equal to currentTick, show 50/50 split
+                    if (currentTick !== null && currentTick !== undefined && tooltipTick === currentTick) {
+                      return (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+                            <div style={{ 
+                              width: '16px', 
+                              height: '16px', 
+                              borderRadius: '50%', 
+                              background: `linear-gradient(135deg, ${CHART_COLORS.GRADIENT_START} 0%, ${CHART_COLORS.GRADIENT_END} 100%)`,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '8px',
+                              color: 'white',
+                              fontWeight: 'bold'
+                            }}>
+                              Ξ
+                            </div>
+                            <span>ETH</span>
+                            <span style={{ color: CHART_COLORS.TEXT_GREY }}>
+                              {formatPrice(dragTooltips.minTooltip.data.amount1Locked * 4000 || 0)}
+                            </span>
+                            <span style={{ color: CHART_COLORS.TEXT_GREY }}>50%</span>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+                            <div style={{ 
+                              width: '16px', 
+                              height: '16px', 
+                              borderRadius: '50%', 
+                              background: '#2775CA',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '8px',
+                              color: 'white',
+                              fontWeight: 'bold'
+                            }}>
+                              $
+                            </div>
+                            <span>USDC</span>
+                            <span style={{ color: CHART_COLORS.TEXT_GREY }}>
+                              {formatPrice(dragTooltips.minTooltip.data.amount0Locked || 0)}
+                            </span>
+                            <span style={{ color: CHART_COLORS.TEXT_GREY }}>50%</span>
+                          </div>
+                        </div>
+                      );
+                    }
+                    
+                    // Default: above currentTick, show amount0Locked as ETH
+                    return (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+                        <div style={{ 
+                          width: '16px', 
+                          height: '16px', 
+                          borderRadius: '50%', 
+                          background: `linear-gradient(135deg, ${CHART_COLORS.GRADIENT_START} 0%, ${CHART_COLORS.GRADIENT_END} 100%)`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '8px',
+                          color: 'white',
+                          fontWeight: 'bold'
+                        }}>
+                          Ξ
+                        </div>
+                        <span>ETH</span>
+                        <span style={{ color: CHART_COLORS.TEXT_GREY }}>
+                          {formatPrice(dragTooltips.minTooltip.data.amount1Locked * 4000 || 0)}
+                        </span>
+                        <span style={{ color: CHART_COLORS.TEXT_GREY }}>100%</span>
+                      </div>
+                    );
+                  })()}
+                </div>
+                
+                {/* Connecting line for min tooltip */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    right: 16,
+                    top: dragTooltips.minTooltip.y - 1,
+                    width: `${dragTooltips.minTooltip.lineEndX - (dimensions.width - 210)}px`,
+                    height: '2px',
+                    background: '#666',
+                    pointerEvents: 'none',
+                    zIndex: 1000
+                  }}
+                />
+              </>
+            )}
+
+            {/* Max Tooltip */}
+            {dragTooltips.maxTooltip && dragTooltips.maxTooltip.data && (
+              <>
+                <div
+                  style={{
+                    position: 'absolute',
+                    right: 130,
+                    top: dragTooltips.maxTooltip.y - 18,
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    border: `1px solid ${CHART_COLORS.BORDER_GREY}`,
+                    borderRadius: '8px',
+                    padding: '8px 12px',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    pointerEvents: 'none',
+                    zIndex: 1001,
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                    minWidth: '120px',
+                    textAlign: 'center'
+                  }}
+                >
+                  <div style={{ fontSize: '10px', color: CHART_COLORS.TEXT_GREY, marginBottom: '4px', fontWeight: 'bold' }}>MAX</div>
+                  {(() => {
+                    const tooltipTick = dragTooltips.maxTooltip.data.tick;
+                    
+                    // If below currentTick, show amount1Locked as USDC
+                    if (currentTick !== null && currentTick !== undefined && tooltipTick < currentTick) {
+                      return (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+                          <div style={{ 
+                            width: '16px', 
+                            height: '16px', 
+                            borderRadius: '50%', 
+                            background: '#2775CA',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '8px',
+                            color: 'white',
+                            fontWeight: 'bold'
+                          }}>
+                            $
+                          </div>
+                          <span>USDC</span>
+                          <span style={{ color: CHART_COLORS.TEXT_GREY }}>
+                            {formatPrice(dragTooltips.maxTooltip.data.amount0Locked || 0)}
+                          </span>
+                          <span style={{ color: CHART_COLORS.TEXT_GREY }}>100%</span>
+                        </div>
+                      );
+                    }
+                    
+                    // If equal to currentTick, show 50/50 split
+                    if (currentTick !== null && currentTick !== undefined && tooltipTick === currentTick) {
+                      return (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+                            <div style={{ 
+                              width: '16px', 
+                              height: '16px', 
+                              borderRadius: '50%', 
+                              background: `linear-gradient(135deg, ${CHART_COLORS.GRADIENT_START} 0%, ${CHART_COLORS.GRADIENT_END} 100%)`,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '8px',
+                              color: 'white',
+                              fontWeight: 'bold'
+                            }}>
+                              Ξ
+                            </div>
+                            <span>ETH</span>
+                            <span style={{ color: CHART_COLORS.TEXT_GREY }}>
+                              {formatPrice(dragTooltips.maxTooltip.data.amount1Locked * 4000 || 0)}
+                            </span>
+                            <span style={{ color: CHART_COLORS.TEXT_GREY }}>50%</span>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+                            <div style={{ 
+                              width: '16px', 
+                              height: '16px', 
+                              borderRadius: '50%', 
+                              background: '#2775CA',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '8px',
+                              color: 'white',
+                              fontWeight: 'bold'
+                            }}>
+                              $
+                            </div>
+                            <span>USDC</span>
+                            <span style={{ color: CHART_COLORS.TEXT_GREY }}>
+                              {formatPrice(dragTooltips.maxTooltip.data.amount0Locked || 0)}
+                            </span>
+                            <span style={{ color: CHART_COLORS.TEXT_GREY }}>50%</span>
+                          </div>
+                        </div>
+                      );
+                    }
+                    
+                    // Default: above currentTick, show amount0Locked as ETH
+                    return (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+                        <div style={{ 
+                          width: '16px', 
+                          height: '16px', 
+                          borderRadius: '50%', 
+                          background: `linear-gradient(135deg, ${CHART_COLORS.GRADIENT_START} 0%, ${CHART_COLORS.GRADIENT_END} 100%)`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '8px',
+                          color: 'white',
+                          fontWeight: 'bold'
+                        }}>
+                          Ξ
+                        </div>
+                        <span>ETH</span>
+                        <span style={{ color: CHART_COLORS.TEXT_GREY }}>
+                          {formatPrice(dragTooltips.maxTooltip.data.amount1Locked * 4000 || 0)}
+                        </span>
+                        <span style={{ color: CHART_COLORS.TEXT_GREY }}>100%</span>
+                      </div>
+                    );
+                  })()}
+                </div>
+                
+                {/* Connecting line for max tooltip */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    right: 16,
+                    top: dragTooltips.maxTooltip.y - 1,
+                    width: `${dragTooltips.maxTooltip.lineEndX - (dimensions.width - 210)}px`,
+                    height: '2px',
+                    background: '#666',
+                    pointerEvents: 'none',
+                    zIndex: 1000
+                  }}
+                />
+              </>
+            )}
+          </>
+        )}
+
       </div>
     </div>
   );
