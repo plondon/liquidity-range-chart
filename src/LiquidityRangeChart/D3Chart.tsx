@@ -312,7 +312,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       g.append("path")
         .datum(priceData)
         .attr("fill", "none")
-        .attr("stroke", CHART_COLORS.PRIMARY_BLUE)
+        .attr("stroke", CHART_COLORS.OUT_RANGE_GREY)
         .attr("stroke-width", 2)
         .attr("d", line)
         .attr("class", "price-line");
@@ -627,6 +627,10 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       const isPastMaxHandle = maxPrice > visibleMaxPrice;
       const isPastMinHandle = minPrice < visibleMinPrice;
       
+      // Check if the range is partially visible (use white) vs completely out of view (use pink)
+      const isRangePartiallyVisible = (minPrice <= visibleMaxPrice && maxPrice >= visibleMinPrice);
+      const iconColor = isRangePartiallyVisible ? 'white' : CHART_COLORS.PRIMARY_PINK;
+      
       // Draw dynamic range indicator line inside the border grey line
       g.append('rect')
         .attr('class', `price-range-element ${BACKGROUND_CLASSES.RANGE_INDICATOR}`)
@@ -634,7 +638,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         .attr('y', yScale(maxPrice))
         .attr('width', CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET)
         .attr('height', yScale(minPrice) - yScale(maxPrice))
-        .attr('fill', CHART_COLORS.RANGE_OVERLAY_PINK)
+        .attr('fill', CHART_COLORS.PRIMARY_PINK)
         .attr('rx', 8)
         .attr('ry', 8);
       
@@ -650,7 +654,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         // Fast-forward icon path
         arrowGroup.append('path')
           .attr('d', 'M-3 -4.875L3 -4.875C3.207 -4.875 3.375 -4.707 3.375 -4.5C3.375 -4.293 3.207 -4.125 3 -4.125L0.77295 -4.125L2.78955 -1.57202C3.29355 -0.93402 2.83555 0 2.01855 0L0.00952 0C0.29402 0.0025 0.577 0.127 0.771 0.3725L2.78955 2.92798C3.29355 3.56598 2.83555 4.5 2.01855 4.5L-2.01855 4.5C-2.83555 4.5 -3.29355 3.56648 -2.78955 2.92798L-0.77148 0.3725C-0.57748 0.127 -0.29353 0.0025 -0.00903 0L-2.01855 0C-2.83555 0 -3.29355 -0.93352 -2.78955 -1.57202L-0.77295 -4.125L-3 -4.125C-3.207 -4.125 -3.375 -4.293 -3.375 -4.5C-3.375 -4.707 -3.207 -4.875 -3 -4.875Z')
-          .attr('fill', 'white')
+          .attr('fill', iconColor)
           .attr('opacity', 0.65)
       } else {
         // Show normal drag handle when not scrolled past
@@ -706,8 +710,8 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         
         // Fast-backward icon path
         arrowGroup.append('path')
-          .attr('d', 'M-3 4.875L3 4.875C3.207 4.875 3.375 4.707 3.375 4.5C3.375 4.293 3.207 4.125 3 4.125L0.77295 4.125L2.78955 1.57202C3.29355 0.93402 2.83555 0 2.01855 0L0.00952 0C0.29402 -0.0025 0.577 -0.127 0.771 -0.3725L2.78955 -2.92798C3.29355 -3.56598 2.83555 -4.5 2.01855 -4.5L-2.01855 -4.5C-2.83555 -4.5 -3.29355 -3.56648 -2.78955 -2.92798L-0.77148 -0.3725C-0.57748 -0.127 -0.29353 -0.0025 -0.00903 0L-2.01855 0C-2.83555 0 -3.29355 0.93352 -2.78955 1.57202L-0.77295 4.125L-3 4.125C-3.207 4.125 -3.375 4.293 -3.375 4.5C-3.375 4.707 -3.207 4.875 -3 4.875Z')
-          .attr('fill', 'white')
+          .attr('d', 'M-3 4.875L3 4.875C3.207 4.875 3.375 4.707 3.375 4.5C3.375 4.293 3.207 4.125 3 4.125L0.77295 4.125L2.78955 1.57202C3.29355 0.93402 2.83555 0 2.01855 0L0.00952 0C0.29402 -0.0025 0.577 -0.127 0.771 -0.3725L2.78955 -2.92798C3.29355 -3.56598 2.83555 -4.5 2.01855 -4.5L-2.01855 -4.5C-2.83555 -4.5 -3.29355 -3.56648 -2.78955 -2.92798L-0.77148 -0.3725C-0.57748 -0.127 -0.29353 -0.0025 -0.00903 0L-2.01855 0C-2.83555 0 -3.29355 0.93352 -2.78955 1.57202L-0.77295 4.125L -3 4.125C-3.207 4.125 -3.375 4.293 -3.375 4.5C-3.375 4.707 -3.207 4.875 -3 4.875Z')
+          .attr('fill', iconColor)
           .attr('opacity', 0.65)
       } else {
         // Show normal drag handle when not scrolled past
@@ -856,7 +860,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         .attr('y', yScale(maxPrice))
         .attr('width', dimensions.width - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET) // Cover the entire SVG width
         .attr('height', yScale(minPrice) - yScale(maxPrice))
-        .attr('fill', CHART_COLORS.RANGE_OVERLAY_PINK)
+        .attr('fill', CHART_COLORS.PRIMARY_PINK)
         .attr('opacity', 0.2)
         .attr('stroke', 'none')
         .style('pointer-events', 'none'); // No interactions on this visual layer

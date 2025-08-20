@@ -1,13 +1,9 @@
 // Chart Color Constants
 export const CHART_COLORS = {
   // Primary chart colors
-  PRIMARY_BLUE: '#2196F3',
-  IN_RANGE_PINK: '#FF37C7',
+  PRIMARY_PINK: '#FF37C7',
   OUT_RANGE_GREY: '#888888',
   CURRENT_PRICE_GREY: '#666666',
-  
-  // Range overlay colors
-  RANGE_OVERLAY_PINK: '#FF37C7',
   
   // UI element colors
   HANDLE_STROKE: '#ffffff',

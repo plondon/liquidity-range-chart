@@ -20,7 +20,7 @@ export const getPriceExtent = (data: Array<{value: number}>) => {
 export const getColorForPrice = (value: number, minPrice: number | null, maxPrice: number | null): string => {
   if (minPrice !== null && maxPrice !== null) {
     const isInRange = value >= minPrice && value <= maxPrice;
-    return isInRange ? CHART_COLORS.IN_RANGE_PINK : CHART_COLORS.OUT_RANGE_GREY;
+    return isInRange ? CHART_COLORS.PRIMARY_PINK : CHART_COLORS.OUT_RANGE_GREY;
   }
   return CHART_COLORS.OUT_RANGE_GREY;
 };
