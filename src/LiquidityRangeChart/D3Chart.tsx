@@ -1351,7 +1351,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
                       </div>
                       <span>USDC</span>
                       <span style={{ color: CHART_COLORS.TEXT_GREY }}>
-                        {formatPrice(tooltip.data.amount1Locked || 0)}
+                        {formatPrice(tooltip.data.amount0Locked || 0)} {tooltip.data.tick}
                       </span>
                       <span style={{ color: CHART_COLORS.TEXT_GREY }}>100%</span>
                     </div>
@@ -1379,7 +1379,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
                         </div>
                         <span>ETH</span>
                         <span style={{ color: CHART_COLORS.TEXT_GREY }}>
-                          {formatPrice(tooltip.data.amount0Locked || 0)}
+                          {formatPrice(tooltip.data.amount1Locked * 4000 || 0)} {tooltip.data.tick}
                         </span>
                         <span style={{ color: CHART_COLORS.TEXT_GREY }}>50%</span>
                       </div>
@@ -1400,7 +1400,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
                         </div>
                         <span>USDC</span>
                         <span style={{ color: CHART_COLORS.TEXT_GREY }}>
-                          {formatPrice(tooltip.data.amount1Locked || 0)}
+                            {formatPrice(tooltip.data.amount0Locked || 0)} {tooltip.data.tick}
                         </span>
                         <span style={{ color: CHART_COLORS.TEXT_GREY }}>50%</span>
                       </div>
@@ -1427,7 +1427,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
                     </div>
                     <span>ETH</span>
                     <span style={{ color: CHART_COLORS.TEXT_GREY }}>
-                      {formatPrice(tooltip.data.amount0Locked || 0)}
+                      {formatPrice(tooltip.data.amount1Locked * 4000 || 0)} {tooltip.data.tick}
                     </span>
                     <span style={{ color: CHART_COLORS.TEXT_GREY }}>100%</span>
                   </div>
