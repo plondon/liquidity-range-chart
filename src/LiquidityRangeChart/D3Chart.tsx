@@ -91,7 +91,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         centerPrice - zoomedRange / 2,
         centerPrice + zoomedRange / 2
       ])
-      .range([dimensions.height - CHART_DIMENSIONS.MARGIN_TOP - CHART_DIMENSIONS.MARGIN_BOTTOM, 0]);
+      .range([dimensions.height, 0]);
   }, [data, liquidityData, zoomLevel, panY, dimensions]);
 
   useEffect(() => {
@@ -102,9 +102,9 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
 
     const isMobile = window.innerWidth <= BREAKPOINTS.MOBILE;
     const margin = { 
-      top: isMobile ? 20 : CHART_DIMENSIONS.MARGIN_TOP, 
+      top: 0, 
       right: isMobile ? 120 : 180,
-      bottom: isMobile ? 50 : CHART_DIMENSIONS.MARGIN_BOTTOM, 
+      bottom: 0, 
       left: isMobile ? 60 : 80
     };
     const width = dimensions.width - margin.left - margin.right;

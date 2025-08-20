@@ -34,8 +34,6 @@ export const CHART_DIMENSIONS = {
   LIQUIDITY_WIDTH: 300,
   
   // Margins and spacing
-  MARGIN_TOP: 40,
-  MARGIN_BOTTOM: 68,
   MARGIN_LEFT: 60,
   MARGIN_RIGHT: 60,
   
