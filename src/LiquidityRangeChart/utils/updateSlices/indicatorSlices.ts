@@ -1,13 +1,8 @@
+import { CHART_DIMENSIONS } from 'LiquidityRangeChart/constants';
 import { UpdateSlice } from '../chartUpdateManager';
 
-// Class names for floating indicators
-export const FLOATING_INDICATOR_CLASSES = {
-  MIN_INDICATOR: 'min-floating-indicator',
-  MAX_INDICATOR: 'max-floating-indicator'
-} as const;
-
 // Class names for price lines
-export const PRICE_LINE_CLASSES = {
+export const TRANSPARENT_PRICE_LINE_CLASSES = {
   MIN_LINE: 'min-line',
   MAX_LINE: 'max-line'
 } as const;
@@ -20,42 +15,46 @@ export const DRAG_HANDLE_CLASSES = {
   CENTER_LINES: 'center-drag-line'
 } as const;
 
-/**
- * ELI5: This slice updates the small dark grey floating rectangles that appear at your 
- * min and max price levels. These are like visual bookmarks showing exactly where your 
- * price boundaries are. When you drag the price lines, these move with them.
- */
-export const FLOATING_INDICATORS_SLICE: UpdateSlice = {
-  name: 'floatingIndicators',
-  update: (ctx) => {
-    const { g, minPrice, maxPrice, yScale } = ctx;
-    
-    // Update floating indicators (30px x 6px dark grey rectangles)
-    g.select(`.${FLOATING_INDICATOR_CLASSES.MIN_INDICATOR}`)
-      .attr('y', yScale(minPrice) - 3);
-    g.select(`.${FLOATING_INDICATOR_CLASSES.MAX_INDICATOR}`)
-      .attr('y', yScale(maxPrice) - 3);
-  }
-};
+// Class names for solid price lines
+export const SOLID_PRICE_LINE_CLASSES = {
+  MIN_LINE: 'min-solid-line',
+  MAX_LINE: 'max-solid-line'
+} as const;
 
 /**
  * ELI5: This slice updates invisible horizontal lines that you can drag to change your 
  * price range. You can't see them (opacity = 0) but when you drag where they are,
  * you're actually moving the min/max price boundaries.
  */
-export const PRICE_LINES_SLICE: UpdateSlice = {
+export const TRANSPARENT_PRICE_LINES_SLICE: UpdateSlice = {
   name: 'priceLines',
   update: (ctx) => {
     const { g, minPrice, maxPrice, yScale } = ctx;
     
     // Update min/max lines (hidden but still used for dragging)
-    g.select(`.${PRICE_LINE_CLASSES.MIN_LINE}`)
+    g.select(`.${TRANSPARENT_PRICE_LINE_CLASSES.MIN_LINE}`)
       .attr('y1', yScale(minPrice))
       .attr('y2', yScale(minPrice));
       
-    g.select(`.${PRICE_LINE_CLASSES.MAX_LINE}`)
+    g.select(`.${TRANSPARENT_PRICE_LINE_CLASSES.MAX_LINE}`)
       .attr('y1', yScale(maxPrice))
       .attr('y2', yScale(maxPrice));
+  }
+};
+
+export const SOLID_PRICE_LINES_SLICE: UpdateSlice = {
+  name: 'solidPriceLines',
+  update: (ctx) => {
+    const { g, minPrice, maxPrice, yScale } = ctx;
+
+    // Update min/max lines (solid)
+  g.select(`.${SOLID_PRICE_LINE_CLASSES.MIN_LINE}`)
+    .attr('y1', yScale(minPrice) + CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
+    .attr('y2', yScale(minPrice) + CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2);
+
+  g.select(`.${SOLID_PRICE_LINE_CLASSES.MAX_LINE}`)
+      .attr('y1', yScale(maxPrice) - CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
+      .attr('y2', yScale(maxPrice) - CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2);
   }
 };
 

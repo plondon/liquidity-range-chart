@@ -10,6 +10,7 @@ export interface UpdateContext {
   dimensions: { width: number; height: number };
   current?: number | null;
   getColorForPrice: (price: number, min: number | null, max: number | null) => string;
+  getOpacityForPrice: (price: number, min: number | null, max: number | null) => number;
 }
 
 export interface UpdateSlice {

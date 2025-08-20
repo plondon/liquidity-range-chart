@@ -22,7 +22,16 @@ export const getColorForPrice = (value: number, minPrice: number | null, maxPric
     const isInRange = value >= minPrice && value <= maxPrice;
     return isInRange ? CHART_COLORS.IN_RANGE_PINK : CHART_COLORS.OUT_RANGE_GREY;
   }
-  return CHART_COLORS.PRIMARY_BLUE;
+  return CHART_COLORS.OUT_RANGE_GREY;
+};
+
+// Utility function to determine opacity for price elements
+export const getOpacityForPrice = (value: number, minPrice: number | null, maxPrice: number | null): number => {
+  if (minPrice !== null && maxPrice !== null) {
+    const isInRange = value >= minPrice && value <= maxPrice;
+    return isInRange ? 0.5 : 0.08;
+  }
+  return 0.2;
 };
 
 // Utility function to format price values consistently

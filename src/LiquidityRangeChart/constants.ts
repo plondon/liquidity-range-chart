@@ -2,12 +2,12 @@
 export const CHART_COLORS = {
   // Primary chart colors
   PRIMARY_BLUE: '#2196F3',
-  IN_RANGE_PINK: '#d63384',
+  IN_RANGE_PINK: '#FF37C7',
   OUT_RANGE_GREY: '#888888',
   CURRENT_PRICE_GREY: '#666666',
   
   // Range overlay colors
-  RANGE_OVERLAY_PINK: '#ff69b4',
+  RANGE_OVERLAY_PINK: '#FF37C7',
   
   // UI element colors
   HANDLE_STROKE: '#ffffff',
@@ -38,7 +38,8 @@ export const CHART_DIMENSIONS = {
   MARGIN_RIGHT: 60,
   
   // Component spacing
-  MIN_MAX_LINE_HEIGHT: 40,
+  TRANSPARENT_MIN_MAX_LINE_HEIGHT: 40,
+  SOLID_MIN_MAX_LINE_HEIGHT: 3,
   TOOLTIP_OFFSET: 10,
   LIQUIDITY_SECTION_OFFSET: 16,
   LIQUIDITY_BARS_SPACING: 10,

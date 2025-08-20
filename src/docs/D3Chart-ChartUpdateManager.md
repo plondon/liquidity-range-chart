@@ -78,11 +78,6 @@ export const BACKGROUND_CLASSES = {
 **Class Names**:
 
 ```typescript
-export const FLOATING_INDICATOR_CLASSES = {
-  MIN_INDICATOR: 'min-floating-indicator',
-  MAX_INDICATOR: 'max-floating-indicator'
-} as const;
-
 export const PRICE_LINE_CLASSES = {
   MIN_LINE: 'min-line',
   MAX_LINE: 'max-line'  

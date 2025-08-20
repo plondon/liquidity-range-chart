@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import { UpdateSlice } from '../chartUpdateManager';
 import { LiquidityDataPoint } from '../../types';
 import { CHART_COLORS } from '../../constants';
+import { getOpacityForPrice } from 'LiquidityRangeChart/utils';
 
 // Class names for data visualization elements
 export const DATA_ELEMENT_CLASSES = {
@@ -25,6 +26,10 @@ export const LIQUIDITY_BARS_SLICE: UpdateSlice = {
       .attr('fill', (d: any) => {
         const price = (d as LiquidityDataPoint).price0;
         return getColorForPrice(price, minPrice, maxPrice);
+      })
+      .attr('opacity', (d: any) => {
+        const price = (d as LiquidityDataPoint).price0;
+        return getOpacityForPrice(price, minPrice, maxPrice);
       });
   }
 };
