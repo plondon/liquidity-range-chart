@@ -712,7 +712,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         .attr('class', `price-range-element ${BACKGROUND_CLASSES.VISUAL_BG}`)
         .attr('x', -margin.left) // Extend left to cover the margin area
         .attr('y', yScale(maxPrice))
-        .attr('width', dimensions.width) // Cover the entire SVG width
+        .attr('width', dimensions.width - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET) // Cover the entire SVG width
         .attr('height', yScale(minPrice) - yScale(maxPrice))
         .attr('fill', CHART_COLORS.RANGE_OVERLAY_PINK)
         .attr('opacity', 0.2)
