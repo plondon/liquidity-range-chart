@@ -902,7 +902,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       g.append('line')
         .attr('class', 'current-price-line')
         .attr('x1', -margin.left) // Start from left margin
-        .attr('x2', dimensions.width - margin.left) // Extend to right edge
+        .attr('x2', dimensions.width - margin.left - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET) // Extend to right edge
         .attr('y1', yScale(current))
         .attr('y2', yScale(current))
         .attr('stroke', CHART_COLORS.CURRENT_PRICE_GREY)
