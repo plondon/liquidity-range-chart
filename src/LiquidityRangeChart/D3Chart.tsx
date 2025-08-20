@@ -24,7 +24,7 @@ import {
 } from './utils/updateSlices';
 import { SOLID_PRICE_LINE_CLASSES } from './utils/updateSlices/indicatorSlices';
 
-const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityData: LiquidityDataPoint[] }) => {
+const D3Chart = ({ data, liquidityData, onHoverTick }: { data: PriceDataPoint[], liquidityData: LiquidityDataPoint[], onHoverTick: (tick: LiquidityDataPoint | null) => void }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   
@@ -66,6 +66,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
     data: null,
     lineEndX: 0
   });
+
 
   // Drag tooltips for showing min/max during range creation
   const [dragTooltips, setDragTooltips] = useState<{
@@ -364,7 +365,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       .attr("width", d => liquidityXScale(d.activeLiquidity))
       .attr("fill", d => getColorForPrice(d.price0, minPrice, maxPrice))
       .attr('opacity', d => getOpacityForPrice(d.price0, minPrice, maxPrice))
-      .attr("cursor", "pointer");
+      .attr("cursor", "pointer")
     
     // Add invisible overlay for better hover detection across the entire liquidity area
     const liquidityOverlay = g.append("rect")
@@ -540,6 +541,9 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
           data: closestData,
           lineEndX: liquidityBarsEndX
         });
+        
+        // Alert parent component about the hovered tick
+        onHoverTick(closestData);
       })
       .on("mousemove", function(event) {
         // Update tooltip position as mouse moves
@@ -572,11 +576,16 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
           data: closestData,
           lineEndX: liquidityBarsEndX
         });
+        
+        // Alert parent component about the hovered tick
+        onHoverTick(closestData);
       })
       .on("mouseleave", function() {
         // Only hide tooltip if not currently dragging
         if (!(this as any)._isDragging) {
           setTooltip(prev => ({ ...prev, visible: false }));
+          // Alert parent component that no tick is being hovered
+          onHoverTick(null);
         }
       });
 
@@ -1067,6 +1076,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         currentDot.attr('fill', dotColor);
       }
     }
+
 
     // Add areas above and below current range for creating new ranges (drawn last to be on top)
     if (minPrice !== null && maxPrice !== null) {
