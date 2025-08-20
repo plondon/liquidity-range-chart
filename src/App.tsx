@@ -7,6 +7,8 @@ import { LiquidityDataPoint } from 'LiquidityRangeChart/types';
 
 const App: React.FC = () => {
     const [hoveredPrice, setHoveredPrice] = useState<number | null>(null);
+    const [minPrice, setMinPrice] = useState<number | null>(null);
+    const [maxPrice, setMaxPrice] = useState<number | null>(null);
 
     const handleHoverTick = (tick: LiquidityDataPoint | null) => {
         if (tick) {
@@ -15,15 +17,25 @@ const App: React.FC = () => {
             setHoveredPrice(null);
         }
     }
+
+    const handleMinPrice = (price: number) => {
+        setMinPrice(price);
+    }
+
+    const handleMaxPrice = (price: number) => {
+        setMaxPrice(price);
+    }
     
   return (
     <div className="App">
       <header className="App-header">
         <h1>Liquidity Range Chart</h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-            <span style={{ fontSize: '12px' }}>Hovered Price: {hoveredPrice}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', flexDirection: 'column' }}>
+            <div style={{ fontSize: '12px' }}>Hovered Price: {hoveredPrice}</div>
+            <div style={{ fontSize: '12px' }}>Min Price: {minPrice}</div>
+            <div style={{ fontSize: '12px' }}>Max Price: {maxPrice}</div>
         </div>
-        <D3Chart data={priceData} liquidityData={liquidityData} onHoverTick={handleHoverTick} />
+        <D3Chart data={priceData} liquidityData={liquidityData} onHoverTick={handleHoverTick} onMinPrice={handleMinPrice} onMaxPrice={handleMaxPrice} />
       </header>
     </div>
   );

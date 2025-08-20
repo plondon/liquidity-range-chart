@@ -24,7 +24,7 @@ import {
 } from './utils/updateSlices';
 import { SOLID_PRICE_LINE_CLASSES } from './utils/updateSlices/indicatorSlices';
 
-const D3Chart = ({ data, liquidityData, onHoverTick }: { data: PriceDataPoint[], liquidityData: LiquidityDataPoint[], onHoverTick: (tick: LiquidityDataPoint | null) => void }) => {
+const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: { data: PriceDataPoint[], liquidityData: LiquidityDataPoint[], onHoverTick: (tick: LiquidityDataPoint | null) => void, onMinPrice: (price: number) => void, onMaxPrice: (price: number) => void }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   
@@ -47,6 +47,18 @@ const D3Chart = ({ data, liquidityData, onHoverTick }: { data: PriceDataPoint[],
     handleResetZoom,
     handleCenterRange
   } = useChartState();
+
+  useEffect(() => {
+    if (minPrice !== null) {
+      onMinPrice(minPrice);
+    }
+  }, [minPrice]);
+
+  useEffect(() => {
+    if (maxPrice !== null) {
+      onMaxPrice(maxPrice);
+    }
+  }, [maxPrice]);
   
   // Initialize hooks
   useInitialView(data, liquidityData, setChartState, defaultState);
