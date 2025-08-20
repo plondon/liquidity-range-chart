@@ -362,7 +362,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
     const enterBars = bars.enter()
       .append("rect")
       .attr("class", DATA_ELEMENT_CLASSES.LIQUIDITY_BAR)
-      .attr("height", 1)
+      .attr("height", 2)
       .attr('opacity', d => getOpacityForPrice(d.price0, minPrice, maxPrice))
       .attr("x", d => width + margin.right - liquidityXScale(d.activeLiquidity) - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET)
       .attr("y", d => liquidityYScale(d.price0) - 0.5)
