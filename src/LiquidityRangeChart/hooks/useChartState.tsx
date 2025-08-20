@@ -29,10 +29,6 @@ export function useChartState() {
   // Destructure for easier access
   const { zoomLevel, panY, minPrice, maxPrice } = chartState;
   
-  // Helper functions for updating individual state properties
-  const setMinPrice = (price: number | null) => setChartState(prev => ({ ...prev, minPrice: price }));
-  const setMaxPrice = (price: number | null) => setChartState(prev => ({ ...prev, maxPrice: price }));
-  
   // Create the animation function with current chart state
   const animateToState = createAnimateToState(setChartState);
 
@@ -105,8 +101,6 @@ export function useChartState() {
     
     // State setters
     setChartState,
-    setMinPrice,
-    setMaxPrice,
     
     // Actions
     handleZoomIn,

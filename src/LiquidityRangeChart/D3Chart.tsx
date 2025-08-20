@@ -43,8 +43,6 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
     maxPrice,
     defaultState,
     setChartState,
-    setMinPrice,
-    setMaxPrice,
     handleZoomIn,
     handleZoomOut,
     handleResetZoom,
@@ -420,8 +418,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         
         // Only update state if we have a valid range
         if (constrainedMaxPrice > constrainedMinPrice) {
-          setMinPrice(constrainedMinPrice);
-          setMaxPrice(constrainedMaxPrice);
+          setChartState(prev => ({ ...prev, minPrice: constrainedMinPrice, maxPrice: constrainedMaxPrice }));
         }
       })
     );
@@ -515,6 +512,14 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       // Remove existing range elements
       g.selectAll(".price-range-element").remove();
       
+      // Calculate current visible price range
+      const visibleMinPrice = yScale.invert(height);
+      const visibleMaxPrice = yScale.invert(0);
+      
+      // Check if we're scrolled past the handles
+      const isPastMaxHandle = maxPrice > visibleMaxPrice;
+      const isPastMinHandle = minPrice < visibleMinPrice;
+      
       // Draw dynamic range indicator line inside the border grey line
       g.append('rect')
         .attr('class', `price-range-element ${BACKGROUND_CLASSES.RANGE_INDICATOR}`)
@@ -526,87 +531,119 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
         .attr('rx', 8)
         .attr('ry', 8);
       
-      // Add max price drag indicator (top circle) - positioned inside the range indicator
-      g.append('circle')
-        .attr('class', `price-range-element ${DRAG_HANDLE_CLASSES.MAX_HANDLE}`)
-        .attr('cx', width + margin.right - (CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET / 2))
-        .attr('cy', yScale(maxPrice) + 8)
-        .attr('r', 6)
-        .attr('fill', 'white')
-        .attr('stroke', 'rgba(0,0,0,0.1)')
-        .attr('stroke-width', 1)
-        .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))')
-        .attr('cursor', 'ns-resize')
-        .call(d3.drag<SVGCircleElement, unknown>()
-          .on('drag', function(event) {
-            const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
-            const newMaxPrice = yScale.invert(newY);
-            
-            // Ensure max stays above min
-            const constrainedMaxPrice = Math.max(newMaxPrice, minPrice || 0);
-            
-            // Update all chart elements using centralized system
-            chartUpdateManager.updateAll({
-              g,
-              minPrice: minPrice || 0,
-              maxPrice: constrainedMaxPrice,
-              yScale,
-              width: dimensions.width - margin.left - margin.right,
-              margin,
-              dimensions,
-              current,
-              getColorForPrice,
-              getOpacityForPrice
-            });
-          })
-          .on('end', function(event) {
-            const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
-            const newMaxPrice = yScale.invert(newY);
-            const constrainedMaxPrice = Math.max(newMaxPrice, minPrice || 0);
-            setMaxPrice(constrainedMaxPrice);
-          })
-        );
+      // Add max price indicator - show fast-forward icon if scrolled past, otherwise show drag handle
+      if (isPastMaxHandle) {
+        // Show fast-forward icon when scrolled past max handle
+        const arrowGroup = g.append('g')
+          .attr('class', `price-range-element max-arrow-indicator`)
+          .attr('transform', `translate(${width + margin.right - (CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET / 2)}, 10)`)
+          .attr('cursor', 'pointer')
+          .on('click', () => handleCenterRange(data, liquidityData));
+        
+        // Fast-forward icon path
+        arrowGroup.append('path')
+          .attr('d', 'M-3 -4.875L3 -4.875C3.207 -4.875 3.375 -4.707 3.375 -4.5C3.375 -4.293 3.207 -4.125 3 -4.125L0.77295 -4.125L2.78955 -1.57202C3.29355 -0.93402 2.83555 0 2.01855 0L0.00952 0C0.29402 0.0025 0.577 0.127 0.771 0.3725L2.78955 2.92798C3.29355 3.56598 2.83555 4.5 2.01855 4.5L-2.01855 4.5C-2.83555 4.5 -3.29355 3.56648 -2.78955 2.92798L-0.77148 0.3725C-0.57748 0.127 -0.29353 0.0025 -0.00903 0L-2.01855 0C-2.83555 0 -3.29355 -0.93352 -2.78955 -1.57202L-0.77295 -4.125L-3 -4.125C-3.207 -4.125 -3.375 -4.293 -3.375 -4.5C-3.375 -4.707 -3.207 -4.875 -3 -4.875Z')
+          .attr('fill', 'white')
+          .attr('opacity', 0.65)
+      } else {
+        // Show normal drag handle when not scrolled past
+        g.append('circle')
+          .attr('class', `price-range-element ${DRAG_HANDLE_CLASSES.MAX_HANDLE}`)
+          .attr('cx', width + margin.right - (CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET / 2))
+          .attr('cy', yScale(maxPrice) + 8)
+          .attr('r', 6)
+          .attr('fill', 'white')
+          .attr('stroke', 'rgba(0,0,0,0.1)')
+          .attr('stroke-width', 1)
+          .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))')
+          .attr('cursor', 'ns-resize')
+          .call(d3.drag<SVGCircleElement, unknown>()
+            .on('drag', function(event) {
+              const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
+              const newMaxPrice = yScale.invert(newY);
+              
+              // Ensure max stays above min
+              const constrainedMaxPrice = Math.max(newMaxPrice, minPrice || 0);
+              
+              // Update all chart elements using centralized system
+              chartUpdateManager.updateAll({
+                g,
+                minPrice: minPrice || 0,
+                maxPrice: constrainedMaxPrice,
+                yScale,
+                width: dimensions.width - margin.left - margin.right,
+                margin,
+                dimensions,
+                current,
+                getColorForPrice,
+                getOpacityForPrice
+              });
+            })
+            .on('end', function(event) {
+              const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
+              const newMaxPrice = yScale.invert(newY);
+              const constrainedMaxPrice = Math.max(newMaxPrice, minPrice || 0);
+              setChartState(prev => ({ ...prev, maxPrice: constrainedMaxPrice }));
+            })
+          );
+      }
       
-      // Add min price drag indicator (bottom circle) - positioned inside the range indicator
-      g.append('circle')
-        .attr('class', `price-range-element ${DRAG_HANDLE_CLASSES.MIN_HANDLE}`)
-        .attr('cx', width + margin.right - (CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET / 2))
-        .attr('cy', yScale(minPrice) - 8)
-        .attr('r', 6)
-        .attr('fill', 'white')
-        .attr('stroke', 'rgba(0,0,0,0.1)')
-        .attr('stroke-width', 1)
-        .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))')
-        .attr('cursor', 'ns-resize')
-        .call(d3.drag<SVGCircleElement, unknown>()
-          .on('drag', function(event) {
-            const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
-            const newMinPrice = yScale.invert(newY);
-            
-            // Ensure min stays below max
-            const constrainedMinPrice = Math.min(newMinPrice, maxPrice || 0);
-            
-            // Use centralized update system
-            chartUpdateManager.updateAll({
-              g,
-              minPrice: constrainedMinPrice,
-              maxPrice: maxPrice || 0,
-              yScale,
-              width,
-              margin,
-              dimensions,
-              current,
-              getColorForPrice,
-              getOpacityForPrice
-            });
-          })
-          .on('end', function(event) {
-            const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
-            const newMinPrice = yScale.invert(newY);
-            const constrainedMinPrice = Math.min(newMinPrice, maxPrice || 0);
-            setMinPrice(constrainedMinPrice);
-          })
-        );
+      // Add min price indicator - show fast-backward icon if scrolled past, otherwise show drag handle
+      if (isPastMinHandle) {
+        // Show fast-backward icon when scrolled past min handle
+        const arrowGroup = g.append('g')
+          .attr('class', `price-range-element min-arrow-indicator`)
+          .attr('transform', `translate(${width + margin.right - (CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET / 2)}, ${height - 10})`)
+          .attr('cursor', 'pointer')
+          .on('click', () => handleCenterRange(data, liquidityData));
+        
+        // Fast-backward icon path
+        arrowGroup.append('path')
+          .attr('d', 'M-3 4.875L3 4.875C3.207 4.875 3.375 4.707 3.375 4.5C3.375 4.293 3.207 4.125 3 4.125L0.77295 4.125L2.78955 1.57202C3.29355 0.93402 2.83555 0 2.01855 0L0.00952 0C0.29402 -0.0025 0.577 -0.127 0.771 -0.3725L2.78955 -2.92798C3.29355 -3.56598 2.83555 -4.5 2.01855 -4.5L-2.01855 -4.5C-2.83555 -4.5 -3.29355 -3.56648 -2.78955 -2.92798L-0.77148 -0.3725C-0.57748 -0.127 -0.29353 -0.0025 -0.00903 0L-2.01855 0C-2.83555 0 -3.29355 0.93352 -2.78955 1.57202L-0.77295 4.125L-3 4.125C-3.207 4.125 -3.375 4.293 -3.375 4.5C-3.375 4.707 -3.207 4.875 -3 4.875Z')
+          .attr('fill', 'white')
+          .attr('opacity', 0.65)
+      } else {
+        // Show normal drag handle when not scrolled past
+        g.append('circle')
+          .attr('class', `price-range-element ${DRAG_HANDLE_CLASSES.MIN_HANDLE}`)
+          .attr('cx', width + margin.right - (CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET / 2))
+          .attr('cy', yScale(minPrice) - 8)
+          .attr('r', 6)
+          .attr('fill', 'white')
+          .attr('stroke', 'rgba(0,0,0,0.1)')
+          .attr('stroke-width', 1)
+          .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))')
+          .attr('cursor', 'ns-resize')
+          .call(d3.drag<SVGCircleElement, unknown>()
+            .on('drag', function(event) {
+              const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
+              const newMinPrice = yScale.invert(newY);
+              
+              // Ensure min stays below max
+              const constrainedMinPrice = Math.min(newMinPrice, maxPrice || 0);
+              
+              // Use centralized update system
+              chartUpdateManager.updateAll({
+                g,
+                minPrice: constrainedMinPrice,
+                maxPrice: maxPrice || 0,
+                yScale,
+                width,
+                margin,
+                dimensions,
+                current,
+                getColorForPrice,
+                getOpacityForPrice
+              });
+            })
+            .on('end', function(event) {
+              const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
+              const newMinPrice = yScale.invert(newY);
+              const constrainedMinPrice = Math.min(newMinPrice, maxPrice || 0);
+              setChartState(prev => ({ ...prev, minPrice: constrainedMinPrice }));
+            })
+          );
+      }
       
       // Add center drag indicator for moving entire range
       const centerY = (yScale(maxPrice) + yScale(minPrice)) / 2;
@@ -686,8 +723,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
             
             // Only update state if range stays within data bounds
             if (newMinPrice >= dataMin && newMaxPrice <= dataMax) {
-              setMinPrice(newMinPrice);
-              setMaxPrice(newMaxPrice);
+              setChartState(prev => ({ ...prev, minPrice: newMinPrice, maxPrice: newMaxPrice }));
             }
           })
         );
@@ -795,8 +831,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
             
             // Only update state if range stays within data bounds
             if (newMinPrice >= dataMin && newMaxPrice <= dataMax) {
-              setMinPrice(newMinPrice);
-              setMaxPrice(newMaxPrice);
+              setChartState(prev => ({ ...prev, minPrice: newMinPrice, maxPrice: newMaxPrice }));
             }
           })
         );
@@ -842,8 +877,8 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
           height,
           dimensions,
           () => maxPrice,
-          setMinPrice,
-          setMaxPrice
+          (price: number) => setChartState(prev => ({ ...prev, minPrice: price })),
+          (price: number) => setChartState(prev => ({ ...prev, maxPrice: price }))
         ));
 
       // Draw max price line (transparent) with drag behavior
@@ -865,8 +900,8 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
           height,
           dimensions,
           () => minPrice,
-          setMaxPrice,
-          setMinPrice
+          (price: number) => setChartState(prev => ({ ...prev, maxPrice: price })),
+          (price: number) => setChartState(prev => ({ ...prev, minPrice: price }))
         ));
         
       // Add min price label
@@ -1031,8 +1066,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
             
             // Only update state if we have a valid range
             if (constrainedMaxPrice > constrainedMinPrice) {
-              setMinPrice(constrainedMinPrice);
-              setMaxPrice(constrainedMaxPrice);
+                  setChartState(prev => ({ ...prev, minPrice: constrainedMinPrice, maxPrice: constrainedMaxPrice }));
             }
           })
         );
@@ -1119,8 +1153,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
             
             // Only update state if we have a valid range
             if (constrainedMaxPrice > constrainedMinPrice) {
-              setMinPrice(constrainedMinPrice);
-              setMaxPrice(constrainedMaxPrice);
+                setChartState(prev => ({ ...prev, minPrice: constrainedMinPrice, maxPrice: constrainedMaxPrice }));
             }
           })
         );
@@ -1210,7 +1243,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
               <input
                 type="number"
                 value={minPrice || ''}
-                onChange={(e) => setMinPrice(e.target.value ? parseFloat(e.target.value) : null)}
+                onChange={(e) => setChartState(prev => ({ ...prev, minPrice: e.target.value ? parseFloat(e.target.value) : null }))}
                 style={{ 
                   fontSize: dimensions.width <= 768 ? '10px' : '11px', 
                   padding: dimensions.width <= 768 ? '6px 8px' : '4px 6px', 
@@ -1227,7 +1260,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
               <input
                 type="number"
                 value={maxPrice || ''}
-                onChange={(e) => setMaxPrice(e.target.value ? parseFloat(e.target.value) : null)}
+                onChange={(e) => setChartState(prev => ({ ...prev, maxPrice: e.target.value ? parseFloat(e.target.value) : null }))}
                 style={{ 
                   fontSize: dimensions.width <= 768 ? '10px' : '11px', 
                   padding: dimensions.width <= 768 ? '6px 8px' : '4px 6px', 
@@ -1240,7 +1273,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
               />
             </div>
             <button 
-              onClick={() => { setMinPrice(null); setMaxPrice(null); }}
+              onClick={() => { setChartState(prev => ({ ...prev, minPrice: null, maxPrice: null })); }}
               style={{ 
                 fontSize: dimensions.width <= 768 ? '10px' : '11px', 
                 padding: dimensions.width <= 768 ? '6px 10px' : '4px 8px', 
