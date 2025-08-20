@@ -31,7 +31,6 @@ export const CHART_DIMENSIONS = {
   // Main chart dimensions
   HEIGHT: 768,
   CHART_WIDTH: 768,
-  LIQUIDITY_WIDTH: 300,
   
   // Margins and spacing
   MARGIN_LEFT: 60,

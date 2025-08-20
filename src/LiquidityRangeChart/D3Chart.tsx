@@ -858,7 +858,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       g.append('line')
         .attr('class', `price-range-element ${TRANSPARENT_PRICE_LINE_CLASSES.MIN_LINE}`)
         .attr('x1', -margin.left) // Start from left margin
-        .attr('x2', dimensions.width - margin.left) // Extend to right edge
+        .attr('x2', dimensions.width - margin.left - liquidityWidth) // Extend to right edge before liquidity section
         .attr('y1', yScale(minPrice))
         .attr('y2', yScale(minPrice))
         .attr('stroke', CHART_COLORS.BOUNDARY_LINE)
@@ -881,7 +881,7 @@ const D3Chart = ({ data, liquidityData }: { data: PriceDataPoint[], liquidityDat
       g.append('line')
         .attr('class', `price-range-element ${TRANSPARENT_PRICE_LINE_CLASSES.MAX_LINE}`)
         .attr('x1', -margin.left) // Start from left margin
-        .attr('x2', dimensions.width - margin.left) // Extend to right edge
+        .attr('x2', dimensions.width - margin.left - liquidityWidth) // Extend to right edge before liquidity section
         .attr('y1', yScale(maxPrice))
         .attr('y2', yScale(maxPrice))
         .attr('stroke', CHART_COLORS.BOUNDARY_LINE)
