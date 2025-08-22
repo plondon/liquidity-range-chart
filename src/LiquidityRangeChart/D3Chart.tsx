@@ -703,7 +703,75 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         .attr('height', priceToY(minPrice) - priceToY(maxPrice))
         .attr('fill', CHART_COLORS.PRIMARY_PINK)
         .attr('rx', 8)
-        .attr('ry', 8);
+        .attr('ry', 8)
+        .attr('cursor', 'move')
+        .call(d3.drag<SVGRectElement, unknown>()
+          .on('start', function(event) {
+            // Store the initial offset relative to the range center
+            const currentRangeCenterY = (priceToY(maxPrice) + priceToY(minPrice)) / 2;
+            (this as any)._dragOffsetY = event.y - currentRangeCenterY;
+          })
+          .on('drag', function(event) {
+            // Apply the stored offset to maintain consistent drag feel
+            const adjustedY = event.y - (this as any)._dragOffsetY;
+            const newCenterY = Math.max(-margin.top, Math.min(height + margin.bottom, adjustedY));
+            const draggedPrice = yToPrice(newCenterY);
+            const rangeSize = maxPrice - minPrice;
+            
+            // Calculate new min/max based on dragged center position
+            const newMaxPrice = draggedPrice + rangeSize / 2;
+            const newMinPrice = draggedPrice - rangeSize / 2;
+            
+            // Get data bounds to prevent dragging outside chart
+            const allPrices = [
+              ...data.map(d => d.value),
+              ...liquidityData.map(d => d.price0)
+            ];
+            const dataMin = Math.min(...allPrices);
+            const dataMax = Math.max(...allPrices);
+            
+            // Only update if range stays within data bounds
+            if (newMinPrice >= dataMin && newMaxPrice <= dataMax) {
+              // Use centralized update system
+              chartUpdateManager.updateAll({
+                g,
+                minPrice: newMinPrice,
+                maxPrice: newMaxPrice,
+                priceToY,
+                width,
+                margin,
+                dimensions,
+                current,
+                getColorForPrice,
+                getOpacityForPrice
+              });
+            }
+          })
+          .on('end', function(event) {
+            // Apply the same offset calculation for consistency
+            const adjustedY = event.y - (this as any)._dragOffsetY;
+            const newCenterY = Math.max(-margin.top, Math.min(height + margin.bottom, adjustedY));
+            const draggedPrice = yToPrice(newCenterY);
+            const rangeSize = maxPrice - minPrice;
+            
+            // Calculate new min/max based on dragged center position
+            const newMaxPrice = draggedPrice + rangeSize / 2;
+            const newMinPrice = draggedPrice - rangeSize / 2;
+            
+            // Get data bounds
+            const allPrices = [
+              ...data.map(d => d.value),
+              ...liquidityData.map(d => d.price0)
+            ];
+            const dataMin = Math.min(...allPrices);
+            const dataMax = Math.max(...allPrices);
+            
+            // Only update state if range stays within data bounds
+            if (newMinPrice >= dataMin && newMaxPrice <= dataMax) {
+              setChartState(prev => ({ ...prev, minPrice: newMinPrice, maxPrice: newMaxPrice }));
+            }
+          })
+        );
       
       // Add max price indicator - show fast-forward icon if scrolled past, otherwise show drag handle
       if (isPastMaxHandle) {
