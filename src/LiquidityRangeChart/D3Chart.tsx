@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import * as d3 from 'd3';
 import { findClosestElementBinarySearch, formatPrice } from './utils/dataUtils';
 import { useResponsiveDimensions } from './hooks/useResponsiveDimensions';
@@ -62,6 +62,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
   
   // Initialize hooks
   useInitialView(data, liquidityData, setChartState, defaultState);
+  // Disabled pan/zoom for native scrolling approach
   useChartInteractions(svgRef, data, liquidityData, zoomLevel, panY, setChartState);
   
   // Tooltip state
@@ -131,7 +132,91 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
   };
 
 
-  // Calculate yScale outside useEffect so it's available for Brush component
+  // Calculate full height needed for all liquidity bars (like D3Chart2)
+  const barHeight = 3;
+  const barSpacing = 1;
+  const totalHeight = liquidityData.length * (barHeight + barSpacing);
+
+  // Create tick-based scale for exact positioning of liquidity bars
+  const baseTickScale = useMemo(() => {
+    return d3.scaleBand()
+      .domain(liquidityData.map((d: LiquidityDataPoint) => d.tick.toString()))
+      .range([totalHeight * zoomLevel, 0]) // Use zoomed total height, highest price at top, lowest at bottom  
+      .paddingInner(0.05); // Small padding between bars
+  }, [liquidityData, totalHeight, zoomLevel]);
+
+  // Create a wrapper that applies panY offset but preserves scale methods
+  const tickScale = useMemo(() => {
+    const scale = (tick: string) => {
+      const baseY = baseTickScale(tick);
+      return baseY !== undefined ? baseY + panY : 0;
+    };
+    
+    // Add the scale methods
+    scale.domain = () => baseTickScale.domain();
+    scale.bandwidth = () => baseTickScale.bandwidth();
+    scale.range = () => baseTickScale.range();
+    
+    return scale;
+  }, [baseTickScale, panY]);
+
+  // Helper function to convert price to Y position using closest tick
+  const priceToY = useCallback((price: number): number => {
+    if (!tickScale) return 0;
+    
+    // Find the closest liquidity data point to this price
+    const closest = liquidityData.reduce((prev, curr) => 
+      Math.abs(curr.price0 - price) < Math.abs(prev.price0 - price) ? curr : prev
+    );
+    
+    // Get the Y position from the band scale and add half bandwidth for center
+    const bandY = tickScale(closest.tick.toString()) || 0;
+    return bandY + (tickScale.bandwidth() / 2);
+  }, [liquidityData, tickScale]);
+
+  // Helper function to convert Y position back to price (replaces yScale.invert)
+  const yToPrice = useCallback((y: number): number => {
+    if (!tickScale) return 0;
+    
+    // Find the tick at this Y position
+    const tickValues = tickScale.domain();
+    let closestTick = tickValues[0];
+    let minDistance = Math.abs(y - (tickScale(tickValues[0]) || 0));
+    
+    for (const tick of tickValues) {
+      const tickY = tickScale(tick) || 0;
+      const centerY = tickY + (tickScale.bandwidth() / 2);
+      const distance = Math.abs(y - centerY);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestTick = tick;
+      }
+    }
+    
+    // Find the price for this tick
+    const tickData = liquidityData.find(d => d.tick.toString() === closestTick);
+    return tickData ? tickData.price0 : 0;
+  }, [liquidityData, tickScale]);
+
+  // Filter visible liquidity data based on viewport  
+  const visibleLiquidityData = useMemo(() => {
+    const viewportTop = 0;
+    const viewportBottom = dimensions.height;
+    
+    return liquidityData.filter(d => {
+      const tickY = tickScale(d.tick.toString());
+      const barHeight = tickScale.bandwidth();
+      
+      // Check if bar overlaps with viewport (including some padding for smooth scrolling)
+      const barTop = tickY;
+      const barBottom = tickY + barHeight;
+      
+      return barBottom >= viewportTop - 100 && barTop <= viewportBottom + 100;
+    });
+  }, [liquidityData, tickScale, dimensions.height]);
+
+  // Legacy yScale for backward compatibility with zoom/pan interactions
+  // This is used for calculating visible ranges and zoom behavior
   const yScale = useMemo(() => {
     const allPrices = [
       ...calculateAllPrices(data),
@@ -169,18 +254,19 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
     return d3.drag<SVGLineElement, unknown>()
       .on('drag', function(event) {
         const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
-        const newPrice = yScale.invert(newY);
+        const newPrice = yToPrice(newY);
         
-        // Update visual position immediately
+        // Update visual position to snap to nearest tick
+        const snapY = priceToY(newPrice);
         d3.select(this)
-          .attr('y1', newY)
-          .attr('y2', newY);
+          .attr('y1', snapY)
+          .attr('y2', snapY);
         
         // Determine which line represents min and max during drag
         const otherPrice = getOtherPrice();
         if (otherPrice === null) return;
         
-        const otherY = yScale(otherPrice);
+        const otherY = priceToY(otherPrice);
         let draggedMinPrice: number;
         let draggedMaxPrice: number;
         
@@ -224,7 +310,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       })
       .on('end', function(event) {
         const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
-        const newPrice = yScale.invert(newY);
+        const newPrice = yToPrice(newY);
         const otherPrice = getOtherPrice();
         if (otherPrice === null) return;
         
@@ -285,7 +371,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
     // Line generator for price
     const line = d3.line<{ date: Date; value: number }>()
       .x(d => xScale(d.date))
-      .y(d => yScale(d.value))
+      .y(d => priceToY(d.value))
       .curve(d3.curveMonotoneX);
 
     // Draw price line with conditional coloring
@@ -323,33 +409,22 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
     // Right side liquidity chart - inspired by Uniswap's approach
     const liquidityWidth = margin.right; // Use full margin width
     
-    // Use the same unified y scale for liquidity positioning
-    const liquidityYScale = yScale;
+    // Use the tick-based scale for liquidity positioning
+    const liquidityYScale = tickScale;
 
-    // Calculate current visible price range for filtering liquidity data
-    const currentPriceRange = priceExtent?.[1] ? priceExtent?.[1] - priceExtent?.[0] : 0;
-    const currentZoomedRange = currentPriceRange / zoomLevel;
-    const currentCenterPrice = priceExtent?.[0] ? priceExtent?.[0] + currentPriceRange * 0.5 + panY * currentPriceRange : 0;
-    const visibleMinPrice = currentCenterPrice - currentZoomedRange / 2;
-    const visibleMaxPrice = currentCenterPrice + currentZoomedRange / 2;
+    // With native scrolling, all data is rendered - no filtering needed
 
-    // Filter liquidity data to only entries within visible price range
-    const visibleLiquidityData = liquidityData.filter(d => 
-      d.price0 >= visibleMinPrice && d.price0 <= visibleMaxPrice
-    );
-
-    // X scale for liquidity amounts - scale based only on visible entries
-    const maxVisibleLiquidity = visibleLiquidityData.length > 0 
-      ? d3.max(visibleLiquidityData, d => d.activeLiquidity)
-      : d3.max(liquidityData, d => d.activeLiquidity); // Fallback if no visible data
+    // X scale for liquidity amounts - use all data to maintain consistent bar scaling
+    // This prevents bars from changing width when scrolling through different liquidity ranges
+    const maxLiquidity = d3.max(liquidityData, d => d.activeLiquidity) || 0;
 
     const liquidityXScale = d3.scaleLinear()
-      .domain([0, maxVisibleLiquidity || 0])
-      .range([0, liquidityWidth]); // Back to liquidity section width
+      .domain([0, maxLiquidity])
+      .range([0, liquidityWidth]);
 
     // Draw very thin grey horizontal liquidity bars using data join for better performance
     const bars = g.selectAll<SVGRectElement, LiquidityDataPoint>(`.${DATA_ELEMENT_CLASSES.LIQUIDITY_BAR}`)
-      .data(liquidityData, d => d.price0); // Use price as key for consistent updates
+      .data(visibleLiquidityData, d => d.price0); // Use price as key for consistent updates
     
     // Remove bars that are no longer needed
     bars.exit()
@@ -362,19 +437,20 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
     const enterBars = bars.enter()
       .append("rect")
       .attr("class", DATA_ELEMENT_CLASSES.LIQUIDITY_BAR)
-      .attr("height", 2)
       .attr('opacity', d => getOpacityForPrice(d.price0, minPrice, maxPrice))
       .attr("x", d => width + margin.right - liquidityXScale(d.activeLiquidity) - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET)
-      .attr("y", d => liquidityYScale(d.price0) - 0.5)
-      .attr("width", d => liquidityXScale(d.activeLiquidity));
+      .attr("y", d => liquidityYScale(d.tick.toString()) || 0)
+      .attr("width", d => liquidityXScale(d.activeLiquidity))
+      .attr("height", liquidityYScale.bandwidth());
     
     // Update existing bars with smooth transitions and conditional coloring
     bars.merge(enterBars)
       .transition()
       .duration(100)
       .attr("x", d => width + margin.right - liquidityXScale(d.activeLiquidity) - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET)
-      .attr("y", d => liquidityYScale(d.price0) - 0.5)
+      .attr("y", d => liquidityYScale(d.tick.toString()) || 0)
       .attr("width", d => liquidityXScale(d.activeLiquidity))
+      .attr("height", liquidityYScale.bandwidth())
       .attr("fill", d => getColorForPrice(d.price0, minPrice, maxPrice))
       .attr('opacity', d => getOpacityForPrice(d.price0, minPrice, maxPrice))
       .attr("cursor", "pointer")
@@ -405,8 +481,8 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       .on('drag', function(event) {
         const startY = (this as any)._startY;
         const currentY = event.y;
-        const startPrice = liquidityYScale.invert(startY);
-        const currentPrice = liquidityYScale.invert(currentY);
+        const startPrice = yToPrice(startY);
+        const currentPrice = yToPrice(currentY);
         
         // Determine new min/max based on drag direction
         const newMinPrice = Math.min(startPrice, currentPrice);
@@ -449,13 +525,13 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             visible: true,
             minTooltip: minData ? {
               x: fixedTooltipX,
-              y: liquidityYScale(constrainedMinPrice) + margin.top,
+              y: priceToY(constrainedMinPrice) + margin.top,
               data: minData,
               lineEndX: liquidityBarsEndX
             } : null,
             maxTooltip: maxData ? {
               x: fixedTooltipX,
-              y: liquidityYScale(constrainedMaxPrice) + margin.top,
+              y: priceToY(constrainedMaxPrice) + margin.top,
               data: maxData,
               lineEndX: liquidityBarsEndX
             } : null
@@ -475,7 +551,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         if ((this as any)._dragStartTooltip) {
           // Restore tooltip at current mouse position
           const mouseY = event.y + margin.top;
-          const hoveredPrice = liquidityYScale.invert(event.y);
+          const hoveredPrice = yToPrice(event.y);
           const closestData = findClosestLiquidityData(hoveredPrice);
           
           if (closestData) {
@@ -494,8 +570,8 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         
         const startY = (this as any)._startY;
         const endY = event.y;
-        const startPrice = liquidityYScale.invert(startY);
-        const endPrice = liquidityYScale.invert(endY);
+        const startPrice = yToPrice(startY);
+        const endPrice = yToPrice(endY);
         
         // Determine new min/max based on drag direction
         const newMinPrice = Math.min(startPrice, endPrice);
@@ -525,7 +601,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       .on("mouseenter", function(event) {
         // Find closest liquidity data point
         const mouseY = d3.pointer(event, this)[1];
-        const hoveredPrice = liquidityYScale.invert(mouseY);
+        const hoveredPrice = yToPrice(mouseY);
         
         // Find the closest data point
         let closestData = liquidityData[0];
@@ -560,7 +636,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       .on("mousemove", function(event) {
         // Update tooltip position as mouse moves
         const mouseY = d3.pointer(event, this)[1];
-        const hoveredPrice = liquidityYScale.invert(mouseY);
+        const hoveredPrice = yToPrice(mouseY);
         
         // Find the closest data point
         let closestData = liquidityData[0];
@@ -619,9 +695,18 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       // Remove existing range elements
       g.selectAll(".price-range-element").remove();
       
-      // Calculate current visible price range
-      const visibleMinPrice = yScale.invert(height);
-      const visibleMaxPrice = yScale.invert(0);
+      // Calculate current visible price range using tick-based approach
+      const topTick = tickScale ? tickScale.domain().find(tick => {
+        const tickY = tickScale(tick);
+        return tickY !== undefined && tickY <= 0;
+      }) : null;
+      const bottomTick = tickScale ? tickScale.domain().reverse().find(tick => {
+        const tickY = tickScale(tick);
+        return tickY !== undefined && tickY >= height;
+      }) : null;
+      
+      const visibleMaxPrice = topTick ? liquidityData.find(d => d.tick.toString() === topTick)?.price0 || 0 : 0;
+      const visibleMinPrice = bottomTick ? liquidityData.find(d => d.tick.toString() === bottomTick)?.price0 || 0 : 0;
       
       // Check if we're scrolled past the handles
       const isPastMaxHandle = maxPrice > visibleMaxPrice;
@@ -635,9 +720,9 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       g.append('rect')
         .attr('class', `price-range-element ${BACKGROUND_CLASSES.RANGE_INDICATOR}`)
         .attr('x', width + margin.right - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET)
-        .attr('y', yScale(maxPrice))
+        .attr('y', priceToY(maxPrice))
         .attr('width', CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET)
-        .attr('height', yScale(minPrice) - yScale(maxPrice))
+        .attr('height', priceToY(minPrice) - priceToY(maxPrice))
         .attr('fill', CHART_COLORS.PRIMARY_PINK)
         .attr('rx', 8)
         .attr('ry', 8);
@@ -661,7 +746,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         g.append('circle')
           .attr('class', `price-range-element ${DRAG_HANDLE_CLASSES.MAX_HANDLE}`)
           .attr('cx', width + margin.right - (CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET / 2))
-          .attr('cy', yScale(maxPrice) + 8)
+          .attr('cy', priceToY(maxPrice) + 8)
           .attr('r', 6)
           .attr('fill', 'white')
           .attr('stroke', 'rgba(0,0,0,0.1)')
@@ -671,7 +756,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
           .call(d3.drag<SVGCircleElement, unknown>()
             .on('drag', function(event) {
               const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
-              const newMaxPrice = yScale.invert(newY);
+              const newMaxPrice = yToPrice(newY);
               
               // Ensure max stays above min
               const constrainedMaxPrice = Math.max(newMaxPrice, minPrice || 0);
@@ -692,7 +777,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             })
             .on('end', function(event) {
               const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
-              const newMaxPrice = yScale.invert(newY);
+              const newMaxPrice = yToPrice(newY);
               const constrainedMaxPrice = Math.max(newMaxPrice, minPrice || 0);
               setChartState(prev => ({ ...prev, maxPrice: constrainedMaxPrice }));
             })
@@ -718,7 +803,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         g.append('circle')
           .attr('class', `price-range-element ${DRAG_HANDLE_CLASSES.MIN_HANDLE}`)
           .attr('cx', width + margin.right - (CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET / 2))
-          .attr('cy', yScale(minPrice) - 8)
+          .attr('cy', priceToY(minPrice) - 8)
           .attr('r', 6)
           .attr('fill', 'white')
           .attr('stroke', 'rgba(0,0,0,0.1)')
@@ -728,7 +813,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
           .call(d3.drag<SVGCircleElement, unknown>()
             .on('drag', function(event) {
               const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
-              const newMinPrice = yScale.invert(newY);
+              const newMinPrice = yToPrice(newY);
               
               // Ensure min stays below max
               const constrainedMinPrice = Math.min(newMinPrice, maxPrice || 0);
@@ -749,7 +834,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             })
             .on('end', function(event) {
               const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
-              const newMinPrice = yScale.invert(newY);
+              const newMinPrice = yToPrice(newY);
               const constrainedMinPrice = Math.min(newMinPrice, maxPrice || 0);
               setChartState(prev => ({ ...prev, minPrice: constrainedMinPrice }));
             })
@@ -757,7 +842,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       }
       
       // Add center drag indicator for moving entire range
-      const centerY = (yScale(maxPrice) + yScale(minPrice)) / 2;
+      const centerY = (priceToY(maxPrice) + priceToY(minPrice)) / 2;
       g.append('rect')
         .attr('class', `price-range-element ${DRAG_HANDLE_CLASSES.CENTER_HANDLE}`)
         .attr('x', width + margin.right - (CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET / 2) - 6) // Center the 12px width
@@ -774,14 +859,14 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         .call(d3.drag<SVGRectElement, unknown>()
           .on('start', function(event) {
             // Store the initial offset relative to the range center
-            const currentRangeCenterY = (yScale(maxPrice) + yScale(minPrice)) / 2;
+            const currentRangeCenterY = (priceToY(maxPrice) + priceToY(minPrice)) / 2;
             (this as any)._dragOffsetY = event.y - currentRangeCenterY;
           })
           .on('drag', function(event) {
             // Apply the stored offset to maintain consistent drag feel
             const adjustedY = event.y - (this as any)._dragOffsetY;
             const newCenterY = Math.max(-margin.top, Math.min(height + margin.bottom, adjustedY));
-            const draggedPrice = yScale.invert(newCenterY);
+            const draggedPrice = yToPrice(newCenterY);
             const rangeSize = maxPrice - minPrice;
             
             // Calculate new min/max based on dragged center position
@@ -817,7 +902,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             // Apply the same offset calculation for consistency
             const adjustedY = event.y - (this as any)._dragOffsetY;
             const newCenterY = Math.max(-margin.top, Math.min(height + margin.bottom, adjustedY));
-            const draggedPrice = yScale.invert(newCenterY);
+            const draggedPrice = yToPrice(newCenterY);
             const rangeSize = maxPrice - minPrice;
             
             // Calculate new min/max based on dragged center position
@@ -857,9 +942,9 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       g.append('rect')
         .attr('class', `price-range-element ${BACKGROUND_CLASSES.VISUAL_BG}`)
         .attr('x', -margin.left) // Extend left to cover the margin area
-        .attr('y', yScale(maxPrice))
+        .attr('y', priceToY(maxPrice))
         .attr('width', dimensions.width - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET) // Cover the entire SVG width
-        .attr('height', yScale(minPrice) - yScale(maxPrice))
+        .attr('height', priceToY(minPrice) - priceToY(maxPrice))
         .attr('fill', CHART_COLORS.PRIMARY_PINK)
         .attr('opacity', 0.2)
         .attr('stroke', 'none')
@@ -869,16 +954,16 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       g.append('rect')
         .attr('class', `price-range-element ${BACKGROUND_CLASSES.INTERACTIVE_BG}`)
         .attr('x', -margin.left) // Extend left to cover the margin area
-        .attr('y', yScale(maxPrice))
+        .attr('y', priceToY(maxPrice))
         .attr('width', width + margin.left + 10) // Stop before liquidity area
-        .attr('height', yScale(minPrice) - yScale(maxPrice))
+        .attr('height', priceToY(minPrice) - priceToY(maxPrice))
         .attr('fill', 'transparent') // Invisible, just for interactions
         .attr('stroke', 'none')
         .attr('cursor', 'move')
         .call(d3.drag<SVGRectElement, unknown>()
           .on('start', function(event) {
             // Store the initial click offset relative to the range center
-            const currentRangeCenterY = (yScale(maxPrice) + yScale(minPrice)) / 2;
+            const currentRangeCenterY = (priceToY(maxPrice) + priceToY(minPrice)) / 2;
             (this as any)._dragOffsetY = event.y - currentRangeCenterY;
             document.body.classList.add('dragging-range');
             document.body.style.setProperty('cursor', 'move', 'important');
@@ -887,7 +972,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             // Apply the stored offset to maintain consistent drag feel
             const adjustedY = event.y - (this as any)._dragOffsetY;
             const newCenterY = Math.max(0, Math.min(height, adjustedY));
-            const draggedPrice = yScale.invert(newCenterY);
+            const draggedPrice = yToPrice(newCenterY);
             const rangeSize = maxPrice - minPrice;
             
             // Calculate new min/max based on dragged center position
@@ -925,7 +1010,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             // Apply the same offset calculation for consistency
             const adjustedY = event.y - (this as any)._dragOffsetY;
             const newCenterY = Math.max(margin.top, Math.min(dimensions.height - margin.bottom, adjustedY));
-            const draggedPrice = yScale.invert(newCenterY);
+            const draggedPrice = yToPrice(newCenterY);
             const rangeSize = maxPrice - minPrice;
             
             // Calculate new min/max based on dragged center position
@@ -952,8 +1037,8 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         .attr('class', `price-range-element ${SOLID_PRICE_LINE_CLASSES.MIN_LINE}`)
         .attr('x1', -margin.left) // Start from left margin
         .attr('x2', dimensions.width - margin.left - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET) // Extend to right edge
-        .attr('y1', yScale(minPrice) + CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
-        .attr('y2', yScale(minPrice) + CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
+        .attr('y1', priceToY(minPrice) + CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
+        .attr('y2', priceToY(minPrice) + CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
         .attr('stroke', '#FF37C7')
         .attr('stroke-width', CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT)
         .attr('opacity', 0.08)
@@ -963,8 +1048,8 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         .attr('class', `price-range-element ${SOLID_PRICE_LINE_CLASSES.MAX_LINE}`)
         .attr('x1', -margin.left) // Start from left margin
         .attr('x2', dimensions.width - margin.left - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET) // Extend to right edge
-        .attr('y1', yScale(maxPrice) - CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
-        .attr('y2', yScale(maxPrice) - CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
+        .attr('y1', priceToY(maxPrice) - CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
+        .attr('y2', priceToY(maxPrice) - CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
         .attr('stroke', '#FF37C7')
         .attr('stroke-width', 3)
         .attr('opacity', 0.08)
@@ -974,8 +1059,8 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         .attr('class', `price-range-element ${TRANSPARENT_PRICE_LINE_CLASSES.MIN_LINE}`)
         .attr('x1', -margin.left) // Start from left margin
         .attr('x2', dimensions.width - margin.left - liquidityWidth) // Extend to right edge before liquidity section
-        .attr('y1', yScale(minPrice))
-        .attr('y2', yScale(minPrice))
+        .attr('y1', priceToY(minPrice))
+        .attr('y2', priceToY(minPrice))
         .attr('stroke', CHART_COLORS.BOUNDARY_LINE)
         .attr('stroke-width', CHART_DIMENSIONS.TRANSPARENT_MIN_MAX_LINE_HEIGHT)
         .attr('opacity', 0)
@@ -997,8 +1082,8 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         .attr('class', `price-range-element ${TRANSPARENT_PRICE_LINE_CLASSES.MAX_LINE}`)
         .attr('x1', -margin.left) // Start from left margin
         .attr('x2', dimensions.width - margin.left - liquidityWidth) // Extend to right edge before liquidity section
-        .attr('y1', yScale(maxPrice))
-        .attr('y2', yScale(maxPrice))
+        .attr('y1', priceToY(maxPrice))
+        .attr('y2', priceToY(maxPrice))
         .attr('stroke', CHART_COLORS.BOUNDARY_LINE)
         .attr('stroke-width', CHART_DIMENSIONS.TRANSPARENT_MIN_MAX_LINE_HEIGHT)
         .attr('opacity', 0)
@@ -1019,7 +1104,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       g.append('text')
         .attr('class', `price-range-element ${LABEL_CLASSES.MIN_LABEL}`)
         .attr('x', -margin.left + 12) // 12px from left border
-        .attr('y', yScale(minPrice) - 5)
+        .attr('y', priceToY(minPrice) - 5)
         .attr('font-size', '10px')
         .attr('fill', CHART_COLORS.BOUNDARY_LINE)
         .attr('font-weight', 'bold')
@@ -1029,7 +1114,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       g.append('text')
         .attr('class', `price-range-element ${LABEL_CLASSES.MAX_LABEL}`)
         .attr('x', -margin.left + 12) // 12px from left border
-        .attr('y', yScale(maxPrice) + 15)
+        .attr('y', priceToY(maxPrice) + 15)
         .attr('font-size', '10px')
         .attr('fill', CHART_COLORS.BOUNDARY_LINE)
         .attr('font-weight', 'bold')
@@ -1048,8 +1133,8 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         .attr('class', 'current-price-line')
         .attr('x1', -margin.left) // Start from left margin
         .attr('x2', dimensions.width - margin.left - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET) // Extend to right edge
-        .attr('y1', yScale(current))
-        .attr('y2', yScale(current))
+        .attr('y1', priceToY(current))
+        .attr('y2', priceToY(current))
         .attr('stroke', CHART_COLORS.CURRENT_PRICE_GREY)
         .attr('stroke-width', 1.5)
         .attr('stroke-linecap', 'round')
@@ -1060,7 +1145,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       g.append('text')
         .attr('class', 'current-price-label')
         .attr('x', -margin.left + 12) // 12px from left border
-        .attr('y', yScale(current) - 5)
+        .attr('y', priceToY(current) - 5)
         .attr('font-size', '10px')
         .attr('fill', CHART_COLORS.CURRENT_PRICE_GREY)
         .attr('font-weight', 'bold')
@@ -1083,7 +1168,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
           currentDot = g.append('circle')
             .attr('class', DATA_ELEMENT_CLASSES.CURRENT_PRICE_DOT)
             .attr('cx', xScale(lastDataPoint.date))
-            .attr('cy', yScale(lastDataPoint.value))
+            .attr('cy', priceToY(lastDataPoint.value))
             .attr('r', 4)
             .attr('opacity', 1);
         }
@@ -1102,7 +1187,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         .attr('x', -margin.left)
         .attr('y', 0)
         .attr('width', width + margin.left + 10)
-        .attr('height', yScale(maxPrice) - CHART_DIMENSIONS.TRANSPARENT_MIN_MAX_LINE_HEIGHT)
+        .attr('height', priceToY(maxPrice) - CHART_DIMENSIONS.TRANSPARENT_MIN_MAX_LINE_HEIGHT)
         .attr('fill', 'transparent')
         .attr('cursor', 'crosshair')
         .style('pointer-events', 'all')
@@ -1124,8 +1209,8 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             
             const startY = (this as any)._startY;
             const currentY = event.y;
-            const startPrice = yScale.invert(startY);
-            const currentPrice = yScale.invert(currentY);
+            const startPrice = yToPrice(startY);
+            const currentPrice = yToPrice(currentY);
             
             // Determine new min/max based on drag direction
             const newMinPrice = Math.min(startPrice, currentPrice);
@@ -1168,13 +1253,13 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
                 visible: true,
                 minTooltip: minData ? {
                   x: fixedTooltipX,
-                  y: yScale(constrainedMinPrice) + margin.top,
+                  y: priceToY(constrainedMinPrice) + margin.top,
                   data: minData,
                   lineEndX: liquidityBarsEndX
                 } : null,
                 maxTooltip: maxData ? {
                   x: fixedTooltipX,
-                  y: yScale(constrainedMaxPrice) + margin.top,
+                  y: priceToY(constrainedMaxPrice) + margin.top,
                   data: maxData,
                   lineEndX: liquidityBarsEndX
                 } : null
@@ -1192,8 +1277,8 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             
             const startY = (this as any)._startY;
             const endY = event.y;
-            const startPrice = yScale.invert(startY);
-            const endPrice = yScale.invert(endY);
+            const startPrice = yToPrice(startY);
+            const endPrice = yToPrice(endY);
             
             // Determine new min/max based on drag direction
             const newMinPrice = Math.min(startPrice, endPrice);
@@ -1222,9 +1307,9 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       g.append('rect')
         .attr('class', 'price-range-element below-range-area')
         .attr('x', -margin.left)
-        .attr('y', yScale(minPrice) + CHART_DIMENSIONS.TRANSPARENT_MIN_MAX_LINE_HEIGHT)
+        .attr('y', priceToY(minPrice) + CHART_DIMENSIONS.TRANSPARENT_MIN_MAX_LINE_HEIGHT)
         .attr('width', width + margin.left + 10)
-        .attr('height', height - yScale(minPrice))
+        .attr('height', height - priceToY(minPrice))
         .attr('fill', 'transparent')
         .attr('cursor', 'crosshair')
         .style('pointer-events', 'all')
@@ -1246,8 +1331,8 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             
             const startY = (this as any)._startY;
             const currentY = event.y;
-            const startPrice = yScale.invert(startY);
-            const currentPrice = yScale.invert(currentY);
+            const startPrice = yToPrice(startY);
+            const currentPrice = yToPrice(currentY);
             
             // Determine new min/max based on drag direction
             const newMinPrice = Math.min(startPrice, currentPrice);
@@ -1290,13 +1375,13 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
                 visible: true,
                 minTooltip: minData ? {
                   x: fixedTooltipX,
-                  y: yScale(constrainedMinPrice) + margin.top,
+                  y: priceToY(constrainedMinPrice) + margin.top,
                   data: minData,
                   lineEndX: liquidityBarsEndX
                 } : null,
                 maxTooltip: maxData ? {
                   x: fixedTooltipX,
-                  y: yScale(constrainedMaxPrice) + margin.top,
+                  y: priceToY(constrainedMaxPrice) + margin.top,
                   data: maxData,
                   lineEndX: liquidityBarsEndX
                 } : null
@@ -1314,8 +1399,8 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             
             const startY = (this as any)._startY;
             const endY = event.y;
-            const startPrice = yScale.invert(startY);
-            const endPrice = yScale.invert(endY);
+            const startPrice = yToPrice(startY);
+            const endPrice = yToPrice(endY);
             
             // Determine new min/max based on drag direction
             const newMinPrice = Math.min(startPrice, endPrice);
@@ -1341,7 +1426,8 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         );
     }
 
-  }, [data, liquidityData, zoomLevel, panY, yScale, current, currentTick, minPrice, maxPrice, dimensions]);
+
+  }, [data, liquidityData, current, currentTick, minPrice, maxPrice, dimensions, tickScale]);
 
   return (
     <div ref={containerRef} style={{ 
@@ -1368,6 +1454,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         maxWidth: '100%',
         margin: '0 auto 10px auto'
       }}>
+
         {/* Zoom Controls */}
         <div>
           <div style={{ marginBottom: '4px', fontSize: '12px', fontWeight: 'bold' }}>
@@ -1474,9 +1561,8 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
 
       <div style={{ 
         position: 'relative',
-        width: 'fit-content',
+        height: `${dimensions.height}px`,
         maxWidth: '100%',
-        overflow: 'hidden',
         margin: '0 auto'
       }}>
         <svg

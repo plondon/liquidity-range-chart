@@ -24,37 +24,31 @@ export function useChartInteractions(
     ];
     const priceExtent = d3.extent(allPrices);
     
-    // Setup wheel event handler
+    // Setup wheel event handler for tick-based scrolling
     const handleWheel = (event: WheelEvent) => {
       event.preventDefault();
       event.stopPropagation();
       
-      // Calculate current view bounds
-      const priceRange = priceExtent[1] && priceExtent[0] ? priceExtent[1] - priceExtent[0] : 0;
-      const zoomedRange = priceRange / zoomLevel;
-      const currentCenter = priceExtent[0] && priceExtent[0] ? priceExtent[0] + priceRange * 0.5 + panY * priceRange : 0;
-      
-      // Natural scroll sensitivity based on current view range
-      const scrollSensitivity = zoomedRange / 600; // Faster scrolling for larger ranges
-      const rawScrollAmount = event.deltaY * scrollSensitivity;
-      
-      // Apply scroll (invert deltaY for natural direction)
-      const scrollAmount = rawScrollAmount / priceRange; // Normalize to pan range
+      // Calculate scroll based on pixel movement in tick space
+      const scrollSensitivity = 2; // Pixels per scroll tick
+      const scrollAmount = -event.deltaY * scrollSensitivity; // Negative for natural scroll direction
       
       setChartState((prev) => {
-        const newPanY = prev.panY - scrollAmount;
+        const newPanY = prev.panY + scrollAmount;
         
-        // Dynamic bounds based on data and zoom level
-        const dataMin = Math.min(...allPrices);
-        const dataMax = Math.max(...allPrices);
-        const halfZoomedRange = zoomedRange / 2;
+        // Calculate bounds based on total height and viewport
+        const svgElement = svgRef.current;
+        if (!svgElement) return prev;
         
-        // Calculate max pan bounds to keep view within data
-        const maxPanUp = (dataMax - halfZoomedRange - (priceExtent[0] && priceExtent[0] ? priceExtent[0] + priceRange * 0.5 : 0)) / priceRange;
-        const maxPanDown = (dataMin + halfZoomedRange - (priceExtent[0] && priceExtent[0] ? priceExtent[0] + priceRange * 0.5 : 0)) / priceRange;
+        const viewportHeight = svgElement.clientHeight;
+        const totalContentHeight = liquidityData.length * 4 * zoomLevel; // barHeight + spacing
+        
+        // Bounds: show from top of content to bottom of content
+        const minPanY = Math.min(0, viewportHeight - totalContentHeight);
+        const maxPanY = 0;
         
         // Constrain to bounds
-        const constrainedPanY = Math.max(maxPanDown, Math.min(maxPanUp, newPanY));
+        const constrainedPanY = Math.max(minPanY, Math.min(maxPanY, newPanY));
         
         return { ...prev, panY: constrainedPanY };
       });
@@ -75,24 +69,25 @@ export function useChartInteractions(
     const handleTouchMove = (event: TouchEvent) => {
       if (event.touches.length === 1 && touchStartY !== null) {
         const currentTouchY = event.touches[0].clientY;
-        const deltaY = lastTouchY && currentTouchY ? lastTouchY - currentTouchY : 0; // Inverted for natural scrolling
+        const deltaY = lastTouchY && currentTouchY ? currentTouchY - lastTouchY : 0; // Natural touch direction
         
-        // Convert touch movement to pan
-        const priceRange = priceExtent[1] && priceExtent[0] ? priceExtent[1] - priceExtent[0] : 0;
-        const zoomedRange = priceRange / zoomLevel;
-        const touchSensitivity = zoomedRange / 400; // Scale based on current zoom
-        const scrollAmount = deltaY * touchSensitivity / priceRange;
+        // Use same pixel-based scrolling as wheel
+        const scrollAmount = deltaY;
         
         setChartState(prev => {
           const newPanY = prev.panY + scrollAmount;
           
-          // Apply bounds like in wheel handler
-          const halfZoomedRange = zoomedRange / 2;
-          const dataMin = Math.min(...allPrices);
-          const dataMax = Math.max(...allPrices);
-          const maxPanUp = (dataMax - halfZoomedRange - (priceExtent[0] && priceExtent[0] ? priceExtent[0] + priceRange * 0.5 : 0)) / priceRange;
-          const maxPanDown = (dataMin + halfZoomedRange - (priceExtent[0] && priceExtent[0] ? priceExtent[0] + priceRange * 0.5 : 0)) / priceRange;
-          const constrainedPanY = Math.max(maxPanDown, Math.min(maxPanUp, newPanY));
+          // Apply same bounds as wheel handler
+          const svgElement = svgRef.current;
+          if (!svgElement) return prev;
+          
+          const viewportHeight = svgElement.clientHeight;
+          const totalContentHeight = liquidityData.length * 4 * zoomLevel;
+          
+          const minPanY = Math.min(0, viewportHeight - totalContentHeight);
+          const maxPanY = 0;
+          
+          const constrainedPanY = Math.max(minPanY, Math.min(maxPanY, newPanY));
           
           return { ...prev, panY: constrainedPanY };
         });

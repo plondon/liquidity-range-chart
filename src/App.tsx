@@ -36,8 +36,8 @@ const App: React.FC = () => {
             <div style={{ fontSize: '12px' }}>Min Price: {minPrice}</div>
             <div style={{ fontSize: '12px' }}>Max Price: {maxPrice}</div>
         </div>
-        {/* <D3Chart data={priceData} liquidityData={liquidityData} onHoverTick={handleHoverTick} onMinPrice={handleMinPrice} onMaxPrice={handleMaxPrice} /> */}
-        <D3Chart2 data={priceData} onHoverTick={handleHoverTick}  />
+        <D3Chart data={priceData} liquidityData={liquidityData} onHoverTick={handleHoverTick} onMinPrice={handleMinPrice} onMaxPrice={handleMaxPrice} />
+        {/* <D3Chart2 data={priceData} onHoverTick={handleHoverTick}  /> */}
       </header>
     </div>
   );
