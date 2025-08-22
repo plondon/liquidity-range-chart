@@ -15,21 +15,21 @@ export const BACKGROUND_CLASSES = {
 export const BACKGROUND_SLICE: UpdateSlice = {
   name: 'backgrounds',
   update: (ctx) => {
-    const { g, minPrice, maxPrice, yScale } = ctx;
+    const { g, minPrice, maxPrice, priceToY } = ctx;
     
     // Update interactive background (invisible, used for drag interactions)
     g.select(`.${BACKGROUND_CLASSES.INTERACTIVE_BG}`)
-      .attr('y', yScale(maxPrice))
-      .attr('height', yScale(minPrice) - yScale(maxPrice));
+      .attr('y', priceToY(maxPrice))
+      .attr('height', priceToY(minPrice) - priceToY(maxPrice));
     
     // Update visual background (pink overlay showing selected range)
     g.select(`.${BACKGROUND_CLASSES.VISUAL_BG}`)
-      .attr('y', yScale(maxPrice))
-      .attr('height', yScale(minPrice) - yScale(maxPrice));
+      .attr('y', priceToY(maxPrice))
+      .attr('height', priceToY(minPrice) - priceToY(maxPrice));
     
     // Update range indicator line (pink bar on the right side)
     g.select(`.${BACKGROUND_CLASSES.RANGE_INDICATOR}`)
-      .attr('y', yScale(maxPrice))
-      .attr('height', yScale(minPrice) - yScale(maxPrice));
+      .attr('y', priceToY(maxPrice))
+      .attr('height', priceToY(minPrice) - priceToY(maxPrice));
   }
 };

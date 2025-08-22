@@ -14,16 +14,16 @@ export const LABEL_CLASSES = {
 export const LABELS_SLICE: UpdateSlice = {
   name: 'labels',
   update: (ctx) => {
-    const { g, minPrice, maxPrice, yScale, margin } = ctx;
+    const { g, minPrice, maxPrice, priceToY, margin } = ctx;
     
     // Update price labels with current values
     g.select(`.${LABEL_CLASSES.MIN_LABEL}`)
       .attr('x', -margin.left + 12) // 12px from left border
-      .attr('y', yScale(minPrice) - 5)
+      .attr('y', priceToY(minPrice) - 5)
       .text(`Min: ${minPrice.toFixed(0)}`);
     g.select(`.${LABEL_CLASSES.MAX_LABEL}`)
       .attr('x', -margin.left + 12) // 12px from left border  
-      .attr('y', yScale(maxPrice) + 15)
+      .attr('y', priceToY(maxPrice) + 15)
       .text(`Max: ${maxPrice.toFixed(0)}`);
   }
 };

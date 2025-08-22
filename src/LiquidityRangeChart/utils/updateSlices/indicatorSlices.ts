@@ -29,32 +29,32 @@ export const SOLID_PRICE_LINE_CLASSES = {
 export const TRANSPARENT_PRICE_LINES_SLICE: UpdateSlice = {
   name: 'priceLines',
   update: (ctx) => {
-    const { g, minPrice, maxPrice, yScale } = ctx;
+    const { g, minPrice, maxPrice, priceToY } = ctx;
     
     // Update min/max lines (hidden but still used for dragging)
     g.select(`.${TRANSPARENT_PRICE_LINE_CLASSES.MIN_LINE}`)
-      .attr('y1', yScale(minPrice))
-      .attr('y2', yScale(minPrice));
+      .attr('y1', priceToY(minPrice))
+      .attr('y2', priceToY(minPrice));
       
     g.select(`.${TRANSPARENT_PRICE_LINE_CLASSES.MAX_LINE}`)
-      .attr('y1', yScale(maxPrice))
-      .attr('y2', yScale(maxPrice));
+      .attr('y1', priceToY(maxPrice))
+      .attr('y2', priceToY(maxPrice));
   }
 };
 
 export const SOLID_PRICE_LINES_SLICE: UpdateSlice = {
   name: 'solidPriceLines',
   update: (ctx) => {
-    const { g, minPrice, maxPrice, yScale } = ctx;
+    const { g, minPrice, maxPrice, priceToY } = ctx;
 
     // Update min/max lines (solid)
   g.select(`.${SOLID_PRICE_LINE_CLASSES.MIN_LINE}`)
-    .attr('y1', yScale(minPrice) + CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
-    .attr('y2', yScale(minPrice) + CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2);
+    .attr('y1', priceToY(minPrice) + CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
+    .attr('y2', priceToY(minPrice) + CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2);
 
   g.select(`.${SOLID_PRICE_LINE_CLASSES.MAX_LINE}`)
-      .attr('y1', yScale(maxPrice) - CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
-      .attr('y2', yScale(maxPrice) - CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2);
+      .attr('y1', priceToY(maxPrice) - CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
+      .attr('y2', priceToY(maxPrice) - CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2);
   }
 };
 
@@ -66,16 +66,16 @@ export const SOLID_PRICE_LINES_SLICE: UpdateSlice = {
 export const DRAG_HANDLES_SLICE: UpdateSlice = {
   name: 'dragHandles',
   update: (ctx) => {
-    const { g, minPrice, maxPrice, yScale } = ctx;
+    const { g, minPrice, maxPrice, priceToY } = ctx;
     
     // Update drag indicators - positioned inside the range indicator
     g.select(`.${DRAG_HANDLE_CLASSES.MAX_HANDLE}`)
-      .attr('cy', yScale(maxPrice) + 8);
+      .attr('cy', priceToY(maxPrice) + 8);
     g.select(`.${DRAG_HANDLE_CLASSES.MIN_HANDLE}`)
-      .attr('cy', yScale(minPrice) - 8);
+      .attr('cy', priceToY(minPrice) - 8);
     g.select(`.${DRAG_HANDLE_CLASSES.CENTER_HANDLE}`)
-      .attr('y', (yScale(maxPrice) + yScale(minPrice)) / 2 - 3);
+      .attr('y', (priceToY(maxPrice) + priceToY(minPrice)) / 2 - 3);
     g.selectAll(`.${DRAG_HANDLE_CLASSES.CENTER_LINES}`)
-      .attr('y', (yScale(maxPrice) + yScale(minPrice)) / 2 - 1.5);
+      .attr('y', (priceToY(maxPrice) + priceToY(minPrice)) / 2 - 1.5);
   }
 };

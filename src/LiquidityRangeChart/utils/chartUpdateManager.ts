@@ -4,7 +4,7 @@ export interface UpdateContext {
   g: d3.Selection<SVGGElement, unknown, null, undefined>;
   minPrice: number;
   maxPrice: number;
-  yScale: d3.ScaleLinear<number, number>;
+  priceToY: (price: number) => number;
   width: number;
   margin: { top: number; right: number; bottom: number; left: number };
   dimensions: { width: number; height: number };

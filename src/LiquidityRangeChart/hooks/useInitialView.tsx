@@ -8,39 +8,59 @@ export function useInitialView(data: PriceDataPoint[], liquidityData: LiquidityD
   
   useEffect(() => {
     if (!initialViewSet && data && liquidityData && liquidityData.length > 0) {
-      const allPrices = [
-        ...data.map(d => d.value),
-        ...liquidityData.map(d => d.price0)
-      ];
-      const priceExtent = d3.extent(allPrices);
-      const priceRange = priceExtent?.[1] && priceExtent?.[0] ? priceExtent[1] - priceExtent[0] : 0;
-      console.log('priceExtent', priceExtent);
-      console.log('priceRange', priceRange);
+      // Find current price tick index in the liquidity data
+      const currentPrice = data[data.length - 1]?.value || 0;
+      const currentTickIndex = liquidityData.findIndex(d => 
+        Math.abs(d.price0 - currentPrice) === Math.min(...liquidityData.map(item => Math.abs(item.price0 - currentPrice)))
+      );
       
-      // Filter out extreme outliers for initial view - focus on middle 20% of liquidity
-      const liquidityPrices = liquidityData.map(d => d.price0).sort((a, b) => a - b);
-      const percentile20 = liquidityPrices[Math.floor(liquidityPrices.length * 0.2)];
-      const percentile80 = liquidityPrices[Math.floor(liquidityPrices.length * 0.8)];
+      // Set initial zoom based on showing a meaningful price range around current price
+      const priceValues = data.map(d => d.value);
+      const minDataPrice = Math.min(...priceValues);
+      const maxDataPrice = Math.max(...priceValues);
+      const totalPriceRange = maxDataPrice - minDataPrice;
       
-      // Set initial zoom to focus on the 20-80% range of liquidity with tighter view
-      const focusRange = percentile80 - percentile20;
-      const desiredZoom = Math.min(priceRange / (focusRange * 1), 25); // Show ~1x the focus range, max 25x zoom
+      // Show 100% of the total price range initially for a complete overview
+      const desiredViewRange = totalPriceRange * 1.0;
       
-      // Center the view on the current price (last data point)
-      const currentPrice = data[data.length - 1]?.value;
-      const originalCenter = priceExtent?.[0] && priceExtent?.[0] ? priceExtent[0] + priceRange * 0.5 : 0;
-      const panOffset = (currentPrice - originalCenter) / priceRange;
+      // Find how many ticks span this price range around current price
+      const targetMinPrice = currentPrice - desiredViewRange / 2;
+      const targetMaxPrice = currentPrice + desiredViewRange / 2;
       
-      // Set default brush range - use a symmetrical range around current price
-      // Use 10% of the total price range for the brush range (tighter)
-      const brushRangeSize = priceRange * 0.1;
-      const defaultMinPrice = currentPrice - brushRangeSize / 2;
-      const defaultMaxPrice = currentPrice + brushRangeSize / 2;
+      // Find ticks in this price range
+      const ticksInRange = liquidityData.filter(d => 
+        d.price0 >= targetMinPrice && d.price0 <= targetMaxPrice
+      );
+      
+      // Calculate zoom to fit this many ticks in viewport (zoom OUT to show more)
+      const viewportHeight = 400; // pixels
+      const barHeight = 4; // pixels per tick
+      const ticksVisibleInViewport = viewportHeight / barHeight; // ~100 ticks fit in viewport
+      
+      // Use same logic as Center Range - zoom out to fit the range
+      // Add extra zoom-out factor to ensure everything is visible
+      const requiredTicks = ticksInRange.length * 1.5; // Add 50% more space
+      const calculatedZoom = ticksVisibleInViewport / requiredTicks;
+      
+      // Ensure we're zoomed out enough (max zoom of 0.5 for initial view)
+      const desiredZoom = Math.min(calculatedZoom, 0.5);
+      
+      // Calculate panY to center the current price in the viewport  
+      const totalContentHeight = liquidityData.length * barHeight * desiredZoom;
+      const currentTickY = (liquidityData.length - 1 - currentTickIndex) * barHeight * desiredZoom;
+      const centerPanY = (viewportHeight / 2) - currentTickY;
+      
+      // Set default brush range around current price
+      // Find ticks within a reasonable range around current price
+      const currentPriceValue = liquidityData[currentTickIndex]?.price0 || currentPrice;
+      const rangeSize = Math.abs(liquidityData[0]?.price0 - liquidityData[liquidityData.length - 1]?.price0) * 0.05; // 5% of total range
+      const defaultMinPrice = currentPriceValue - rangeSize / 2;
+      const defaultMaxPrice = currentPriceValue + rangeSize / 2;
       
       // Update both current state and default state
       const newDefaultState = {
         zoomLevel: desiredZoom,
-        panY: panOffset,
+        panY: centerPanY,
         minPrice: defaultMinPrice,
         maxPrice: defaultMaxPrice
       };

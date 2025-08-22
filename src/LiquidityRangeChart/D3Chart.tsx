@@ -174,7 +174,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
     return bandY + (tickScale.bandwidth() / 2);
   }, [liquidityData, tickScale]);
 
-  // Helper function to convert Y position back to price (replaces yScale.invert)
+  // Helper function to convert Y position back to price
   const yToPrice = useCallback((y: number): number => {
     if (!tickScale) return 0;
     
@@ -215,35 +215,13 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
     });
   }, [liquidityData, tickScale, dimensions.height]);
 
-  // Legacy yScale for backward compatibility with zoom/pan interactions
-  // This is used for calculating visible ranges and zoom behavior
-  const yScale = useMemo(() => {
-    const allPrices = [
-      ...calculateAllPrices(data),
-      ...liquidityData.map(d => d.price0)
-    ];
-    const priceExtent = d3.extent(allPrices);
-    
-    if (!isPriceExtentValid(priceExtent)) return null;
-    
-    const priceRange = priceExtent[1] - priceExtent[0];
-    const zoomedRange = priceRange / zoomLevel;
-    const centerPrice = priceExtent[0] + priceRange * 0.5 + panY * priceRange;
-    
-    return d3.scaleLinear()
-      .domain([
-        centerPrice - zoomedRange / 2,
-        centerPrice + zoomedRange / 2
-      ])
-      .range([dimensions.height, 0]);
-  }, [data, liquidityData, zoomLevel, panY, dimensions]);
 
 
   // Shared drag behavior factory for price lines
   const createPriceLineDrag = (
     lineType: 'min' | 'max',
     g: d3.Selection<SVGGElement, unknown, null, undefined>,
-    yScale: d3.ScaleLinear<number, number>,
+    priceToYFunc: (price: number) => number,
     margin: { top: number; right: number; bottom: number; left: number },
     height: number,
     dimensions: { width: number; height: number },
@@ -299,7 +277,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
           g,
           minPrice: draggedMinPrice,
           maxPrice: draggedMaxPrice,
-          yScale,
+          priceToY,
           width: dimensions.width - margin.left - margin.right,
           margin,
           dimensions,
@@ -330,7 +308,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
   };
 
   useEffect(() => {
-    if (!data || !liquidityData || !yScale) return;
+    if (!data || !liquidityData || !tickScale) return;
 
     const svg = d3.select(svgRef.current);
     svg.selectAll("g").remove(); // Only remove D3-created elements, not React elements
@@ -506,7 +484,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             g,
             minPrice: constrainedMinPrice,
             maxPrice: constrainedMaxPrice,
-            yScale,
+            priceToY,
             width,
             margin,
             dimensions,
@@ -766,7 +744,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
                 g,
                 minPrice: minPrice || 0,
                 maxPrice: constrainedMaxPrice,
-                yScale,
+                priceToY,
                 width: dimensions.width - margin.left - margin.right,
                 margin,
                 dimensions,
@@ -823,7 +801,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
                 g,
                 minPrice: constrainedMinPrice,
                 maxPrice: maxPrice || 0,
-                yScale,
+                priceToY,
                 width,
                 margin,
                 dimensions,
@@ -888,7 +866,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
                 g,
                 minPrice: newMinPrice,
                 maxPrice: newMaxPrice,
-                yScale,
+                priceToY,
                 width,
                 margin,
                 dimensions,
@@ -994,7 +972,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
                 g,
                 minPrice: newMinPrice,
                 maxPrice: newMaxPrice,
-                yScale,
+                priceToY,
                 width,
                 margin,
                 dimensions,
@@ -1068,7 +1046,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         .call(createPriceLineDrag(
           'min',
           g,
-          yScale,
+          priceToY,
           margin,
           height,
           dimensions,
@@ -1091,7 +1069,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         .call(createPriceLineDrag(
           'max',
           g,
-          yScale,
+          priceToY,
           margin,
           height,
           dimensions,
@@ -1234,7 +1212,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
                 g,
                 minPrice: constrainedMinPrice,
                 maxPrice: constrainedMaxPrice,
-                yScale,
+                priceToY,
                 width,
                 margin,
                 dimensions,
@@ -1356,7 +1334,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
                 g,
                 minPrice: constrainedMinPrice,
                 maxPrice: constrainedMaxPrice,
-                yScale,
+                priceToY,
                 width,
                 margin,
                 dimensions,
