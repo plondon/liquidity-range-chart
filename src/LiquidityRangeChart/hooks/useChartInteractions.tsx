@@ -24,12 +24,13 @@ export function useChartInteractions(
       
       // Check if this is a pinch gesture (Ctrl+wheel or trackpad pinch)
       if (event.ctrlKey || Math.abs(event.deltaY) > 50) {
-        // Handle pinch-to-zoom
+        // Handle pinch-to-zoom with more natural scaling
         const rect = svgElement.getBoundingClientRect();
         const centerY = event.clientY - rect.top;
         
-        // Calculate zoom based on wheel delta
-        const zoomFactor = event.deltaY > 0 ? 0.9 : 1.1; // Zoom out/in
+        // Calculate zoom based on wheel delta - more responsive and natural feel
+        const deltaScale = -event.deltaY * 0.002; // Convert delta to scale change
+        const zoomFactor = Math.max(0.5, Math.min(2.0, 1 + deltaScale)); // Clamp between 0.5x and 2x per gesture
         
         setChartState(prev => {
           const newZoomLevel = Math.max(0.01, Math.min(50, prev.zoomLevel * zoomFactor));
@@ -82,6 +83,9 @@ export function useChartInteractions(
     let initialPinchDistance: number | null = null;
     let lastPinchDistance: number | null = null;
     let isPinching = false;
+    let initialZoomLevel: number | null = null;
+    let lastPinchTime: number | null = null;
+    let lastFrameTime: number | null = null;
     
     // Helper to calculate distance between two touches
     const getTouchDistance = (touches: TouchList): number => {
@@ -96,6 +100,9 @@ export function useChartInteractions(
         isPinching = true;
         initialPinchDistance = getTouchDistance(event.touches);
         lastPinchDistance = initialPinchDistance;
+        initialZoomLevel = zoomLevel; // Store initial zoom level for scale-based calculation
+        lastPinchTime = performance.now();
+        lastFrameTime = lastPinchTime;
         event.preventDefault();
       } else if (event.touches.length === 1 && !isPinching) {
         // Single finger - pan
@@ -106,24 +113,48 @@ export function useChartInteractions(
     };
     
     const handleTouchMove = (event: TouchEvent) => {
-      if (event.touches.length === 2 && isPinching) {
-        // Handle pinch zoom
+      if (event.touches.length === 2 && isPinching && initialPinchDistance && initialZoomLevel && lastPinchDistance && lastFrameTime) {
+        // Handle pinch zoom - velocity-based scaling that responds to gesture speed
         const currentDistance = getTouchDistance(event.touches);
-        const scale = currentDistance / (lastPinchDistance || currentDistance);
+        const currentTime = performance.now();
+        const deltaTime = currentTime - lastFrameTime;
+        
+        // Calculate velocity of pinch gesture - use raw distance change between frames
+        const distanceChange = Math.abs(currentDistance - lastPinchDistance);
+        
+        // Base scale from gesture
+        const totalScale = currentDistance / initialPinchDistance;
+        
+        // Apply aggressive velocity boost based on finger movement speed
+        let velocityBoost = 1;
+        if (distanceChange > 2) {
+          velocityBoost = Math.min(distanceChange * 2, 20); // Up to 20x boost for fast movements
+        }
+        
+        // Apply the boost more aggressively
+        let baseScale: number;
+        if (totalScale > 1) {
+          // Zooming in
+          const scaleAmount = (totalScale - 1) * velocityBoost;
+          baseScale = 1 + scaleAmount;
+        } else {
+          // Zooming out  
+          const scaleAmount = (1 - totalScale) * velocityBoost;
+          baseScale = 1 - scaleAmount;
+        }
         
         // Calculate center point between fingers for zoom focus
         const svgElement = svgRef.current;
         if (!svgElement) return;
         
         const rect = svgElement.getBoundingClientRect();
-        const centerX = (event.touches[0].clientX + event.touches[1].clientX) / 2 - rect.left;
         const centerY = (event.touches[0].clientY + event.touches[1].clientY) / 2 - rect.top;
         
         setChartState(prev => {
-          // Apply zoom with bounds
-          const newZoomLevel = Math.max(0.01, Math.min(50, prev.zoomLevel * scale));
+          // Apply zoom with bounds - velocity-responsive scaling
+          const newZoomLevel = Math.max(0.01, Math.min(50, (initialZoomLevel || prev.zoomLevel) * baseScale));
           
-          // Adjust panY to keep pinch center fixed (same logic as zoom buttons)
+          // Adjust panY to keep pinch center fixed during zoom
           const zoomRatio = newZoomLevel / prev.zoomLevel;
           const newPanY = centerY - (centerY - prev.panY) * zoomRatio;
           
@@ -137,7 +168,10 @@ export function useChartInteractions(
           return { ...prev, zoomLevel: newZoomLevel, panY: constrainedPanY };
         });
         
+        // Update tracking variables
         lastPinchDistance = currentDistance;
+        lastFrameTime = currentTime;
+        
         event.preventDefault();
       } else if (event.touches.length === 1 && !isPinching && touchStartY !== null) {
         // Single finger pan (existing logic)
@@ -176,6 +210,9 @@ export function useChartInteractions(
         isPinching = false;
         initialPinchDistance = null;
         lastPinchDistance = null;
+        initialZoomLevel = null;
+        lastPinchTime = null;
+        lastFrameTime = null;
       }
       
       if (event.touches.length === 0) {
@@ -188,27 +225,47 @@ export function useChartInteractions(
     };
     
     // Add desktop trackpad/touchpad pinch support
+    let gestureStartZoomLevel: number | null = null;
+    let lastGestureScale: number = 1;
+    let lastGestureTime: number | null = null;
+    
     const handleGestureStart = (event: any) => {
+      gestureStartZoomLevel = zoomLevel; // Store initial zoom level
+      lastGestureScale = 1;
+      lastGestureTime = performance.now();
       event.preventDefault();
     };
     
     const handleGestureChange = (event: any) => {
       event.preventDefault();
       
+      if (!gestureStartZoomLevel || !lastGestureTime) return;
+      
+      // Calculate velocity of trackpad gesture
+      const currentTime = performance.now();
+      const deltaTime = currentTime - lastGestureTime;
+      const currentScale = event.scale;
+      
+      // Calculate scale velocity (rate of scale change)
+      const scaleChange = Math.abs(currentScale - lastGestureScale);
+      const scaleVelocity = deltaTime > 0 ? scaleChange / deltaTime : 0;
+      
       // Get the center of the gesture for zoom focus
       const rect = svgElement.getBoundingClientRect();
       const centerY = (event.clientY - rect.top) || (rect.height / 2);
       
-      // Calculate zoom based on gesture scale
-      const scale = event.scale;
+      // Apply velocity-based sensitivity to trackpad gesture - much more aggressive
+      const velocityMultiplier = 1 + Math.min(scaleVelocity * 20000, 30); // Extremely aggressive for fast trackpad gestures
+      const baseScale = currentScale > 1 ? 
+        1 + (currentScale - 1) * velocityMultiplier : // Zoom in
+        1 - (1 - currentScale) * velocityMultiplier;   // Zoom out
       
       setChartState(prev => {
-        // Calculate new zoom level
-        const baseZoom = prev.zoomLevel;
-        const newZoomLevel = Math.max(0.01, Math.min(50, baseZoom * scale));
+        // Apply zoom with velocity-responsive scaling
+        const newZoomLevel = Math.max(0.01, Math.min(50, (gestureStartZoomLevel || prev.zoomLevel) * baseScale));
         
         // Adjust panY to keep gesture center fixed
-        const zoomRatio = newZoomLevel / baseZoom;
+        const zoomRatio = newZoomLevel / prev.zoomLevel;
         const newPanY = centerY - (centerY - prev.panY) * zoomRatio;
         
         // Apply bounds to panY
@@ -220,9 +277,16 @@ export function useChartInteractions(
         
         return { ...prev, zoomLevel: newZoomLevel, panY: constrainedPanY };
       });
+      
+      // Update tracking variables
+      lastGestureScale = currentScale;
+      lastGestureTime = currentTime;
     };
     
     const handleGestureEnd = (event: any) => {
+      gestureStartZoomLevel = null; // Reset gesture state
+      lastGestureScale = 1;
+      lastGestureTime = null;
       event.preventDefault();
     };
 
