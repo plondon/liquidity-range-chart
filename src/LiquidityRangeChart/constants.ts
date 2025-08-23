@@ -46,6 +46,7 @@ export const CHART_DIMENSIONS = {
   DRAG_HANDLE_SIZE: 8,
   PRICE_LABEL_OFFSET: 68,
   DRAG_BOUNDARY_MARGIN: 10,
+  RANGE_INDICATOR_MIN_HEIGHT: 48,
 } as const;
 
 // Typography Constants  

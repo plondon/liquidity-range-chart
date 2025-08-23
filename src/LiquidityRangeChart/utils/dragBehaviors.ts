@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { chartUpdateManager } from './chartUpdateManager';
 import { ChartState } from '../hooks/useChartState';
-import { CHART_COLORS } from '../constants';
+import { CHART_COLORS, CHART_DIMENSIONS } from '../constants';
 
 interface DragBehaviorOptions {
   lineType: 'min' | 'max';
@@ -47,49 +47,84 @@ export function createSharedPriceDragBehavior<T extends Element>(
       const otherPrice = getOtherPrice();
       if (thisPrice === null || otherPrice === null) return;
 
-      // Update visual position to snap to nearest tick for lines
-      const snapY = priceToY(newPrice);
+      const otherY = priceToY(otherPrice);
+      const isMinLine = lineType === 'min';
+      
+      // Calculate the actual pixel distance between lines
+      const actualDistance = Math.abs(newY - otherY);
+      
+      // Determine if we're in normal or swapped configuration
+      const linesCrossed = isMinLine ? (newY < otherY) : (newY > otherY);
+      
+      let finalMinPrice: number;
+      let finalMaxPrice: number;
+      let visualSnapY = priceToY(newPrice);
+      
+      // Apply minimum height constraint logic
+      if (actualDistance < CHART_DIMENSIONS.RANGE_INDICATOR_MIN_HEIGHT) {
+        // We're within the minimum threshold - need to constrain
+        if (linesCrossed) {
+          // Lines would cross - check if continuing drag creates sufficient space after swap
+          const swappedMinPrice = isMinLine ? otherPrice : newPrice;
+          const swappedMaxPrice = isMinLine ? newPrice : otherPrice;
+          const swappedDistance = Math.abs(priceToY(swappedMaxPrice) - priceToY(swappedMinPrice));
+          
+          if (swappedDistance >= CHART_DIMENSIONS.RANGE_INDICATOR_MIN_HEIGHT) {
+            // Resume normal behavior after swap - sufficient space
+            finalMinPrice = swappedMinPrice;
+            finalMaxPrice = swappedMaxPrice;
+          } else {
+            // Still too close even after swap - maintain minimum height
+            const constrainedY = isMinLine 
+              ? otherY + CHART_DIMENSIONS.RANGE_INDICATOR_MIN_HEIGHT 
+              : otherY - CHART_DIMENSIONS.RANGE_INDICATOR_MIN_HEIGHT;
+            const constrainedPrice = yToPrice(constrainedY);
+            
+            finalMinPrice = isMinLine ? constrainedPrice : otherPrice;
+            finalMaxPrice = isMinLine ? otherPrice : constrainedPrice;
+            visualSnapY = constrainedY;
+          }
+        } else {
+          // Lines haven't crossed - constrain to minimum height
+          const constrainedY = isMinLine 
+            ? otherY + CHART_DIMENSIONS.RANGE_INDICATOR_MIN_HEIGHT 
+            : otherY - CHART_DIMENSIONS.RANGE_INDICATOR_MIN_HEIGHT;
+          const constrainedPrice = yToPrice(constrainedY);
+          
+          finalMinPrice = isMinLine ? constrainedPrice : otherPrice;
+          finalMaxPrice = isMinLine ? otherPrice : constrainedPrice;
+          visualSnapY = constrainedY;
+        }
+      } else {
+        // Normal behavior - distance is sufficient
+        if (linesCrossed) {
+          finalMinPrice = isMinLine ? otherPrice : newPrice;
+          finalMaxPrice = isMinLine ? newPrice : otherPrice;
+        } else {
+          finalMinPrice = isMinLine ? newPrice : otherPrice;
+          finalMaxPrice = isMinLine ? otherPrice : newPrice;
+        }
+      }
+
+      // Update visual position of the dragged element
       const element = d3.select(this);
       
       // Handle both line elements (with y1/y2) and circle elements (with cy)
       if (element.attr('y1') !== null) {
-        element.attr('y1', snapY).attr('y2', snapY);
+        element.attr('y1', visualSnapY).attr('y2', visualSnapY);
       } else if (element.attr('cy') !== null) {
-        element.attr('cy', snapY);
+        element.attr('cy', visualSnapY);
       }
       
-      // Determine which line represents min and max during drag
-      const otherY = priceToY(otherPrice);
-      let draggedMinPrice: number;
-      let draggedMaxPrice: number;
-      
-      // Handle visual swapping if lines cross
-      const isMinLine = lineType === 'min';
-      const linesCrossed = isMinLine ? (newY < otherY) : (newY > otherY);
-      
-      if (linesCrossed) {
-        // Lines crossed - swap visually
-        draggedMinPrice = isMinLine ? otherPrice : newPrice;
-        draggedMaxPrice = isMinLine ? newPrice : otherPrice;
-        
-        // Update other line color (both lines use same color anyway)
-        const otherLineClass = isMinLine ? '.max-line' : '.min-line';
-        g.select(otherLineClass).attr('stroke', CHART_COLORS.BOUNDARY_LINE);
-      } else {
-        // Lines in normal order
-        draggedMinPrice = isMinLine ? newPrice : otherPrice;
-        draggedMaxPrice = isMinLine ? otherPrice : newPrice;
-        
-        // Restore original colors
-        const otherLineClass = isMinLine ? '.max-line' : '.min-line';
-        g.select(otherLineClass).attr('stroke', CHART_COLORS.BOUNDARY_LINE);
-      }
+      // Update other line color for visual feedback
+      const otherLineClass = isMinLine ? '.max-line' : '.min-line';
+      g.select(otherLineClass).attr('stroke', CHART_COLORS.BOUNDARY_LINE);
       
       // Update all related elements
       chartUpdateManager.updateAll({
         g,
-        minPrice: draggedMinPrice,
-        maxPrice: draggedMaxPrice,
+        minPrice: finalMinPrice,
+        maxPrice: finalMaxPrice,
         priceToY,
         width: dimensions.width - margin.left - margin.right,
         margin,
