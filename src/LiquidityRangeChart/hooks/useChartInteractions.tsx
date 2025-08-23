@@ -22,18 +22,18 @@ export function useChartInteractions(
       event.preventDefault();
       event.stopPropagation();
       
-      // Check if this is a pinch gesture (Ctrl+wheel or trackpad pinch)
-      if (event.ctrlKey || Math.abs(event.deltaY) > 50) {
+      // Check if this is a zoom gesture (Ctrl+wheel)
+      if (event.ctrlKey) {
         // Handle pinch-to-zoom with more natural scaling
         const rect = svgElement.getBoundingClientRect();
         const centerY = event.clientY - rect.top;
         
         // Calculate zoom based on wheel delta - more responsive and natural feel
-        const deltaScale = -event.deltaY * 0.002; // Convert delta to scale change
+        const deltaScale = event.deltaY * 0.002; // Convert delta to scale change (positive for natural direction)
         const zoomFactor = Math.max(0.5, Math.min(2.0, 1 + deltaScale)); // Clamp between 0.5x and 2x per gesture
         
         setChartState(prev => {
-          const newZoomLevel = Math.max(0.01, Math.min(50, prev.zoomLevel * zoomFactor));
+          const newZoomLevel = Math.max(0.01, Math.min(25, prev.zoomLevel * zoomFactor));
           
           // Adjust panY to keep mouse position fixed during zoom
           const zoomRatio = newZoomLevel / prev.zoomLevel;
@@ -152,7 +152,7 @@ export function useChartInteractions(
         
         setChartState(prev => {
           // Apply zoom with bounds - velocity-responsive scaling
-          const newZoomLevel = Math.max(0.01, Math.min(50, (initialZoomLevel || prev.zoomLevel) * baseScale));
+          const newZoomLevel = Math.max(0.01, Math.min(25, (initialZoomLevel || prev.zoomLevel) * baseScale));
           
           // Adjust panY to keep pinch center fixed during zoom
           const zoomRatio = newZoomLevel / prev.zoomLevel;
@@ -262,7 +262,7 @@ export function useChartInteractions(
       
       setChartState(prev => {
         // Apply zoom with velocity-responsive scaling
-        const newZoomLevel = Math.max(0.01, Math.min(50, (gestureStartZoomLevel || prev.zoomLevel) * baseScale));
+        const newZoomLevel = Math.max(0.01, Math.min(25, (gestureStartZoomLevel || prev.zoomLevel) * baseScale));
         
         // Adjust panY to keep gesture center fixed
         const zoomRatio = newZoomLevel / prev.zoomLevel;
