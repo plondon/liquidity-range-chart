@@ -4,7 +4,6 @@ import './App.css';
 import priceData from './LiquidityRangeChart/data/price';
 import liquidityData from './LiquidityRangeChart/data/liquidity';
 import { LiquidityDataPoint } from 'LiquidityRangeChart/types';
-import D3Chart2 from 'LiquidityRangeChart/D3Chart2';
 
 const App: React.FC = () => {
     const [hoveredTick, setHoveredTick] = useState<LiquidityDataPoint | null>(null);
@@ -37,7 +36,6 @@ const App: React.FC = () => {
             <div style={{ fontSize: '12px' }}>Max Price: {maxPrice}</div>
         </div>
         <D3Chart data={priceData} liquidityData={liquidityData} onHoverTick={handleHoverTick} onMinPrice={handleMinPrice} onMaxPrice={handleMaxPrice} />
-        {/* <D3Chart2 data={priceData} onHoverTick={handleHoverTick}  /> */}
       </header>
     </div>
   );
