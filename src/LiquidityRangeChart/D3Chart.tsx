@@ -23,6 +23,7 @@ import {
   DATA_ELEMENT_CLASSES
 } from './utils/updateSlices';
 import { SOLID_PRICE_LINE_CLASSES } from './utils/updateSlices/indicatorSlices';
+import { createSharedPriceDragBehavior } from './utils/dragBehaviors';
 
 const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: { data: PriceDataPoint[], liquidityData: LiquidityDataPoint[], onHoverTick: (tick: LiquidityDataPoint | null) => void, onMinPrice: (price: number) => void, onMaxPrice: (price: number) => void }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -217,7 +218,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
 
 
 
-  // Shared drag behavior factory for price lines
+  // Simplified price line drag using shared logic
   const createPriceLineDrag = (
     lineType: 'min' | 'max',
     g: d3.Selection<SVGGElement, unknown, null, undefined>,
@@ -225,86 +226,25 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
     margin: { top: number; right: number; bottom: number; left: number },
     height: number,
     dimensions: { width: number; height: number },
-    getOtherPrice: () => number | null,
-    setThisPrice: (price: number) => void,
-    setOtherPrice: (price: number) => void
+    getOtherPrice: () => number | null
   ) => {
-    return d3.drag<SVGLineElement, unknown>()
-      .on('drag', function(event) {
-        const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
-        const newPrice = yToPrice(newY);
-        
-        // Update visual position to snap to nearest tick
-        const snapY = priceToY(newPrice);
-        d3.select(this)
-          .attr('y1', snapY)
-          .attr('y2', snapY);
-        
-        // Determine which line represents min and max during drag
-        const otherPrice = getOtherPrice();
-        if (otherPrice === null) return;
-        
-        const otherY = priceToY(otherPrice);
-        let draggedMinPrice: number;
-        let draggedMaxPrice: number;
-        
-        // Handle visual swapping if lines cross
-        const isMinLine = lineType === 'min';
-        const linesCrossed = isMinLine ? (newY < otherY) : (newY > otherY);
-        
-        if (linesCrossed) {
-          // Lines crossed - swap visually
-          draggedMinPrice = isMinLine ? otherPrice : newPrice;
-          draggedMaxPrice = isMinLine ? newPrice : otherPrice;
-          
-          // Update other line color (both lines use same color anyway)
-          const otherLineClass = isMinLine ? '.max-line' : '.min-line';
-          g.select(otherLineClass).attr('stroke', CHART_COLORS.BOUNDARY_LINE);
-          d3.select(this).attr('stroke', CHART_COLORS.BOUNDARY_LINE);
-        } else {
-          // Lines in normal order
-          draggedMinPrice = isMinLine ? newPrice : otherPrice;
-          draggedMaxPrice = isMinLine ? otherPrice : newPrice;
-          
-          // Restore original colors
-          const otherLineClass = isMinLine ? '.max-line' : '.min-line';
-          g.select(otherLineClass).attr('stroke', CHART_COLORS.BOUNDARY_LINE);
-          d3.select(this).attr('stroke', CHART_COLORS.BOUNDARY_LINE);
-        }
-        
-        // Update all related elements
-        chartUpdateManager.updateAll({
-          g,
-          minPrice: draggedMinPrice,
-          maxPrice: draggedMaxPrice,
-          priceToY,
-          width: dimensions.width - margin.left - margin.right,
-          margin,
-          dimensions,
-          current,
-          getColorForPrice,
-          getOpacityForPrice
-        });
-      })
-      .on('end', function(event) {
-        const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
-        const newPrice = yToPrice(newY);
-        const otherPrice = getOtherPrice();
-        if (otherPrice === null) return;
-        
-        // Handle final state update with proper min/max ordering
-        const isMinLine = lineType === 'min';
-        const linesCrossed = isMinLine ? (newPrice > otherPrice) : (newPrice < otherPrice);
-        
-        if (linesCrossed) {
-          // Lines crossed - swap them in state
-          setThisPrice(otherPrice);
-          setOtherPrice(newPrice);
-        } else {
-          // Normal case - just update this line
-          setThisPrice(newPrice);
-        }
-      });
+    const getThisPrice = () => lineType === 'min' ? minPrice : maxPrice;
+    
+    return createSharedPriceDragBehavior<SVGLineElement>({
+      lineType,
+      g,
+      priceToY,
+      yToPrice,
+      margin,
+      height,
+      dimensions,
+      getThisPrice,
+      getOtherPrice,
+      setChartState,
+      current,
+      getColorForPrice,
+      getOpacityForPrice
+    });
   };
 
   useEffect(() => {
@@ -326,77 +266,26 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
     const g = svg.append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // Shared handle drag behavior with line crossing logic
+    // Simplified handle drag using shared logic
     const createHandleDragBehavior = (handleType: 'min' | 'max') => {
-      return d3.drag<SVGCircleElement, unknown>()
-        .on('drag', function(event) {
-          const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
-          const newPrice = yToPrice(newY);
-          
-          if (minPrice === null || maxPrice === null) return;
-          
-          // Determine which line represents min and max during drag
-          const isMinHandle = handleType === 'min';
-          const otherPrice = isMinHandle ? maxPrice : minPrice;
-          const otherY = priceToY(otherPrice);
-          
-          let draggedMinPrice: number;
-          let draggedMaxPrice: number;
-          
-          // Handle visual swapping if lines cross - same logic as createPriceLineDrag
-          const linesCrossed = isMinHandle ? (newY < otherY) : (newY > otherY);
-          
-          if (linesCrossed) {
-            // Lines crossed - swap visually
-            draggedMinPrice = isMinHandle ? otherPrice : newPrice;
-            draggedMaxPrice = isMinHandle ? newPrice : otherPrice;
-          } else {
-            // Lines in normal order
-            draggedMinPrice = isMinHandle ? newPrice : otherPrice;
-            draggedMaxPrice = isMinHandle ? otherPrice : newPrice;
-          }
-          
-          // Update all chart elements using centralized system
-          chartUpdateManager.updateAll({
-            g,
-            minPrice: draggedMinPrice,
-            maxPrice: draggedMaxPrice,
-            priceToY,
-            width: dimensions.width - margin.left - margin.right,
-            margin,
-            dimensions,
-            current,
-            getColorForPrice,
-            getOpacityForPrice
-          });
-        })
-        .on('end', function(event) {
-          const newY = Math.max(-margin.top, Math.min(height + margin.bottom, event.y));
-          const newPrice = yToPrice(newY);
-          
-          if (minPrice === null || maxPrice === null) return;
-          
-          // Handle final state update with proper min/max ordering - same logic as createPriceLineDrag
-          const isMinHandle = handleType === 'min';
-          const otherPrice = isMinHandle ? maxPrice : minPrice;
-          const linesCrossed = isMinHandle ? (newPrice > otherPrice) : (newPrice < otherPrice);
-          
-          if (linesCrossed) {
-            // Lines crossed - swap them in state
-            if (isMinHandle) {
-              setChartState(prev => ({ ...prev, minPrice: otherPrice, maxPrice: newPrice }));
-            } else {
-              setChartState(prev => ({ ...prev, minPrice: newPrice, maxPrice: otherPrice }));
-            }
-          } else {
-            // Normal case - just update this handle's price
-            if (isMinHandle) {
-              setChartState(prev => ({ ...prev, minPrice: newPrice }));
-            } else {
-              setChartState(prev => ({ ...prev, maxPrice: newPrice }));
-            }
-          }
-        });
+      const getThisPrice = () => handleType === 'min' ? minPrice : maxPrice;
+      const getOtherPrice = () => handleType === 'min' ? maxPrice : minPrice;
+      
+      return createSharedPriceDragBehavior<SVGCircleElement>({
+        lineType: handleType,
+        g,
+        priceToY,
+        yToPrice,
+        margin,
+        height,
+        dimensions,
+        getThisPrice,
+        getOtherPrice,
+        setChartState,
+        current,
+        getColorForPrice,
+        getOpacityForPrice
+      });
     };
 
     // Shared tick-based drag behavior
@@ -1055,9 +944,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
           margin,
           height,
           dimensions,
-          () => maxPrice,
-          (price: number) => setChartState(prev => ({ ...prev, minPrice: price })),
-          (price: number) => setChartState(prev => ({ ...prev, maxPrice: price }))
+          () => maxPrice
         ));
 
       // Draw max price line (transparent) with drag behavior
@@ -1078,9 +965,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
           margin,
           height,
           dimensions,
-          () => minPrice,
-          (price: number) => setChartState(prev => ({ ...prev, maxPrice: price })),
-          (price: number) => setChartState(prev => ({ ...prev, minPrice: price }))
+          () => minPrice
         ));
         
       // Add min price label
