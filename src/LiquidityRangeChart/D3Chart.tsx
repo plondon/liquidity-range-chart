@@ -1423,6 +1423,26 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             >
               Clear Range
             </button>
+            <button 
+              onClick={() => { 
+                const prices = liquidityData.map(d => d.price0);
+                const minPrice = Math.min(...prices);
+                const maxPrice = Math.max(...prices);
+                setChartState(prev => ({ ...prev, minPrice, maxPrice }));
+              }}
+              style={{ 
+                fontSize: dimensions.width <= 768 ? '10px' : '11px', 
+                padding: dimensions.width <= 768 ? '6px 10px' : '4px 8px', 
+                backgroundColor: '#fff',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                minHeight: dimensions.width <= 768 ? '32px' : 'auto',
+                marginLeft: '8px'
+              }}
+            >
+              Full Range
+            </button>
           </div>
         </div>
       </div>
