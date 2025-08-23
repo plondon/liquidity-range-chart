@@ -29,7 +29,7 @@ export function useChartInteractions(
         const centerY = event.clientY - rect.top;
         
         // Calculate zoom based on wheel delta - more responsive and natural feel
-        const deltaScale = event.deltaY * 0.002; // Convert delta to scale change (positive for natural direction)
+        const deltaScale = -event.deltaY * 0.002; // Convert delta to scale change (negative for natural direction)
         const zoomFactor = Math.max(0.5, Math.min(2.0, 1 + deltaScale)); // Clamp between 0.5x and 2x per gesture
         
         setChartState(prev => {
