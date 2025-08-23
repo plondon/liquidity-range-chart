@@ -141,25 +141,68 @@ export function createSharedPriceDragBehavior<T extends Element>(
       const thisPrice = getThisPrice();
       const otherPrice = getOtherPrice();
       if (thisPrice === null || otherPrice === null) return;
-      
-      // Handle final state update with proper min/max ordering
+
+      const otherY = priceToY(otherPrice);
       const isMinLine = lineType === 'min';
+      
+      // Calculate the actual pixel distance between lines
+      const actualDistance = Math.abs(newY - otherY);
+      
+      // Determine if we're in normal or swapped configuration
       const linesCrossed = isMinLine ? (newPrice > otherPrice) : (newPrice < otherPrice);
       
-      if (linesCrossed) {
-        // Lines crossed - swap them in state
-        if (isMinLine) {
-          setChartState(prev => ({ ...prev, minPrice: otherPrice, maxPrice: newPrice }));
+      let finalMinPrice: number;
+      let finalMaxPrice: number;
+      
+      // Apply minimum height constraint logic on drag end
+      if (actualDistance < CHART_DIMENSIONS.RANGE_INDICATOR_MIN_HEIGHT) {
+        // We're ending in the threshold zone - need to constrain
+        if (linesCrossed) {
+          // Lines would cross - check if swap creates sufficient space
+          const swappedMinPrice = isMinLine ? otherPrice : newPrice;
+          const swappedMaxPrice = isMinLine ? newPrice : otherPrice;
+          const swappedDistance = Math.abs(priceToY(swappedMaxPrice) - priceToY(swappedMinPrice));
+          
+          if (swappedDistance >= CHART_DIMENSIONS.RANGE_INDICATOR_MIN_HEIGHT) {
+            // Swap is valid - sufficient space after swap
+            finalMinPrice = swappedMinPrice;
+            finalMaxPrice = swappedMaxPrice;
+          } else {
+            // Swap still doesn't create enough space - constrain to minimum
+            const constrainedY = isMinLine 
+              ? otherY + CHART_DIMENSIONS.RANGE_INDICATOR_MIN_HEIGHT 
+              : otherY - CHART_DIMENSIONS.RANGE_INDICATOR_MIN_HEIGHT;
+            const constrainedPrice = yToPrice(constrainedY);
+            
+            finalMinPrice = isMinLine ? constrainedPrice : otherPrice;
+            finalMaxPrice = isMinLine ? otherPrice : constrainedPrice;
+          }
         } else {
-          setChartState(prev => ({ ...prev, minPrice: newPrice, maxPrice: otherPrice }));
+          // Lines haven't crossed - constrain to minimum height
+          const constrainedY = isMinLine 
+            ? otherY + CHART_DIMENSIONS.RANGE_INDICATOR_MIN_HEIGHT 
+            : otherY - CHART_DIMENSIONS.RANGE_INDICATOR_MIN_HEIGHT;
+          const constrainedPrice = yToPrice(constrainedY);
+          
+          finalMinPrice = isMinLine ? constrainedPrice : otherPrice;
+          finalMaxPrice = isMinLine ? otherPrice : constrainedPrice;
         }
       } else {
-        // Normal case - just update this line's price
-        if (isMinLine) {
-          setChartState(prev => ({ ...prev, minPrice: newPrice }));
+        // Normal behavior - distance is sufficient
+        if (linesCrossed) {
+          finalMinPrice = isMinLine ? otherPrice : newPrice;
+          finalMaxPrice = isMinLine ? newPrice : otherPrice;
         } else {
-          setChartState(prev => ({ ...prev, maxPrice: newPrice }));
+          finalMinPrice = isMinLine ? newPrice : otherPrice;
+          finalMaxPrice = isMinLine ? otherPrice : newPrice;
         }
       }
+      
+      // Update final state
+      setChartState(prev => ({ 
+        ...prev, 
+        minPrice: finalMinPrice, 
+        maxPrice: finalMaxPrice 
+      }));
     });
 }
