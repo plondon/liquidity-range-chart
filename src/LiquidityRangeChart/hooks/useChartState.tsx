@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { createAnimateToState } from '../utils/animationUtils';
 import { PriceDataPoint, LiquidityDataPoint } from '../types';
+import { CHART_BEHAVIOR } from '../constants';
 
 export type ChartState = {
   zoomLevel: number;
@@ -45,7 +46,7 @@ export function useChartState() {
   };
 
   const handleZoomOut = () => {
-    const targetZoom = Math.max(zoomLevel / 1.3, 0.01);
+    const targetZoom = Math.max(zoomLevel / 1.3, CHART_BEHAVIOR.MIN_ZOOM);
     const viewportHeight = 400; // Chart viewport height
     const centerY = viewportHeight / 2;
     
@@ -98,7 +99,7 @@ export function useChartState() {
     // we need to zoom OUT (zoom < 1). The formula should be:
     // ticksVisible = ticksVisibleInViewport / zoomLevel
     // So: zoomLevel = ticksVisibleInViewport / ticksVisible
-    const targetZoom = Math.max(ticksVisibleInViewport / requiredTicks, 0.01);
+    const targetZoom = Math.max(ticksVisibleInViewport / requiredTicks, CHART_BEHAVIOR.MIN_ZOOM);
     
     // Calculate panY to center the range with the new zoom level
     const rangeCenterY = (liquidityData.length - 1 - rangeCenterIndex) * barHeight * targetZoom;
