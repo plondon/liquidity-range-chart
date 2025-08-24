@@ -757,25 +757,12 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       // Remove existing range elements
       g.selectAll(".price-range-element").remove();
       
-      // Calculate current visible price range using tick-based approach
-      const topTick = tickScale ? tickScale.domain().find(tick => {
-        const tickY = tickScale(tick);
-        return tickY !== undefined && tickY <= 0;
-      }) : null;
-      const bottomTick = tickScale ? tickScale.domain().reverse().find(tick => {
-        const tickY = tickScale(tick);
-        return tickY !== undefined && tickY >= height;
-      }) : null;
-      
-      const visibleMaxPrice = topTick ? liquidityData.find(d => d.tick.toString() === topTick)?.price0 || 0 : 0;
-      const visibleMinPrice = bottomTick ? liquidityData.find(d => d.tick.toString() === bottomTick)?.price0 || 0 : 0;
-      
-      // Check if we're scrolled past the handles
-      const isPastMaxHandle = maxPrice > visibleMaxPrice;
-      const isPastMinHandle = minPrice < visibleMinPrice;
+      // Check if handles are outside the visible viewport
+      const isPastMaxHandle = priceToY(maxPrice) < 0;
+      const isPastMinHandle = priceToY(minPrice) > height;
       
       // Check if the range is partially visible (use white) vs completely out of view (use pink)
-      const isRangePartiallyVisible = (minPrice <= visibleMaxPrice && maxPrice >= visibleMinPrice);
+      const isRangePartiallyVisible = priceToY(maxPrice) < height && priceToY(minPrice) > 0;
       const iconColor = isRangePartiallyVisible ? 'white' : CHART_COLORS.PRIMARY_PINK;
       
       // Draw dynamic range indicator line inside the border grey line
