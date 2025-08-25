@@ -34,7 +34,7 @@ export function useChartState() {
   const animateToState = createAnimateToState(setChartState);
 
   const handleZoomIn = () => {
-    const targetZoom = Math.min(zoomLevel * 1.3, 50);
+    const targetZoom = Math.min(zoomLevel * 1.3, CHART_BEHAVIOR.MAX_ZOOM);
     const viewportHeight = 400; // Chart viewport height
     const centerY = viewportHeight / 2;
     

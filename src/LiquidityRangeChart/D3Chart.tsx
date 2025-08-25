@@ -417,13 +417,6 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       value: d.value
     }));
 
-    // Unified price scale encompassing both price data and liquidity data
-    const allPrices = [
-      ...calculateAllPrices(priceData),
-      ...liquidityData.map(d => d.price0)
-    ];
-    const priceExtent = d3.extent(allPrices);
-
     // Scales for price line chart
     const dateExtent = d3.extent(priceData, d => d.date);
     const xScale = d3.scaleTime()
@@ -470,9 +463,6 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
 
     // Right side liquidity chart - inspired by Uniswap's approach
     const liquidityWidth = margin.right; // Use full margin width
-    
-    // Use the tick-based scale for liquidity positioning
-    const liquidityYScale = tickScale;
 
     // With native scrolling, all data is rendered - no filtering needed
 
@@ -501,18 +491,18 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       .attr("class", DATA_ELEMENT_CLASSES.LIQUIDITY_BAR)
       .attr('opacity', d => getOpacityForPrice(d.price0, minPrice, maxPrice))
       .attr("x", d => width + margin.right - liquidityXScale(d.activeLiquidity) - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET)
-      .attr("y", d => liquidityYScale(d.tick.toString()) || 0)
+      .attr("y", d => tickScale(d.tick.toString()) || 0)
       .attr("width", d => liquidityXScale(d.activeLiquidity))
-      .attr("height", liquidityYScale.bandwidth());
+      .attr("height", tickScale.bandwidth());
     
     // Update existing bars with smooth transitions and conditional coloring
     bars.merge(enterBars)
       .transition()
       .duration(100)
       .attr("x", d => width + margin.right - liquidityXScale(d.activeLiquidity) - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET)
-      .attr("y", d => liquidityYScale(d.tick.toString()) || 0)
+      .attr("y", d => tickScale(d.tick.toString()) || 0)
       .attr("width", d => liquidityXScale(d.activeLiquidity))
-      .attr("height", liquidityYScale.bandwidth())
+      .attr("height", tickScale.bandwidth())
       .attr("fill", d => getColorForPrice(d.price0, minPrice, maxPrice))
       .attr('opacity', d => getOpacityForPrice(d.price0, minPrice, maxPrice))
       .attr("cursor", "pointer")
