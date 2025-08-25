@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import * as d3 from 'd3';
 import { findClosestElementBinarySearch, formatPrice } from './utils/dataUtils';
+import { createPriceToY, createYToPrice } from './utils/coordinateUtils';
 import { useResponsiveDimensions } from './hooks/useResponsiveDimensions';
 import { useChartState } from './hooks/useChartState';
 import { useInitialView } from './hooks/useInitialView';
@@ -20,7 +21,8 @@ import {
   TRANSPARENT_PRICE_LINE_CLASSES,
   DRAG_HANDLE_CLASSES,
   LABEL_CLASSES,
-  DATA_ELEMENT_CLASSES
+  DATA_ELEMENT_CLASSES,
+  DrawContext
 } from './utils/updateSlices';
 import { SOLID_PRICE_LINE_CLASSES } from './utils/updateSlices/indicatorSlices';
 import { createSharedPriceDragBehavior } from './utils/dragBehaviors';
@@ -161,43 +163,16 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
     return scale;
   }, [baseTickScale, panY]);
 
-  // Helper function to convert price to Y position using closest tick
-  const priceToY = useCallback((price: number): number => {
-    if (!tickScale) return 0;
-    
-    // Find the closest liquidity data point to this price
-    const closest = liquidityData.reduce((prev, curr) => 
-      Math.abs(curr.price0 - price) < Math.abs(prev.price0 - price) ? curr : prev
-    );
-    
-    // Get the Y position from the band scale and add half bandwidth for center
-    const bandY = tickScale(closest.tick.toString()) || 0;
-    return bandY + (tickScale.bandwidth() / 2);
-  }, [liquidityData, tickScale]);
-
-  // Helper function to convert Y position back to price
-  const yToPrice = useCallback((y: number): number => {
-    if (!tickScale) return 0;
-    
-    // Find the tick at this Y position
-    const tickValues = tickScale.domain();
-    let closestTick = tickValues[0];
-    let minDistance = Math.abs(y - (tickScale(tickValues[0]) || 0));
-    
-    for (const tick of tickValues) {
-      const tickY = tickScale(tick) || 0;
-      const centerY = tickY + (tickScale.bandwidth() / 2);
-      const distance = Math.abs(y - centerY);
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestTick = tick;
-      }
-    }
-    
-    // Find the price for this tick
-    const tickData = liquidityData.find(d => d.tick.toString() === closestTick);
-    return tickData ? tickData.price0 : 0;
-  }, [liquidityData, tickScale]);
+  // Helper functions to convert between price and Y position
+  const priceToY = useCallback(
+    createPriceToY(liquidityData, tickScale), 
+    [liquidityData, tickScale]
+  );
+  
+  const yToPrice = useCallback(
+    createYToPrice(liquidityData, tickScale), 
+    [liquidityData, tickScale]
+  );
 
   // Filter visible liquidity data based on viewport  
   const visibleLiquidityData = useMemo(() => {
@@ -429,35 +404,24 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       .y(d => priceToY(d.value))
       .curve(d3.curveMonotoneX);
 
-    // Draw price line with conditional coloring
-    if (minPrice !== null && maxPrice !== null) {
-      // Draw segments with different colors based on price range
-      for (let i = 0; i < priceData.length - 1; i++) {
-        const currentPoint = priceData[i];
-        const nextPoint = priceData[i + 1];
-        
-        // Check if current point is within range
-        const color = getColorForPrice(currentPoint.value, minPrice, maxPrice);
-        
-        // Draw line segment between current and next point
-        g.append("path")
-          .datum([currentPoint, nextPoint])
-          .attr("fill", "none")
-          .attr("stroke", color)
-          .attr("stroke-width", 2)
-          .attr("d", line)
-          .attr("class", DATA_ELEMENT_CLASSES.PRICE_SEGMENT);
-      }
-    } else {
-      // Draw single blue line when no range is selected
-      g.append("path")
-        .datum(priceData)
-        .attr("fill", "none")
-        .attr("stroke", CHART_COLORS.OUT_RANGE_GREY)
-        .attr("stroke-width", 2)
-        .attr("d", line)
-        .attr("class", "price-line");
-    }
+    // Draw price line using data slice
+    const drawContext: DrawContext = {
+      g,
+      minPrice: minPrice || 0,
+      maxPrice: maxPrice || 0,
+      priceToY,
+      width,
+      margin,
+      dimensions,
+      current,
+      getColorForPrice,
+      getOpacityForPrice,
+      xScale,
+      priceData,
+      line
+    };
+
+    chartUpdateManager.drawAll(drawContext);
 
     // Remove X and left Y axes completely
 

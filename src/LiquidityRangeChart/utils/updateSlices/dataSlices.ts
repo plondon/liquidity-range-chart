@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { UpdateSlice } from '../chartUpdateManager';
+import { UpdateSlice, DrawContext } from '../chartUpdateManager';
 import { LiquidityDataPoint } from '../../types';
 import { CHART_COLORS } from '../../constants';
 import { getOpacityForPrice } from 'LiquidityRangeChart/utils';
@@ -35,12 +35,45 @@ export const LIQUIDITY_BARS_SLICE: UpdateSlice = {
 };
 
 /**
- * ELI5: This slice updates the colors of the price line segments (the zigzag price chart).
+ * ELI5: This slice draws and updates the colors of the price line segments (the zigzag price chart).
  * Parts of the price line that fall within your selected range turn pink, while parts 
  * outside your range turn grey. This shows which price movements are "in range."
  */
 export const PRICE_SEGMENTS_SLICE: UpdateSlice = {
-  name: 'priceSegments', 
+  name: 'priceSegments',
+  draw: (ctx: DrawContext) => {
+    const { g, minPrice, maxPrice, getColorForPrice, priceData, line } = ctx;
+    
+    // Draw price line with conditional coloring
+    if (minPrice !== null && maxPrice !== null) {
+      // Draw segments with different colors based on price range
+      for (let i = 0; i < priceData.length - 1; i++) {
+        const currentPoint = priceData[i];
+        const nextPoint = priceData[i + 1];
+        
+        // Check if current point is within range
+        const color = getColorForPrice(currentPoint.value, minPrice, maxPrice);
+        
+        // Draw line segment between current and next point
+        g.append("path")
+          .datum([currentPoint, nextPoint])
+          .attr("fill", "none")
+          .attr("stroke", color)
+          .attr("stroke-width", 2)
+          .attr("d", line)
+          .attr("class", DATA_ELEMENT_CLASSES.PRICE_SEGMENT);
+      }
+    } else {
+      // Draw single blue line when no range is selected
+      g.append("path")
+        .datum(priceData)
+        .attr("fill", "none")
+        .attr("stroke", CHART_COLORS.OUT_RANGE_GREY)
+        .attr("stroke-width", 2)
+        .attr("d", line)
+        .attr("class", "price-line");
+    }
+  },
   update: (ctx) => {
     const { g, minPrice, maxPrice, getColorForPrice } = ctx;
     

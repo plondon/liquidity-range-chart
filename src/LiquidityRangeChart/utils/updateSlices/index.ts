@@ -34,4 +34,4 @@ export {
   DATA_ELEMENT_CLASSES
 } from './dataSlices';
 export { chartUpdateManager } from '../chartUpdateManager';
-export type { UpdateContext, UpdateSlice } from '../chartUpdateManager';
+export type { UpdateContext, UpdateSlice, DrawContext } from '../chartUpdateManager';

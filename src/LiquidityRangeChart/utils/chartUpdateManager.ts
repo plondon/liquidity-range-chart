@@ -13,9 +13,16 @@ export interface UpdateContext {
   getOpacityForPrice: (price: number, min: number | null, max: number | null) => number;
 }
 
+export interface DrawContext extends UpdateContext {
+  xScale: d3.ScaleTime<number, number>;
+  priceData: Array<{ date: Date; value: number }>;
+  line: d3.Line<{ date: Date; value: number }>;
+}
+
 export interface UpdateSlice {
   name: string;
   update: (context: UpdateContext) => void;
+  draw?: (context: DrawContext) => void;
   dependencies?: string[]; // Other slices that must run first
 }
 
@@ -38,6 +45,16 @@ export class ChartUpdateManager {
   }
 
   /**
+   * Draw all registered slices that have a draw method in dependency order
+   */
+  drawAll(context: DrawContext): void {
+    const sliceNames = Array.from(this.sliceRegistry.keys()).filter(
+      name => this.sliceRegistry.get(name)?.draw
+    );
+    this.drawSlices(sliceNames, context);
+  }
+
+  /**
    * Update specific slices by name in dependency order
    */
   updateSlices(sliceNames: string[], context: UpdateContext): void {
@@ -50,6 +67,24 @@ export class ChartUpdateManager {
           slice.update(context);
         } catch (error) {
           console.error(`Error updating slice "${sliceName}":`, error);
+        }
+      }
+    }
+  }
+
+  /**
+   * Draw specific slices by name in dependency order
+   */
+  drawSlices(sliceNames: string[], context: DrawContext): void {
+    const resolvedOrder = this.resolveDependencies(sliceNames);
+    
+    for (const sliceName of resolvedOrder) {
+      const slice = this.sliceRegistry.get(sliceName);
+      if (slice?.draw) {
+        try {
+          slice.draw(context);
+        } catch (error) {
+          console.error(`Error drawing slice "${sliceName}":`, error);
         }
       }
     }
