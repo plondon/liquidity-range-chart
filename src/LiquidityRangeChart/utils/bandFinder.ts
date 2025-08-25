@@ -202,3 +202,35 @@ export const Years = {
 export const DEFAULT_SIGMA = 0.8; // 80% annualized volatility
 export const DEFAULT_ALPHA = 0.05; // 95% confidence interval
 export const DEFAULT_MU = 0; // zero drift assumption
+
+// Calculate mu and sigma from price data
+export function calculateMuAndVolatility(priceData: { value: number }[]): { mu: number; sigma: number } {
+  // Extract price values
+  const prices = priceData.map(p => p.value);
+  
+  if (prices.length < 2) {
+    throw new Error("Need at least 2 price points to calculate returns");
+  }
+  
+  // Calculate log returns: ln(P_t / P_{t-1}) = ln(P_t) - ln(P_{t-1})
+  const logReturns: number[] = [];
+  for (let i = 1; i < prices.length; i++) {
+    logReturns.push(Math.log(prices[i]) - Math.log(prices[i - 1]));
+  }
+  
+  // Calculate mean return
+  const meanReturn = logReturns.reduce((sum, ret) => sum + ret, 0) / logReturns.length;
+  
+  // Calculate variance manually (since we don't have a standard library)
+  const variance = logReturns.reduce((sum, ret) => sum + Math.pow(ret - meanReturn, 2), 0) / logReturns.length;
+  const volatility = Math.sqrt(variance);
+  
+  // Annualize the parameters
+  // 4-hourly data: 6 periods per day, 6 * 365.25 = 2191.5 periods per year
+  const periodsPerYear = 6 * 365.25;
+  
+  const mu = meanReturn * periodsPerYear;
+  const sigma = volatility * Math.sqrt(periodsPerYear);
+  
+  return { mu, sigma };
+}

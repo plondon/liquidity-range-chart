@@ -9,7 +9,7 @@ import { useChartInteractions } from './hooks/useChartInteractions';
 import { PriceDataPoint, LiquidityDataPoint } from './types';
 import { CHART_COLORS, CHART_DIMENSIONS, BREAKPOINTS, CHART_BEHAVIOR, ANIMATION, TYPOGRAPHY } from './constants';
 import TimeSelector from './components/TimeSelector';
-import { computePriceBands, Years, DEFAULT_SIGMA, DEFAULT_ALPHA, DEFAULT_MU } from './utils/bandFinder';
+import { computePriceBands, Years, DEFAULT_ALPHA, calculateMuAndVolatility } from './utils/bandFinder';
 import { 
   calculateAllPrices, 
   getColorForPrice, 
@@ -124,13 +124,16 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
 
   // Function to recalculate confidence bands based on current price and time horizon
   const recalculateConfidenceBands = useCallback(() => {
-    if (!current || !liquidityData) return;
+    if (!current || !liquidityData || !data) return;
+
+    // Calculate mu and sigma from actual price data
+    const { mu, sigma } = calculateMuAndVolatility(data);
 
     const { pl: newMinPrice, pu: newMaxPrice } = computePriceBands({
       p0: current,
       T: Years.fromWeeks(timeHorizonWeeks),
-      sigma: DEFAULT_SIGMA,
-      mu: DEFAULT_MU,
+      sigma: sigma,
+      mu: mu,
       alpha: DEFAULT_ALPHA
     });
 
@@ -146,18 +149,21 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       newMaxPrice,
       600 // 600ms animation duration
     );
-  }, [current, liquidityData, timeHorizonWeeks, animateToState, zoomLevel, panY, minPrice, maxPrice]);
+  }, [current, liquidityData, data, timeHorizonWeeks, animateToState, zoomLevel, panY, minPrice, maxPrice]);
 
   // Handle time horizon changes
   const handleTimeHorizonChange = useCallback((newTimeWeeks: number) => {
     setTimeHorizonWeeks(newTimeWeeks);
     // Only recalculate if we have valid current price and data
-    if (current && liquidityData) {
+    if (current && liquidityData && data) {
+      // Calculate mu and sigma from actual price data
+      const { mu, sigma } = calculateMuAndVolatility(data);
+
       const { pl: newMinPrice, pu: newMaxPrice } = computePriceBands({
         p0: current,
         T: Years.fromWeeks(newTimeWeeks),
-        sigma: DEFAULT_SIGMA,
-        mu: DEFAULT_MU,
+        sigma: sigma,
+        mu: mu,
         alpha: DEFAULT_ALPHA
       });
 
@@ -174,7 +180,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         600 // 600ms animation duration
       );
     }
-  }, [current, liquidityData, animateToState, zoomLevel, panY, minPrice, maxPrice]);
+  }, [current, liquidityData, data, animateToState, zoomLevel, panY, minPrice, maxPrice]);
 
   // Helper function to find closest liquidity data point
   const findClosestLiquidityData = (price: number): LiquidityDataPoint | null => {
