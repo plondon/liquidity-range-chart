@@ -8,6 +8,8 @@ import { useInitialView } from './hooks/useInitialView';
 import { useChartInteractions } from './hooks/useChartInteractions';
 import { PriceDataPoint, LiquidityDataPoint } from './types';
 import { CHART_COLORS, CHART_DIMENSIONS, BREAKPOINTS, CHART_BEHAVIOR, ANIMATION, TYPOGRAPHY } from './constants';
+import TimeSelector from './components/TimeSelector';
+import { computePriceBands, Years, DEFAULT_SIGMA, DEFAULT_ALPHA, DEFAULT_MU } from './utils/bandFinder';
 import { 
   calculateAllPrices, 
   getColorForPrice, 
@@ -30,6 +32,9 @@ import { createSharedPriceDragBehavior } from './utils/dragBehaviors';
 const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: { data: PriceDataPoint[], liquidityData: LiquidityDataPoint[], onHoverTick: (tick: LiquidityDataPoint | null) => void, onMinPrice: (price: number) => void, onMaxPrice: (price: number) => void }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  
+  // Time horizon state for confidence bands
+  const [timeHorizonWeeks, setTimeHorizonWeeks] = useState<number>(1);
   
   // Initialize update slices on first render
   React.useLayoutEffect(() => {
@@ -64,7 +69,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
   }, [maxPrice]);
   
   // Initialize hooks
-  useInitialView(data, liquidityData, setChartState, defaultState);
+  useInitialView(data, liquidityData, setChartState, defaultState, timeHorizonWeeks);
   // Disabled pan/zoom for native scrolling approach
   useChartInteractions(svgRef, data, liquidityData, zoomLevel, panY, setChartState);
   
@@ -115,6 +120,46 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
     if (!current || !liquidityData) return null;
     return findClosestElementBinarySearch(liquidityData, current)?.tick;
   }, [current, liquidityData]);
+
+  // Function to recalculate confidence bands based on current price and time horizon
+  const recalculateConfidenceBands = useCallback(() => {
+    if (!current || !liquidityData) return;
+
+    const { pl: newMinPrice, pu: newMaxPrice } = computePriceBands({
+      p0: current,
+      T: Years.fromWeeks(timeHorizonWeeks),
+      sigma: DEFAULT_SIGMA,
+      mu: DEFAULT_MU,
+      alpha: DEFAULT_ALPHA
+    });
+
+    setChartState(prev => ({ 
+      ...prev, 
+      minPrice: newMinPrice, 
+      maxPrice: newMaxPrice 
+    }));
+  }, [current, liquidityData, timeHorizonWeeks, setChartState]);
+
+  // Handle time horizon changes
+  const handleTimeHorizonChange = useCallback((newTimeWeeks: number) => {
+    setTimeHorizonWeeks(newTimeWeeks);
+    // Only recalculate if we have valid current price and data
+    if (current && liquidityData) {
+      const { pl: newMinPrice, pu: newMaxPrice } = computePriceBands({
+        p0: current,
+        T: Years.fromWeeks(newTimeWeeks),
+        sigma: DEFAULT_SIGMA,
+        mu: DEFAULT_MU,
+        alpha: DEFAULT_ALPHA
+      });
+
+      setChartState(prev => ({ 
+        ...prev, 
+        minPrice: newMinPrice, 
+        maxPrice: newMaxPrice 
+      }));
+    }
+  }, [current, liquidityData, setChartState]);
 
   // Helper function to find closest liquidity data point
   const findClosestLiquidityData = (price: number): LiquidityDataPoint | null => {
@@ -1310,6 +1355,13 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
           </div>
         </div>
 
+        {/* Time Horizon Controls */}
+        <TimeSelector
+          selectedTimeWeeks={timeHorizonWeeks}
+          onTimeChange={handleTimeHorizonChange}
+          isMobile={dimensions.width <= 768}
+        />
+
         {/* Price Range Controls */}
         <div>
           <div style={{ marginBottom: '4px', fontSize: '12px', fontWeight: 'bold' }}>
@@ -1363,6 +1415,23 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
               }}
             >
               Clear Range
+            </button>
+            <button 
+              onClick={recalculateConfidenceBands}
+              disabled={!current}
+              style={{ 
+                fontSize: dimensions.width <= 768 ? '10px' : '11px', 
+                padding: dimensions.width <= 768 ? '6px 10px' : '4px 8px', 
+                backgroundColor: !current ? '#f5f5f5' : '#fff',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                cursor: !current ? 'not-allowed' : 'pointer',
+                minHeight: dimensions.width <= 768 ? '32px' : 'auto',
+                color: !current ? '#999' : 'inherit',
+                marginLeft: '8px'
+              }}
+            >
+              {dimensions.width <= 768 ? 'GBM' : 'GBM Bands'}
             </button>
             <button 
               onClick={() => { 

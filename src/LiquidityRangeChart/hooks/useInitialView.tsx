@@ -2,8 +2,9 @@ import { useState, useEffect, RefObject } from 'react';
 import * as d3 from 'd3';
 import { LiquidityDataPoint, PriceDataPoint } from 'LiquidityRangeChart/types';
 import { ChartState } from './useChartState';
+import { computePriceBands, Years, DEFAULT_SIGMA, DEFAULT_ALPHA, DEFAULT_MU } from '../utils/bandFinder';
 
-export function useInitialView(data: PriceDataPoint[], liquidityData: LiquidityDataPoint[], setChartState: (state: ChartState) => void, defaultState: RefObject<ChartState>) {
+export function useInitialView(data: PriceDataPoint[], liquidityData: LiquidityDataPoint[], setChartState: (state: ChartState) => void, defaultState: RefObject<ChartState>, timeHorizonWeeks: number = 1) {
   const [initialViewSet, setInitialViewSet] = useState(false);
   
   useEffect(() => {
@@ -14,10 +15,17 @@ export function useInitialView(data: PriceDataPoint[], liquidityData: LiquidityD
         Math.abs(d.price0 - currentPrice) === Math.min(...liquidityData.map(item => Math.abs(item.price0 - currentPrice)))
       );
       
-      // Set initial zoom based on the selected range (±10% of current price)
+      // Set initial zoom based on GBM confidence bands
       const currentPriceValue = liquidityData[currentTickIndex]?.price0 || currentPrice;
-      const defaultMinPrice = currentPriceValue * 0.9; // 10% below current price
-      const defaultMaxPrice = currentPriceValue * 1.1; // 10% above current price
+      
+      // Use GBM-based confidence bands with configurable time horizon
+      const { pl: defaultMinPrice, pu: defaultMaxPrice } = computePriceBands({
+        p0: currentPriceValue,
+        T: Years.fromWeeks(timeHorizonWeeks),
+        sigma: DEFAULT_SIGMA,
+        mu: DEFAULT_MU,
+        alpha: DEFAULT_ALPHA
+      });
       
       // Find the ticks that correspond to our selected range - same logic as Center Range
       const minPriceTick = liquidityData.reduce((prev, curr) => 
@@ -61,7 +69,7 @@ export function useInitialView(data: PriceDataPoint[], liquidityData: LiquidityD
       
       setInitialViewSet(true);
     }
-  }, [data, liquidityData, initialViewSet, setChartState, defaultState]);
+  }, [data, liquidityData, initialViewSet, setChartState, defaultState, timeHorizonWeeks]);
   
   return initialViewSet;
 }
