@@ -44,6 +44,7 @@ export class ChartUpdateManager {
     this.updateSlices(sliceNames, context);
   }
 
+
   /**
    * Draw all registered slices that have a draw method in dependency order
    */

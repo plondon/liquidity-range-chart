@@ -9,8 +9,8 @@ export function createAnimateToState(setChartState: (state: React.SetStateAction
     maxPrice: number | null, 
     targetZoom: number, 
     targetPan: number, 
-    targetMinPrice = null, 
-    targetMaxPrice = null, 
+    targetMinPrice: number | null = null, 
+    targetMaxPrice: number | null = null, 
     duration = 400
   ) {
     const startZoom = zoomLevel;

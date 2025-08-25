@@ -53,7 +53,8 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
     handleZoomIn,
     handleZoomOut,
     handleResetZoom,
-    handleCenterRange
+    handleCenterRange,
+    animateToState
   } = useChartState();
 
   useEffect(() => {
@@ -133,12 +134,19 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
       alpha: DEFAULT_ALPHA
     });
 
-    setChartState(prev => ({ 
-      ...prev, 
-      minPrice: newMinPrice, 
-      maxPrice: newMaxPrice 
-    }));
-  }, [current, liquidityData, timeHorizonWeeks, setChartState]);
+    // Use smooth animation for confidence band changes
+    animateToState(
+      zoomLevel,
+      panY, 
+      minPrice,
+      maxPrice,
+      zoomLevel, // Keep same zoom
+      panY, // Keep same pan
+      newMinPrice,
+      newMaxPrice,
+      600 // 600ms animation duration
+    );
+  }, [current, liquidityData, timeHorizonWeeks, animateToState, zoomLevel, panY, minPrice, maxPrice]);
 
   // Handle time horizon changes
   const handleTimeHorizonChange = useCallback((newTimeWeeks: number) => {
@@ -153,13 +161,20 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         alpha: DEFAULT_ALPHA
       });
 
-      setChartState(prev => ({ 
-        ...prev, 
-        minPrice: newMinPrice, 
-        maxPrice: newMaxPrice 
-      }));
+      // Use smooth animation for time horizon changes
+      animateToState(
+        zoomLevel,
+        panY, 
+        minPrice,
+        maxPrice,
+        zoomLevel, // Keep same zoom
+        panY, // Keep same pan
+        newMinPrice,
+        newMaxPrice,
+        600 // 600ms animation duration
+      );
     }
-  }, [current, liquidityData, setChartState]);
+  }, [current, liquidityData, animateToState, zoomLevel, panY, minPrice, maxPrice]);
 
   // Helper function to find closest liquidity data point
   const findClosestLiquidityData = (price: number): LiquidityDataPoint | null => {
