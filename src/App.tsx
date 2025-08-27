@@ -7,8 +7,7 @@ import type { PairId } from './LiquidityRangeChart/components/PairSelector';
 
 import ethUsdcPriceData from './LiquidityRangeChart/data/eth-usdc/price';
 import ethUsdcLiquidityData from './LiquidityRangeChart/data/eth-usdc/liquidity';
-import ethUniPriceData from './LiquidityRangeChart/data/eth-uni/price';
-import ethUniLiquidityData from './LiquidityRangeChart/data/eth-uni/liquidity';
+
 import uniUsdcPriceData from './LiquidityRangeChart/data/uni-usdc/price';
 import uniUsdcLiquidityData from './LiquidityRangeChart/data/uni-usdc/liquidity';
 import usdcUsdtPriceData from './LiquidityRangeChart/data/usdc-usdt/price';
@@ -20,10 +19,6 @@ const PAIR_DATA = {
   'eth-usdc': {
     priceData: ethUsdcPriceData,
     liquidityData: ethUsdcLiquidityData
-  },
-  'eth-uni': {
-    priceData: ethUniPriceData,
-    liquidityData: ethUniLiquidityData
   },
   'uni-usdc': {
     priceData: uniUsdcPriceData,

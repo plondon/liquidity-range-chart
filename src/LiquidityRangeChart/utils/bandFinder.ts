@@ -81,7 +81,7 @@ export interface PriceBandParams {
   p0: number;     // Current price (token1 per token0, Uniswap convention)
   T: number;      // Horizon in years (e.g. 7/365 for one week)
   sigma: number;  // Annualized volatility (e.g. 0.8 = 80%)
-  mu?: number;    // Annualized drift (optional, default 0)
+  mu: number;     // Annualized drift (required, calculated from data)
   alpha?: number; // Two-sided tail probability (default 0.05 => 95% CI)
 }
 
@@ -96,7 +96,7 @@ export interface PriceBandResult {
  * Compute (pl, pu) confidence band for price under GBM over horizon T (years).
  */
 export function computePriceBands(params: PriceBandParams): PriceBandResult {
-  const { p0, T, sigma, mu = 0, alpha = 0.05 } = params;
+  const { p0, T, sigma, mu, alpha = 0.05 } = params;
   
   if (!(p0 > 0)) throw new Error("p0 must be > 0");
   if (!(T >= 0)) throw new Error("T must be >= 0");
@@ -174,7 +174,7 @@ export interface BandsAndTicksResult {
  * Optionally snap to a tickSpacing.
  */
 export function computeBandsAndTicks(params: BandsAndTicksParams): BandsAndTicksResult {
-  const { p0, T, sigma, mu = 0, alpha = 0.05, d0, d1, tickSpacing, snapMode = "round" } = params;
+  const { p0, T, sigma, mu, alpha = 0.05, d0, d1, tickSpacing, snapMode = "round" } = params;
 
   const { pl, pu } = computePriceBands({ p0, T, sigma, mu, alpha });
 
@@ -193,20 +193,25 @@ export function computeBandsAndTicks(params: BandsAndTicksParams): BandsAndTicks
 
 // Convenience: time helpers
 export const Years = {
-  fromDays: (d: number): number => d / 365,
-  fromWeeks: (w: number): number => (7 * w) / 365,
-  fromMonths: (m: number): number => (30.4375 * m) / 365, // avg month length
+  fromDays: (d: number): number => d / 365.25,  // Account for leap years
+  fromWeeks: (w: number): number => (7 * w) / 365.25,  // Account for leap years 
+  fromMonths: (m: number): number => (30.4375 * m) / 365.25, // avg month length, account for leap years
 };
 
-// Default parameters for common use cases
-export const DEFAULT_SIGMA = 0.8; // 80% annualized volatility
+// Default alpha for 95% confidence interval
 export const DEFAULT_ALPHA = 0.05; // 95% confidence interval
-export const DEFAULT_MU = 0; // zero drift assumption
 
 // Calculate mu and sigma from price data
-export function calculateMuAndVolatility(priceData: { value: number }[]): { mu: number; sigma: number } {
+export function calculateMuAndVolatility(priceData: { price: number }[]): { mu: number; sigma: number } {
   // Extract price values
-  const prices = priceData.map(p => p.value);
+  let prices = priceData.map(p => p.price);
+  
+  // Use only the last year of data for more relevant volatility estimates
+  // Assuming hourly data: 24 * 365.25 = 8766 hours per year
+  const oneYearOfHours = Math.floor(24 * 365.25);
+  if (prices.length > oneYearOfHours) {
+    prices = prices.slice(-oneYearOfHours); // Take the last year of data
+  }
   
   if (prices.length < 2) {
     throw new Error("Need at least 2 price points to calculate returns");
@@ -221,13 +226,12 @@ export function calculateMuAndVolatility(priceData: { value: number }[]): { mu: 
   // Calculate mean return
   const meanReturn = logReturns.reduce((sum, ret) => sum + ret, 0) / logReturns.length;
   
-  // Calculate variance manually (since we don't have a standard library)
+  // Calculate population variance 
   const variance = logReturns.reduce((sum, ret) => sum + Math.pow(ret - meanReturn, 2), 0) / logReturns.length;
   const volatility = Math.sqrt(variance);
   
   // Annualize the parameters
-  // 4-hourly data: 6 periods per day, 6 * 365.25 = 2191.5 periods per year
-  const periodsPerYear = 6 * 365.25;
+  const periodsPerYear = 24 * 365.25;
   
   const mu = meanReturn * periodsPerYear;
   const sigma = volatility * Math.sqrt(periodsPerYear);

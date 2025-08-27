@@ -113,7 +113,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
   
   // Calculate current price from the last entry
   const current = useMemo(() => {
-    return data && data.length > 0 ? data[data.length - 1]?.value : null;
+    return data && data.length > 0 ? data[data.length - 1]?.price : null;
   }, [data]);
   
   // Calculate currentTick based on current price
@@ -122,34 +122,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
     return findClosestElementBinarySearch(liquidityData, current)?.tick;
   }, [current, liquidityData]);
 
-  // Function to recalculate confidence bands based on current price and time horizon
-  const recalculateConfidenceBands = useCallback(() => {
-    if (!current || !liquidityData || !data) return;
 
-    // Calculate mu and sigma from actual price data
-    const { mu, sigma } = calculateMuAndVolatility(data);
-
-    const { pl: newMinPrice, pu: newMaxPrice } = computePriceBands({
-      p0: current,
-      T: Years.fromWeeks(timeHorizonWeeks),
-      sigma: sigma,
-      mu: mu,
-      alpha: DEFAULT_ALPHA
-    });
-
-    // Use smooth animation for confidence band changes
-    animateToState(
-      zoomLevel,
-      panY, 
-      minPrice,
-      maxPrice,
-      zoomLevel, // Keep same zoom
-      panY, // Keep same pan
-      newMinPrice,
-      newMaxPrice,
-      600 // 600ms animation duration
-    );
-  }, [current, liquidityData, data, timeHorizonWeeks, animateToState, zoomLevel, panY, minPrice, maxPrice]);
 
   // Handle time horizon changes
   const handleTimeHorizonChange = useCallback((newTimeWeeks: number) => {
@@ -382,7 +355,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             
             // Get data bounds to prevent dragging outside chart
             const allPrices = [
-              ...data.map(d => d.value),
+              ...data.map(d => d.price),
               ...liquidityData.map(d => d.price0)
             ];
             const dataMin = Math.min(...allPrices);
@@ -437,7 +410,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             
             // Get data bounds
             const allPrices = [
-              ...data.map(d => d.value),
+              ...data.map(d => d.price),
               ...liquidityData.map(d => d.price0)
             ];
             const dataMin = Math.min(...allPrices);
@@ -455,7 +428,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
     // Convert timestamps to dates for price data
     const priceData = data.map(d => ({
       date: new Date(d.time * 1000),
-      value: d.value
+      value: d.price
     }));
 
     // Scales for price line chart
@@ -572,7 +545,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         
         // Get data bounds
         const allPrices = [
-          ...data.map(d => d.value),
+          ...data.map(d => d.price),
           ...liquidityData.map(d => d.price0)
         ];
         const dataMin = Math.min(...allPrices);
@@ -661,7 +634,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
         
         // Get data bounds
         const allPrices = [
-          ...data.map(d => d.value),
+          ...data.map(d => d.price),
           ...liquidityData.map(d => d.price0)
         ];
         const dataMin = Math.min(...allPrices);
@@ -1093,7 +1066,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             
             // Get data bounds
             const allPrices = [
-              ...data.map(d => d.value),
+              ...data.map(d => d.price),
               ...liquidityData.map(d => d.price0)
             ];
             const dataMin = Math.min(...allPrices);
@@ -1161,7 +1134,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             
             // Get data bounds
             const allPrices = [
-              ...data.map(d => d.value),
+              ...data.map(d => d.price),
               ...liquidityData.map(d => d.price0)
             ];
             const dataMin = Math.min(...allPrices);
@@ -1215,7 +1188,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             
             // Get data bounds
             const allPrices = [
-              ...data.map(d => d.value),
+              ...data.map(d => d.price),
               ...liquidityData.map(d => d.price0)
             ];
             const dataMin = Math.min(...allPrices);
@@ -1283,7 +1256,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             
             // Get data bounds
             const allPrices = [
-              ...data.map(d => d.value),
+              ...data.map(d => d.price),
               ...liquidityData.map(d => d.price0)
             ];
             const dataMin = Math.min(...allPrices);
@@ -1437,23 +1410,7 @@ const D3Chart = ({ data, liquidityData, onHoverTick, onMinPrice, onMaxPrice }: {
             >
               Clear Range
             </button>
-            <button 
-              onClick={recalculateConfidenceBands}
-              disabled={!current}
-              style={{ 
-                fontSize: dimensions.width <= 768 ? '10px' : '11px', 
-                padding: dimensions.width <= 768 ? '6px 10px' : '4px 8px', 
-                backgroundColor: !current ? '#f5f5f5' : '#fff',
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-                cursor: !current ? 'not-allowed' : 'pointer',
-                minHeight: dimensions.width <= 768 ? '32px' : 'auto',
-                color: !current ? '#999' : 'inherit',
-                marginLeft: '8px'
-              }}
-            >
-              {dimensions.width <= 768 ? 'GBM' : 'GBM Bands'}
-            </button>
+
             <button 
               onClick={() => { 
                 const prices = liquidityData.map(d => d.price0);

@@ -1,13 +1,13 @@
 import { CHART_COLORS, PRICE_FORMAT } from './constants';
 
 // Utility function to calculate allPrices - used 7 times in the component
-export const calculateAllPrices = (data: Array<{value: number}>) => {
+export const calculateAllPrices = (data: Array<{price: number}>) => {
   if (!data || data.length === 0) return [];
-  return data.map(d => d.value);
+  return data.map(d => d.price);
 };
 
 // Utility function to get price extent - eliminates optional chaining
-export const getPriceExtent = (data: Array<{value: number}>) => {
+export const getPriceExtent = (data: Array<{price: number}>) => {
   const allPrices = calculateAllPrices(data);
   if (allPrices.length === 0) return null;
   
@@ -69,7 +69,7 @@ export const getResponsiveDimensions = (containerWidth: number) => {
 };
 
 // Utility function to find closest data point (binary search optimization)
-export const findClosestDataPoint = (data: Array<{time: number, value: number}>, targetTime: number) => {
+export const findClosestDataPoint = (data: Array<{time: number, price: number}>, targetTime: number) => {
   if (!data || data.length === 0) return null;
   
   let left = 0;

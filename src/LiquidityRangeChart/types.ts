@@ -1,10 +1,6 @@
 export type PriceDataPoint = {
   time: number;
-  value: number;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
+  price: number;
 };
 
 export type LiquidityDataPoint = {

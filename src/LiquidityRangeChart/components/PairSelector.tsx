@@ -2,7 +2,6 @@ import React from 'react';
 
 const TRADING_PAIRS = [
   { id: 'eth-usdc', name: 'ETH/USDC', default: true },
-  { id: 'eth-uni', name: 'ETH/UNI', default: false },
   { id: 'uni-usdc', name: 'UNI/USDC', default: false },
   { id: 'usdc-usdt', name: 'USDC/USDT', default: false },
   { id: 'wbtc-usdc', name: 'WBTC/USDC', default: false },
